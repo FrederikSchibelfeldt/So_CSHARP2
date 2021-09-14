@@ -9,17 +9,46 @@ namespace So_CSHARP
         static void Main(string[] args)
         {
 
+            Model res = new Model();
+
             var xs = new XmlSerializer(typeof(Model));
-            using (FileStream fileStream = new FileStream("../SO_CSHARP/Files/small.xml", FileMode.Open)) 
+            using (FileStream fileStream = new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\small.xml", FileMode.Open)) 
             {
-                Model result = (Model) xs.Deserialize(fileStream);
+                res = (Model) xs.Deserialize(fileStream);
             }
+            
+            
+        }
+        /// <summary>
+        /// Method to return initial random solution given a Model object
+        /// </summary>
+        Solution RandomSolution(Model a)
+        {
+            //Extract tasks and cores from model a.
+            //Remake to loop for cores
+
+            var taskList = a.Application.Task;
+            var coreList1 = a.Platform.MCP[0].Core;
+            var coreList2 = a.Platform.MCP[1].Core;
+            Solution solution = new Solution();
+            // Fill out at random cores and calculate WCRT 
+
+            foreach (var t in taskList)
+            {
+                
+                
+            }
+            
+            
+
+
+            return null;
         }
     }
     
     [XmlRoot(ElementName="Task")]
     public class Task {
-        [XmlAttribute(AttributeName="Deadline5")]
+        [XmlAttribute(AttributeName="Deadline")]
         public string Deadline { get; set; }
         [XmlAttribute(AttributeName="Id")]
         public string Id { get; set; }
@@ -65,6 +94,21 @@ namespace So_CSHARP
         public Platform Platform { get; set; }
     }
     
-    
+    [XmlRoot(ElementName="Task2")]
+    public class Task2 {
+        [XmlAttribute(AttributeName="Id")]
+        public string Id { get; set; }
+        [XmlAttribute(AttributeName="MCP")]
+        public string MCP { get; set; }
+        [XmlAttribute(AttributeName="Core")]
+        public string Core { get; set; }
+        [XmlAttribute(AttributeName="WCRT")]
+        public string WCRT { get; set; }
+    }
 
+    [XmlRoot(ElementName="solution")]
+    public class Solution {
+        [XmlElement(ElementName="Task2")]
+        public List<Task2> Task2 { get; set; }
+    }
 }

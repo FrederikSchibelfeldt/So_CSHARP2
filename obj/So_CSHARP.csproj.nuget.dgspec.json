@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\abdir\\OneDrive\\DTU_UNI\\Masters\\Fall_21\\system\\So_CSHARP2\\So_CSHARP.csproj": {}
+    "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\So_CSHARP.csproj": {}
   },
   "projects": {
-    "C:\\Users\\abdir\\OneDrive\\DTU_UNI\\Masters\\Fall_21\\system\\So_CSHARP2\\So_CSHARP.csproj": {
+    "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\So_CSHARP.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\abdir\\OneDrive\\DTU_UNI\\Masters\\Fall_21\\system\\So_CSHARP2\\So_CSHARP.csproj",
+        "projectUniqueName": "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\So_CSHARP.csproj",
         "projectName": "So_CSHARP",
-        "projectPath": "C:\\Users\\abdir\\OneDrive\\DTU_UNI\\Masters\\Fall_21\\system\\So_CSHARP2\\So_CSHARP.csproj",
-        "packagesPath": "C:\\Users\\abdir\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\abdir\\OneDrive\\DTU_UNI\\Masters\\Fall_21\\system\\So_CSHARP2\\obj\\",
+        "projectPath": "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\So_CSHARP.csproj",
+        "packagesPath": "C:\\Users\\frederik\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\abdir\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\frederik\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -54,7 +54,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.207\\RuntimeIdentifierGraph.json"
         }
       }
     }
