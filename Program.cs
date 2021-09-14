@@ -10,7 +10,7 @@ namespace So_CSHARP
         {
 
             var xs = new XmlSerializer(typeof(Model));
-            using (FileStream fileStream = new FileStream("/SO_CSHARP/Files/small.xml", FileMode.Open)) 
+            using (FileStream fileStream = new FileStream("../SO_CSHARP/Files/small.xml", FileMode.Open)) 
             {
                 Model result = (Model) xs.Deserialize(fileStream);
             }
