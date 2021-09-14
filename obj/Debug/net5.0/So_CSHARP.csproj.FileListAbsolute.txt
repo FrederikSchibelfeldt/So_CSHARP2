@@ -1,0 +1,16 @@
+C:\Users\Bruger\RiderProjects\So_CSHARP\bin\Debug\net5.0\So_CSHARP.exe
+C:\Users\Bruger\RiderProjects\So_CSHARP\bin\Debug\net5.0\So_CSHARP.deps.json
+C:\Users\Bruger\RiderProjects\So_CSHARP\bin\Debug\net5.0\So_CSHARP.runtimeconfig.json
+C:\Users\Bruger\RiderProjects\So_CSHARP\bin\Debug\net5.0\So_CSHARP.runtimeconfig.dev.json
+C:\Users\Bruger\RiderProjects\So_CSHARP\bin\Debug\net5.0\So_CSHARP.dll
+C:\Users\Bruger\RiderProjects\So_CSHARP\bin\Debug\net5.0\ref\So_CSHARP.dll
+C:\Users\Bruger\RiderProjects\So_CSHARP\bin\Debug\net5.0\So_CSHARP.pdb
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.csproj.AssemblyReference.cache
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.AssemblyInfoInputs.cache
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.AssemblyInfo.cs
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.csproj.CoreCompileInputs.cache
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.dll
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\ref\So_CSHARP.dll
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.pdb
+C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.genruntimeconfig.cache
