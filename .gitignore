@@ -39,6 +39,7 @@ x64/
 *.ilk
 *.meta
 *.obj
+
 *.pch
 *.pdb
 *.pgc
@@ -130,6 +131,7 @@ ClientBin/
 *.publishsettings
 modulesbin/
 tempbin/
+*.dll
 
 # EPiServer Site file (VPP)
 AppData/
@@ -154,6 +156,7 @@ UpgradeLog*.htm
  
 # svn
 .svn
+bin/Debug/*
 
 # CVS - Source Control
 **/CVS/
