@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace So_CSHARP
@@ -12,9 +15,17 @@ namespace So_CSHARP
             Model res = new Model();
 
             var xs = new XmlSerializer(typeof(Model));
-            using (FileStream fileStream = new FileStream("../So_CSHARP2/files/small.xml", FileMode.Open)) 
+            using (FileStream fileStream = new FileStream("../So_CSHARP/files/small.xml", FileMode.Open)) 
             {
                 res = (Model) xs.Deserialize(fileStream);
+            }
+            Solution res2 =  RandomSolution(res);
+            var xs2 = new XmlSerializer(typeof(Solution));
+
+  
+            using (FileStream fileStream = new FileStream("../So_CSHARP/files/smallSolutionExample.xml", FileMode.Create)) 
+            {
+                xs2.Serialize(fileStream,res2);
             }
 
 
@@ -22,7 +33,7 @@ namespace So_CSHARP
         /// <summary>
         /// Method to return initial random solution given a Model object
         /// </summary>
-        Solution RandomSolution(Model a)
+      static  Solution RandomSolution(Model a)
         {
             //Extract tasks and cores from model a.
             //Remake to loop for cores
@@ -31,18 +42,24 @@ namespace So_CSHARP
             var coreList1 = a.Platform.MCP[0].Core;
             var coreList2 = a.Platform.MCP[1].Core;
             Solution solution = new Solution();
+            List<Task2> task2List = new List<Task2>();
+            Random rand = new Random();
             // Fill out at random cores and calculate WCRT
 
             foreach (var t in taskList)
             {
-
-
+                Task2 task2 = new Task2();
+                task2.Id = t.Id;
+                task2.MCP = rand.Next(0, 2).ToString();
+                task2.Core = a.Platform.MCP[Int32.Parse(task2.MCP)].Core[rand.Next(0, 4)].Id;
+                var wcetfactor = a.Platform.MCP[int.Parse(task2.MCP)].Core[int.Parse(task2.Core)].WCETFactor;
+                task2.WCRT =
+                    Convert.ToInt32(float.Parse(t.WCET,CultureInfo.InvariantCulture) * float.Parse(wcetfactor,CultureInfo.InvariantCulture)).ToString();
+                task2List.Add(task2);
+                solution.Task2 = task2List;
             }
 
-
-
-
-            return null;
+            return solution;
         }
     }
 

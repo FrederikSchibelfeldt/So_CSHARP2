@@ -1,25 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mo/02229/So_CSHARP2/So_CSHARP.csproj": {}
+    "C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\So_CSHARP.csproj": {}
   },
   "projects": {
-    "/Users/mo/02229/So_CSHARP2/So_CSHARP.csproj": {
+    "C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\So_CSHARP.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mo/02229/So_CSHARP2/So_CSHARP.csproj",
+        "projectUniqueName": "C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\So_CSHARP.csproj",
         "projectName": "So_CSHARP",
-        "projectPath": "/Users/mo/02229/So_CSHARP2/So_CSHARP.csproj",
-        "packagesPath": "/Users/mo/.nuget/packages/",
-        "outputPath": "/Users/mo/02229/So_CSHARP2/obj/",
+        "projectPath": "C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\So_CSHARP.csproj",
+        "packagesPath": "C:\\Users\\Bruger\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "/Users/mo/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Bruger\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -52,7 +57,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.400/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
