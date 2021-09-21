@@ -12,12 +12,12 @@ namespace So_CSHARP
             Model res = new Model();
 
             var xs = new XmlSerializer(typeof(Model));
-            using (FileStream fileStream = new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\small.xml", FileMode.Open)) 
+            using (FileStream fileStream = new FileStream("../So_CSHARP2/files/small.xml", FileMode.Open)) 
             {
                 res = (Model) xs.Deserialize(fileStream);
             }
-            
-            
+
+
         }
         /// <summary>
         /// Method to return initial random solution given a Model object
@@ -31,21 +31,21 @@ namespace So_CSHARP
             var coreList1 = a.Platform.MCP[0].Core;
             var coreList2 = a.Platform.MCP[1].Core;
             Solution solution = new Solution();
-            // Fill out at random cores and calculate WCRT 
+            // Fill out at random cores and calculate WCRT
 
             foreach (var t in taskList)
             {
-                
-                
+
+
             }
-            
-            
+
+
 
 
             return null;
         }
     }
-    
+
     [XmlRoot(ElementName="Task")]
     public class Task {
         [XmlAttribute(AttributeName="Deadline")]
@@ -93,7 +93,7 @@ namespace So_CSHARP
         [XmlElement(ElementName="Platform")]
         public Platform Platform { get; set; }
     }
-    
+
     [XmlRoot(ElementName="Task2")]
     public class Task2 {
         [XmlAttribute(AttributeName="Id")]
