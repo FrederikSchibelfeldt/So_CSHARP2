@@ -9,26 +9,51 @@ namespace So_CSHARP
 {
     class Program
     {
-        static void Main(string[] args)
+         static void Main(string[] args)
         {
 
             Model res = new Model();
 
             var xs = new XmlSerializer(typeof(Model));
-            using (FileStream fileStream = new FileStream("../So_CSHARP/files/small.xml", FileMode.Open)) 
+            using (FileStream fileStream = new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\small.xml", FileMode.Open)) 
             {
                 res = (Model) xs.Deserialize(fileStream);
             }
             Solution res2 =  RandomSolution(res);
             var xs2 = new XmlSerializer(typeof(Solution));
+            
+            //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-  
-            using (FileStream fileStream = new FileStream("../So_CSHARP/files/smallSolutionExample.xml", FileMode.Create)) 
+            if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallSolutionExample.xml"))
             {
-                xs2.Serialize(fileStream,res2);
+                {
+                    File.Delete("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallSolutionExample.xml");
+                }
+                using (FileStream fileStream =
+                    new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallSolutionExample.xml",
+                        FileMode.Create))
+                {
+                    xs2.Serialize(fileStream, res2);
+                }
+                Solution res3 =  NewRandomSolution(res2,res);
+
+
+                if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallNewSolutionExample.xml"))
+                {
+                    {
+                        File.Delete(
+                            "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallNewSolutionExample.xml");
+                    }
+                }
+
+                using (FileStream fileStream =
+                    new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallNewSolutionExample.xml",
+                        FileMode.Create))
+                {
+                    xs2.Serialize(fileStream, res3);
+                }
             }
-
-
+            
         }
         /// <summary>
         /// Method to return initial random solution given a Model object
@@ -60,6 +85,37 @@ namespace So_CSHARP
             }
 
             return solution;
+        }
+
+        static Solution NewRandomSolution(Solution s, Model a)
+        {
+            Random rnd = new Random();
+            var s1 = s.Task2.OrderBy(x => rnd.Next()).Take(2).ToList();
+            
+            // If task from same core chosen get new ones.
+            while (s1[0].MCP == s1[1].MCP && s1[0].Core == s1[1].Core)
+            {
+                s1 = s.Task2.OrderBy(x => rnd.Next()).Take(2).ToList();
+
+            }
+            
+            // temp storage for task properties
+            string tempCore = s1[0].Core;
+            string tempMcp = s1[0].MCP;
+
+
+            s1[0].Core = s1[1].Core;
+            s1[0].MCP = s1[1].MCP;
+            s1[1].Core = tempCore;
+            s1[1].MCP = tempMcp;
+            //probably not efficient
+            var wcetfactor = a.Platform.MCP[int.Parse(s1[0].MCP)].Core[int.Parse(s1[0].Core)].WCETFactor;
+            var wcet = a.Application.Task[a.Application.Task.FindIndex(x => x.Id == s1[0].Id)].WCET;
+            var wcetfactor2 = a.Platform.MCP[int.Parse(s1[1].MCP)].Core[int.Parse(s1[1].Core)].WCETFactor;
+            var wcet2 = a.Application.Task[a.Application.Task.FindIndex(x => x.Id == s1[1].Id)].WCET;
+            s1[0].WCRT = Convert.ToInt32(float.Parse(wcet,CultureInfo.InvariantCulture) * float.Parse(wcetfactor,CultureInfo.InvariantCulture)).ToString();
+            s1[1].WCRT = Convert.ToInt32(float.Parse(wcet2,CultureInfo.InvariantCulture) * float.Parse(wcetfactor2,CultureInfo.InvariantCulture)).ToString();
+            return s;
         }
     }
 
