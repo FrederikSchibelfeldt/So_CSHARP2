@@ -21,7 +21,7 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Model));
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\small.xml", FileMode.Open))
+                new FileStream("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/small.xml", FileMode.Open))
             {
                 res = (Model) xs.Deserialize(fileStream);
             }
@@ -31,13 +31,13 @@ namespace So_CSHARP
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallSolutionExample.xml"))
+            if (File.Exists("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallSolutionExample.xml"))
             {
                 {
-                    File.Delete("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallSolutionExample.xml");
+                    File.Delete("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallSolutionExample.xml");
                 }
                 using (FileStream fileStream =
-                    new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallSolutionExample.xml",
+                    new FileStream("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallSolutionExample.xml",
                         FileMode.Create))
                 {
                     xs2.Serialize(fileStream, res2);
@@ -46,22 +46,20 @@ namespace So_CSHARP
                 Solution res3 = NewRandomSolution(res2, res);
                 var q = res2.Task2.SequenceEqual(res3.Task2);
                 
-                if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallNewSolutionExample.xml"))
+                if (File.Exists("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallNewSolutionExample.xml"))
                 {
                     {
-                        File.Delete(
-                            "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallNewSolutionExample.xml");
+                        File.Delete("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallNewSolutionExample.xml");
                     }
                 }
 
                 using (FileStream fileStream =
-                    new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\smallNewSolutionExample.xml",
+                    new FileStream("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallNewSolutionExample.xml",
                         FileMode.Create))
                 {
                     xs2.Serialize(fileStream, res3);
                 }
             }
-
         }
 
         /// <summary>
@@ -141,18 +139,18 @@ namespace So_CSHARP
         static Solution SimulatedAnnealing(Model a)
         {
             Stopwatch time = new Stopwatch();
-            double t = 10000000;
+            double t = 100000;
             var alpha = 0.0003;
             var c = RandomSolution(a);
 
             List<Solution> solutionSpace = new List<Solution>();
             time.Start();
-            while (time.Elapsed.TotalMinutes<5)
+            while (time.Elapsed.TotalMinutes < 5)
             {
                Solution d = NewRandomSolution(c, a);
                var q = c.Task2.SequenceEqual(d.Task2);
                 int lambda = costFunction(c) - costFunction(d);
-                if (lambda < Math.Exp(-(1 / t) * lambda))
+                if (lambda > 0 || lambda > Math.Exp(-(1 / t) * lambda))
                 {
                     solutionSpace.Add(c);
                     c.Laxity = lax(c);
@@ -172,7 +170,6 @@ namespace So_CSHARP
         static int costFunction(Solution s1)
         {
             int c = 0;
-            int ci = 0;
             List<Task2> task2List = s1.Task2;
             foreach (Task2 t in task2List)
             {
