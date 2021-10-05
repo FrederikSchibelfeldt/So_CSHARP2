@@ -148,6 +148,10 @@ namespace So_CSHARP
             while (time.Elapsed.TotalMinutes < 5)
             {
                Solution d = NewRandomSolution(c, a);
+               while (solutionSpace.Contains(d))
+               {
+                   d = NewRandomSolution(c, a);
+               }
                var q = c.Task2.SequenceEqual(d.Task2);
                 int lambda = costFunction(c) - costFunction(d);
                 if (lambda > 0 || lambda > Math.Exp(-(1 / t) * lambda))
