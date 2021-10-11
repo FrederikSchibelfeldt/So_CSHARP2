@@ -45,22 +45,6 @@ C:/Users/Bruger/RiderProjects/So_CSHARP/obj/Debug/net5.0/So_CSHARP.dll
 C:/Users/Bruger/RiderProjects/So_CSHARP/obj/Debug/net5.0/ref/So_CSHARP.dll
 C:/Users/Bruger/RiderProjects/So_CSHARP/obj/Debug/net5.0/So_CSHARP.pdb
 C:/Users/Bruger/RiderProjects/So_CSHARP/obj/Debug/net5.0/So_CSHARP.genruntimeconfig.cache
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.dll
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/ref/So_CSHARP.dll
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.pdb
-C:/Users/frederik/RiderProjects/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.exe
-C:/Users/frederik/RiderProjects/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.deps.json
-C:/Users/frederik/RiderProjects/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.runtimeconfig.json
-C:/Users/frederik/RiderProjects/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.runtimeconfig.dev.json
-C:/Users/frederik/RiderProjects/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.dll
-C:/Users/frederik/RiderProjects/So_CSHARP2/bin/Debug/net5.0/ref/So_CSHARP.dll
-C:/Users/frederik/RiderProjects/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.pdb
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.csprojAssemblyReference.cache
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.GeneratedMSBuildEditorConfig.editorconfig
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.AssemblyInfoInputs.cache
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.AssemblyInfo.cs
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.csproj.CoreCompileInputs.cache
-C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.genruntimeconfig.cache
 /Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.deps.json
 /Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.runtimeconfig.json
 /Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/bin/Debug/net5.0/So_CSHARP.runtimeconfig.dev.json
@@ -76,3 +60,19 @@ C:/Users/frederik/RiderProjects/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.genruntime
 /Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/obj/Debug/net5.0/ref/So_CSHARP.dll
 /Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.pdb
 /Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/obj/Debug/net5.0/So_CSHARP.genruntimeconfig.cache
+C:\Users\frederik\RiderProjects\So_CSHARP2\bin\Debug\net5.0\So_CSHARP.exe
+C:\Users\frederik\RiderProjects\So_CSHARP2\bin\Debug\net5.0\So_CSHARP.deps.json
+C:\Users\frederik\RiderProjects\So_CSHARP2\bin\Debug\net5.0\So_CSHARP.runtimeconfig.json
+C:\Users\frederik\RiderProjects\So_CSHARP2\bin\Debug\net5.0\So_CSHARP.runtimeconfig.dev.json
+C:\Users\frederik\RiderProjects\So_CSHARP2\bin\Debug\net5.0\So_CSHARP.dll
+C:\Users\frederik\RiderProjects\So_CSHARP2\bin\Debug\net5.0\ref\So_CSHARP.dll
+C:\Users\frederik\RiderProjects\So_CSHARP2\bin\Debug\net5.0\So_CSHARP.pdb
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.csprojAssemblyReference.cache
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.AssemblyInfoInputs.cache
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.AssemblyInfo.cs
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.csproj.CoreCompileInputs.cache
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.dll
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\ref\So_CSHARP.dll
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.pdb
+C:\Users\frederik\RiderProjects\So_CSHARP2\obj\Debug\net5.0\So_CSHARP.genruntimeconfig.cache

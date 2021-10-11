@@ -19,7 +19,7 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Model));
             using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/small.xml", FileMode.Open))
+                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\large.xml", FileMode.Open))
             {
                 res = (Model) xs.Deserialize(fileStream);
             }
@@ -29,34 +29,18 @@ namespace So_CSHARP
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallSolutionExample.xml"))
+            if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml"))
             {
                 {
-                    File.Delete("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallSolutionExample.xml");
+                    File.Delete("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml");
                 }
-                using (FileStream fileStream =
-                    new FileStream("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallSolutionExample.xml",
-                        FileMode.Create))
-                {
-                    xs2.Serialize(fileStream, res2);
-                }
+            }
 
-                Solution res3 = NewRandomSolution(res2, res);
-                var q = res2.Task2.SequenceEqual(res3.Task2);
-                
-                if (File.Exists("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallNewSolutionExample.xml"))
-                {
-                    {
-                        File.Delete("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallNewSolutionExample.xml");
-                    }
-                }
-
-                using (FileStream fileStream =
-                    new FileStream("/Users/martindanielnielsen/Projects/SO_CSHARP2/SO_CSHARP2/files/smallNewSolutionExample.xml",
-                        FileMode.Create))
-                {
-                    xs2.Serialize(fileStream, res3);
-                }
+            using (FileStream fileStream =
+                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml",
+                    FileMode.Create))
+            {
+                xs2.Serialize(fileStream, res2);
             }
         }
 
@@ -66,6 +50,7 @@ namespace So_CSHARP
         static Solution RandomSolution(Model a)
         {
             //Extract tasks from model a.
+            var maxMcp = a.Platform.MCP.Count;
 
             var taskList = a.Application.Task;
             taskList.Sort((x, y) => int.Parse(x.Deadline).CompareTo(int.Parse(y.Deadline)));
@@ -79,8 +64,8 @@ namespace So_CSHARP
                 Task2 task2 = new Task2();
                 task2.Id = t.Id;
                 task2.Deadline = t.Deadline;
-                task2.MCP = rand.Next(0, 2).ToString();
-                task2.Core = a.Platform.MCP[Int32.Parse(task2.MCP)].Core[rand.Next(0, 4)].Id;
+                task2.MCP = rand.Next(0, maxMcp).ToString();
+                task2.Core = a.Platform.MCP[Int32.Parse(task2.MCP)].Core[rand.Next(0, a.Platform.MCP[Int32.Parse(task2.MCP)].Core.Count)].Id;
                 var wcetfactor = a.Platform.MCP[int.Parse(task2.MCP)].Core[int.Parse(task2.Core)].WCETFactor;
                 task2.WCRT =
                     Convert.ToInt32(float.Parse(t.WCET, CultureInfo.InvariantCulture) *
