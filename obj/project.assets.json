@@ -8,24 +8,30 @@
     "net5.0": []
   },
   "packageFolders": {
-    "/Users/martindanielnielsen/.nuget/packages/": {}
+    "C:\\Users\\frederik\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/So_CSHARP.csproj",
+      "projectUniqueName": "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\So_CSHARP.csproj",
       "projectName": "So_CSHARP",
-      "projectPath": "/Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/So_CSHARP.csproj",
-      "packagesPath": "/Users/martindanielnielsen/.nuget/packages/",
-      "outputPath": "/Users/martindanielnielsen/Desktop/M.Sc. Computer Science and Engineering/1.Sem/System Optimization/Exercise/SysOpExercise/So_CSHARP2/obj/",
+      "projectPath": "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\So_CSHARP.csproj",
+      "packagesPath": "C:\\Users\\frederik\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "/Users/martindanielnielsen/.config/NuGet/NuGet.Config"
+        "C:\\Users\\frederik\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -58,7 +64,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.401/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.207\\RuntimeIdentifierGraph.json"
       }
     }
   }
