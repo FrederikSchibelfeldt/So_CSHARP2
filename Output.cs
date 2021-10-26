@@ -1,10 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace So_CSHARP
 {
     public class Output
     {
+        public void GiveOutput(Report rep)
+        {
+            
+            var xs2 = new XmlSerializer(typeof(Report));
+
+            //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
+
+            if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml"))
+            {
+                {
+                    File.Delete("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml");
+                }
+            }
+
+            using (FileStream fileStream =
+                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml",
+                    FileMode.Create))
+            {
+                xs2.Serialize(fileStream, rep);
+            }
+        }
+        
         [XmlRoot(ElementName="Solution")]
         public class Solution {
             [XmlAttribute(AttributeName="Runtime")]
