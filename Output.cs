@@ -49,7 +49,7 @@ namespace So_CSHARP
         }
 
         [XmlRoot(ElementName="Message")]
-        public  class Message2 {
+        public  class Message {
             [XmlElement(ElementName="Link")]
             public List<Link> Link { get; set; }
             [XmlAttribute(AttributeName="Name")]

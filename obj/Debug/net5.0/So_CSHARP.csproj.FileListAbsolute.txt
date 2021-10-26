@@ -146,7 +146,6 @@ C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.GeneratedMSBu
 C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.AssemblyInfoInputs.cache
 C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.AssemblyInfo.cs
 C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.csproj.CoreCompileInputs.cache
-C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.csproj.CopyComplete
 C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.dll
 C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\ref\So_CSHARP.dll
 C:\Users\Bruger\RiderProjects\So_CSHARP\obj\Debug\net5.0\So_CSHARP.pdb

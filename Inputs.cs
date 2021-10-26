@@ -6,13 +6,27 @@ namespace So_CSHARP
 {
     public class Inputs
     {
-        public static Architecture readApps()
+        public static Application readApps()
+        {
+            Application res = new Application();
+
+            var xs = new XmlSerializer(typeof(Application));
+            using (FileStream fileStream =
+                new FileStream("C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\files\\Apps.xml", FileMode.Open))
+            {
+                res = (Application) xs.Deserialize(fileStream);
+            }
+
+            return res;
+        }
+        
+        public static Architecture readConfig()
         {
             Architecture res = new Architecture();
 
             var xs = new XmlSerializer(typeof(Architecture));
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Apps.xml", FileMode.Open))
+                new FileStream("C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\files\\Config.xml", FileMode.Open))
             {
                 res = (Architecture) xs.Deserialize(fileStream);
             }
@@ -20,18 +34,10 @@ namespace So_CSHARP
             return res;
         }
         
-        public static Application readConfig()
-        {
-            Application res = new Application();
-
-            var xs = new XmlSerializer(typeof(Application));
-            using (FileStream fileStream =
-                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Config.xml", FileMode.Open))
-            {
-                res = (Application) xs.Deserialize(fileStream);
-            }
-
-            return res;
+        [XmlRoot(ElementName="Application")]
+        public class Application {
+            [XmlElement(ElementName="Message")]
+            public List<Message> Message { get; set; }
         }
         
         [XmlRoot(ElementName="Message")]
@@ -50,12 +56,6 @@ namespace So_CSHARP
             public string Deadline { get; set; }
         }
 
-        [XmlRoot(ElementName="Application")]
-        public class Application {
-            [XmlElement(ElementName="Message")]
-            public List<Message> Message { get; set; }
-        }
-        
         [XmlRoot(ElementName="Vertex")]
         public class Vertex {
             [XmlAttribute(AttributeName="Name")]
