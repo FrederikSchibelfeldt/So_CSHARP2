@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using static So_CSHARP.Inputs;
 
 namespace So_CSHARP
 {
