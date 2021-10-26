@@ -14,6 +14,9 @@ namespace So_CSHARP
     {
         static void Main(string[] args)
         {
+            var architecture = readApps();
+            var application = readConfig();
+
         }
 
     }
