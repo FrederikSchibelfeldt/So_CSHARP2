@@ -12,9 +12,6 @@ namespace So_CSHARP
     {
         static void Main(string[] args)
         {
-            Random rnd = new Random();
-            Console.WriteLine(rnd.Next(0, 2) == 1 ? "Mo er adem" : "Abdi er adem");
-
             Model res = new Model();
 
             var xs = new XmlSerializer(typeof(Model));
