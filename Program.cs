@@ -16,7 +16,7 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Model));
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\large.xml", FileMode.Open))
+                new FileStream("files\\large.xml", FileMode.Open))
             {
                 res = (Model) xs.Deserialize(fileStream);
             }
@@ -26,15 +26,15 @@ namespace So_CSHARP
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml"))
+            if (File.Exists("files\\largeSolutionExample.xml"))
             {
                 {
-                    File.Delete("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml");
+                    File.Delete("files\\largeSolutionExample.xml");
                 }
             }
 
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\largeSolutionExample.xml",
+                new FileStream("files\\largeSolutionExample.xml",
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, res2);
@@ -122,10 +122,12 @@ namespace So_CSHARP
             double t = 100000;
             var alpha = 0.0003;
             var c = RandomSolution(a);
+            var minutes = 5; 
+            Console.WriteLine("The program is set to run: " + minutes + " min");
 
             List<Solution> solutionSpace = new List<Solution>();
             time.Start();
-            while (time.Elapsed.TotalMinutes < 5)
+            while (time.Elapsed.TotalMinutes < minutes)
             {
                Solution d = NewRandomSolution(c, a);
                while (solutionSpace.Contains(d))
