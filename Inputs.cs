@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
+using Microsoft.VisualBasic;
 
 namespace So_CSHARP
 {
     public class Inputs
     {
+        static Dictionary<Vertex,List<string>> dict = new();
         public static Application readApps()
         {
             Application res = new Application();
@@ -32,6 +36,29 @@ namespace So_CSHARP
             }
 
             return res;
+        }
+
+        public static Output.Solution initialSolution(Application apps)
+        {
+            return null;
+        }
+
+        public static void mapVertex(Architecture arch)
+        {
+            List<string> sList = new List<string>();
+            foreach (var vertex in arch.Vertex)
+            {
+                foreach (var ed in arch.Edge)
+                {
+                    if (vertex.Name == ed.Source)
+                    {
+                        sList.Add(ed.Destination);
+                    }
+                }
+                dict.Add(vertex,sList);
+                sList.Clear();
+            }
+            Console.WriteLine(dict.Count);
         }
         
         [XmlRoot(ElementName="Application")]
