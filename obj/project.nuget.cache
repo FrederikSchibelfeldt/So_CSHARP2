@@ -1,14 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "mgi0yxv3kWTP9om/fXp7WdgUs5LsMBJiEKz6X22YTatqZT5d09g+kgE15mLT5ddn/JoFsoDFuzRO8z8dr8OPXg==",
+  "dgSpecHash": "hfkKWSQwg4xnwKZLc0z31oPtrWooHT73NuNIMgFvVijaMfRKTN6ZEoy/A8w2yMC73q9O5vOO0fGNDqHWNCPQxw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\So_CSHARP.csproj",
+  "projectFilePath": "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/So_CSHARP.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Bruger\\.nuget\\packages\\google.ortools\\9.1.9490\\google.ortools.9.1.9490.nupkg.sha512",
-    "C:\\Users\\Bruger\\.nuget\\packages\\google.ortools.runtime.linux-x64\\9.1.9490\\google.ortools.runtime.linux-x64.9.1.9490.nupkg.sha512",
-    "C:\\Users\\Bruger\\.nuget\\packages\\google.ortools.runtime.osx-x64\\9.1.9490\\google.ortools.runtime.osx-x64.9.1.9490.nupkg.sha512",
-    "C:\\Users\\Bruger\\.nuget\\packages\\google.ortools.runtime.win-x64\\9.1.9490\\google.ortools.runtime.win-x64.9.1.9490.nupkg.sha512",
-    "C:\\Users\\Bruger\\.nuget\\packages\\google.protobuf\\3.18.0\\google.protobuf.3.18.0.nupkg.sha512"
+    "/Users/martindanielnielsen/.nuget/packages/google.ortools/9.1.9490/google.ortools.9.1.9490.nupkg.sha512",
+    "/Users/martindanielnielsen/.nuget/packages/google.ortools.runtime.linux-x64/9.1.9490/google.ortools.runtime.linux-x64.9.1.9490.nupkg.sha512",
+    "/Users/martindanielnielsen/.nuget/packages/google.ortools.runtime.osx-x64/9.1.9490/google.ortools.runtime.osx-x64.9.1.9490.nupkg.sha512",
+    "/Users/martindanielnielsen/.nuget/packages/google.ortools.runtime.win-x64/9.1.9490/google.ortools.runtime.win-x64.9.1.9490.nupkg.sha512",
+    "/Users/martindanielnielsen/.nuget/packages/google.protobuf/3.18.0/google.protobuf.3.18.0.nupkg.sha512"
   ],
   "logs": []
 }

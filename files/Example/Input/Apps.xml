@@ -1,4 +1,4 @@
-<Application>
+ <Application>
 	<Message Name="F1" Source="ES1" Destination="ES2" Size="300" Period="2000" Deadline="2000">
 		</Message>
 	<Message Name="F2" Source="ES1" Destination="ES2" Size="400" Period="2000" Deadline="2000">

@@ -9,4 +9,74 @@
       <PackageReference Include="Google.OrTools" Version="9.1.9490" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="files\Example\" />
+      <None Remove="files\Small\" />
+      <None Remove="files\Medium\" />
+      <None Remove="files\Large\" />
+      <None Remove="files\Example\Input\" />
+      <None Remove="files\Example\Output\" />
+      <None Remove="files\Small\TC1\" />
+      <None Remove="files\Small\TC2\" />
+      <None Remove="files\Small\TC3\" />
+      <None Remove="files\Small\TC1\Input\" />
+      <None Remove="files\Small\TC1\Output\" />
+      <None Remove="files\Small\TC2\Input\" />
+      <None Remove="files\Small\TC2\Output\" />
+      <None Remove="files\Small\TC3\Input\" />
+      <None Remove="files\Small\TC3\Output\" />
+      <None Remove="files\Medium\TC4\" />
+      <None Remove="files\Medium\TC4\Input\" />
+      <None Remove="files\Medium\TC4\Output\" />
+      <None Remove="files\Medium\TC5\" />
+      <None Remove="files\Medium\TC6\" />
+      <None Remove="files\Medium\TC5\Input\" />
+      <None Remove="files\Medium\TC5\Output\" />
+      <None Remove="files\Medium\TC6\Input\" />
+      <None Remove="files\Medium\TC6\Output\" />
+      <None Remove="files\Large\TC7\" />
+      <None Remove="files\Large\TC8\" />
+      <None Remove="files\Large\TC9\" />
+      <None Remove="files\Large\TC7\Input\" />
+      <None Remove="files\Large\TC7\Output\" />
+      <None Remove="files\Large\TC8\Input\" />
+      <None Remove="files\Large\TC8\Output\" />
+      <None Remove="files\Large\TC9\Input\" />
+      <None Remove="files\Large\TC9\Output\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="files\Example\" />
+      <Folder Include="files\Small\" />
+      <Folder Include="files\Medium\" />
+      <Folder Include="files\Large\" />
+      <Folder Include="files\Example\Input\" />
+      <Folder Include="files\Example\Output\" />
+      <Folder Include="files\Small\TC1\" />
+      <Folder Include="files\Small\TC2\" />
+      <Folder Include="files\Small\TC3\" />
+      <Folder Include="files\Small\TC1\Input\" />
+      <Folder Include="files\Small\TC1\Output\" />
+      <Folder Include="files\Small\TC2\Input\" />
+      <Folder Include="files\Small\TC2\Output\" />
+      <Folder Include="files\Small\TC3\Input\" />
+      <Folder Include="files\Small\TC3\Output\" />
+      <Folder Include="files\Medium\TC4\" />
+      <Folder Include="files\Medium\TC4\Input\" />
+      <Folder Include="files\Medium\TC4\Output\" />
+      <Folder Include="files\Medium\TC5\" />
+      <Folder Include="files\Medium\TC6\" />
+      <Folder Include="files\Medium\TC5\Input\" />
+      <Folder Include="files\Medium\TC5\Output\" />
+      <Folder Include="files\Medium\TC6\Input\" />
+      <Folder Include="files\Medium\TC6\Output\" />
+      <Folder Include="files\Large\TC7\" />
+      <Folder Include="files\Large\TC8\" />
+      <Folder Include="files\Large\TC9\" />
+      <Folder Include="files\Large\TC7\Input\" />
+      <Folder Include="files\Large\TC7\Output\" />
+      <Folder Include="files\Large\TC8\Input\" />
+      <Folder Include="files\Large\TC8\Output\" />
+      <Folder Include="files\Large\TC9\Input\" />
+      <Folder Include="files\Large\TC9\Output\" />
+    </ItemGroup>
 </Project>
