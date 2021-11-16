@@ -9,14 +9,14 @@ namespace So_CSHARP
 {
     public class Inputs
     {
-        static Dictionary<Vertex,List<string>> dict = new();
+        static Dictionary<string,List<string>> dict = new();
         public static Application readApps()
         {
             Application res = new Application();
 
             var xs = new XmlSerializer(typeof(Application));
             using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Example\\Input\\Apps.xml", FileMode.Open))
             {
                 res = (Application) xs.Deserialize(fileStream);
             }
@@ -30,33 +30,97 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Architecture));
             using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Example\\Input\\Config.xml", FileMode.Open))
             {
                 res = (Architecture) xs.Deserialize(fileStream);
             }
+            mapVertex(res);
 
             return res;
         }
 
-        public static Output.Solution initialSolution(Application apps)
+        public static Output.Report initialSolution(Application apps)
         {
-            return null;
+            return findPath(apps);
         }
+
+        public static Output.Report findPath(Application apps)
+        {
+            var random = new Random();
+            var solution = new Output.Report();
+            var output = new Output();
+            solution.Message = new List<Output.Message>();
+            int i = 0;
+            foreach (var message in apps.Message)
+            {
+                var links = new List<Output.Link>();
+                string destination = message.Destination;
+                if (dict.ContainsKey(message.Source))
+                {
+                    List<string> s = dict[message.Source];
+                    int index = random.Next(s.Count);
+                    string d = s[index];
+                    var link = new Output.Link();
+                    link.Source = message.Source;
+                    link.Destination = d;
+                    link.Qnumber = random.Next(1,4).ToString();
+                    links.Add(link);
+                    while (d != destination)
+                    {
+                        if (dict.ContainsKey(d))
+                        {
+                            var source = d;
+                            List<string> s1 = dict[d];
+                            index = random.Next(s1.Count);
+                            link = new Output.Link();
+                            link.Source = source;
+                            d = s1[index];
+                            link.Destination = d;
+                            link.Qnumber = random.Next(1,4).ToString();
+                            links.Add(link);
+                        }
+                    }
+                }
+
+                var m = new Output.Message();
+                m.Link = links;
+                m.Name = message.Name;
+                
+                solution.Message.Add(m);
+                i++;
+            }
+
+            output.GiveOutput(solution);
+
+            return solution;
+        }
+        
+        
+        
+        
 
         public static void mapVertex(Architecture arch)
         {
-            List<string> sList = new List<string>();
             foreach (var vertex in arch.Vertex)
             {
+                List<string> sList = new List<string>();
                 foreach (var ed in arch.Edge)
                 {
                     if (vertex.Name == ed.Source)
                     {
                         sList.Add(ed.Destination);
                     }
+
+                    if (vertex.Name == ed.Destination)
+                    {
+                        sList.Add(ed.Source);
+                    }
                 }
-                dict.Add(vertex,sList);
-                sList.Clear();
+
+                if (sList.Count > 0)
+                {
+                    dict.Add(vertex.Name, sList);
+                }
             }
             Console.WriteLine(dict.Count);
         }

@@ -18,7 +18,7 @@ namespace So_CSHARP
         {
             var application = readApps();
             var arch = readConfig();
-            mapVertex(arch);
+            findPath(application);
         }
 
     }

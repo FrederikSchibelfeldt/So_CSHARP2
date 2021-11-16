@@ -13,15 +13,15 @@ namespace So_CSHARP
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/largeSolutionExample.xml"))
+            if (File.Exists("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Example\\Output\\ReportTest.xml"))
             {
                 {
-                    File.Delete("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/largeSolutionExample.xml");
+                    File.Delete("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Example\\Output\\ReportTest.xml");
                 }
             }
 
             using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/largeSolutionExample.xml",
+                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Example\\Output\\ReportTest.xml",
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);
@@ -62,7 +62,7 @@ namespace So_CSHARP
             [XmlElement(ElementName="Solution")]
             public Solution Solution { get; set; }
             [XmlElement(ElementName="Message")]
-            public List<Inputs.Message> Message { get; set; }
+            public List<Message> Message { get; set; }
         }
     }
 }
