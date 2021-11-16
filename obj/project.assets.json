@@ -504,19 +504,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/martindanielnielsen/.nuget/packages/": {}
+    "/Users/mo/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/So_CSHARP.csproj",
+      "projectUniqueName": "/Users/mo/02229/So_CSHARP2/So_CSHARP.csproj",
       "projectName": "So_CSHARP",
-      "projectPath": "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/So_CSHARP.csproj",
-      "packagesPath": "/Users/martindanielnielsen/.nuget/packages/",
-      "outputPath": "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/obj/",
+      "projectPath": "/Users/mo/02229/So_CSHARP2/So_CSHARP.csproj",
+      "packagesPath": "/Users/mo/.nuget/packages/",
+      "outputPath": "/Users/mo/02229/So_CSHARP2/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/martindanielnielsen/.config/NuGet/NuGet.Config"
+        "/Users/mo/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -560,7 +560,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.401/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.400/RuntimeIdentifierGraph.json"
       }
     }
   }

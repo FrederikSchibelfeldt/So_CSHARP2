@@ -57,6 +57,8 @@ namespace So_CSHARP
                 string destination = message.Destination;
                 if (dict.ContainsKey(message.Source))
                 {
+                    // Liste til at tilføje besgøte vertexes så vi ikke ender i et loop og besøger de samme vertexes
+                    List<string> visited = new List<string>();
                     List<string> s = dict[message.Source];
                     int index = random.Next(s.Count);
                     string d = s[index];
@@ -67,6 +69,8 @@ namespace So_CSHARP
                     links.Add(link);
                     while (d != destination)
                     {
+                        // tilføjer besøgte vertexes
+                        visited.Add(d);
                         if (dict.ContainsKey(d))
                         {
                             var source = d;
@@ -85,7 +89,7 @@ namespace So_CSHARP
                 var m = new Output.Message();
                 m.Link = links;
                 m.Name = message.Name;
-                
+                // indsæt formel for maxe2e etc.
                 solution.Message.Add(m);
                 i++;
             }
