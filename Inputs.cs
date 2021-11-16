@@ -16,7 +16,7 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Application));
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\files\\Apps.xml", FileMode.Open))
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
             {
                 res = (Application) xs.Deserialize(fileStream);
             }
@@ -30,7 +30,7 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Architecture));
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\Bruger\\RiderProjects\\So_CSHARP\\files\\Config.xml", FileMode.Open))
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
             {
                 res = (Architecture) xs.Deserialize(fileStream);
             }
@@ -60,6 +60,23 @@ namespace So_CSHARP
             }
             Console.WriteLine(dict.Count);
         }
+
+        public void AssignQueNumber()
+        {
+
+        }
+
+        public void CSQF(Dictionary<Vertex, List<string>> dict)
+        {
+            int counter = 0;
+            int cycleLen = 12; // 12 micro-seconds
+            //every time we go across a link in a possible route, a local counter is incremented.
+            //depending on the the AssignQueue function, this counter corresponds to 1, 2, or 3 multipled by cycleLen.
+            //
+            AssignQueNumber(); //when traversing from one vertex to another, assign queue number(1-3) to link object
+            
+        }
+
         
         [XmlRoot(ElementName="Application")]
         public class Application {
