@@ -16,7 +16,7 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Application));
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Example\\Input\\Apps.xml", FileMode.Open))
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
             {
                 res = (Application) xs.Deserialize(fileStream);
             }
@@ -30,7 +30,7 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Architecture));
             using (FileStream fileStream =
-                new FileStream("C:\\Users\\frederik\\RiderProjects\\So_CSHARP2\\files\\Example\\Input\\Config.xml", FileMode.Open))
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
             {
                 res = (Architecture) xs.Deserialize(fileStream);
             }
@@ -39,12 +39,12 @@ namespace So_CSHARP
             return res;
         }
 
-        public static Output.Report initialSolution(Application apps)
+        public static Output.Report initialSolution(Application apps, Architecture arch)
         {
-            return findPath(apps);
+            return findPath(apps, arch);
         }
 
-        public static Output.Report findPath(Application apps)
+        public static Output.Report findPath(Application apps, Architecture arch)
         {
             var random = new Random();
             var solution = new Output.Report();
@@ -53,42 +53,59 @@ namespace So_CSHARP
             int i = 0;
             foreach (var message in apps.Message)
             {
+                //Initiate maxE2E at 0 and cycle length, c at 12(microsec) for each message. 
+                //int maxE2E = 0;
+                //int cycleLength = 12;
                 var links = new List<Output.Link>();
                 string destination = message.Destination;
+                //add propDelay of given edge to maxE2E. 
+                //maxE2E = maxE2E + arch.Edge.
+
                 if (dict.ContainsKey(message.Source))
                 {
                     // Liste til at tilføje besgøte vertexes så vi ikke ender i et loop og besøger de samme vertexes
-                    List<string> visited = new List<string>();
-                    List<string> s = dict[message.Source];
-                    int index = random.Next(s.Count);
-                    string d = s[index];
+                    List<string> visitedNodes = new List<string>();
+                    visitedNodes.Add(message.Source);
+                    List<string> optionsFromCurrentNode = dict[message.Source];
+                    int randomIndex = random.Next(optionsFromCurrentNode.Count);
+                    string selectedDestinationFromCurrentNode = optionsFromCurrentNode[randomIndex];
                     var link = new Output.Link();
                     link.Source = message.Source;
-                    link.Destination = d;
+                    link.Destination = selectedDestinationFromCurrentNode;
                     link.Qnumber = random.Next(1,4).ToString();
                     links.Add(link);
-                    while (d != destination)
+                    //add QNumber * c to maxE2E
+                    while (selectedDestinationFromCurrentNode != destination)
                     {
                         // tilføjer besøgte vertexes
-                        visited.Add(d);
-                        if (dict.ContainsKey(d))
+                        visitedNodes.Add(selectedDestinationFromCurrentNode);
+                        if (dict.ContainsKey(selectedDestinationFromCurrentNode))
                         {
-                            var source = d;
-                            List<string> s1 = dict[d];
-                            index = random.Next(s1.Count);
+                            var source = selectedDestinationFromCurrentNode;
+                            List<string> selectedDestinationFromCurrentNode2 = dict[selectedDestinationFromCurrentNode];
                             link = new Output.Link();
                             link.Source = source;
-                            d = s1[index];
-                            link.Destination = d;
+
+                            randomIndex = random.Next(selectedDestinationFromCurrentNode2.Count);
+                            selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
+                            //Make sure selectedDestinationFromCurrentNode is not one which is already within visitedNodes.
+                            while (visitedNodes.Contains(selectedDestinationFromCurrentNode))
+                            {
+                                randomIndex = random.Next(selectedDestinationFromCurrentNode2.Count);
+                                selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
+                            }
+                            link.Destination = selectedDestinationFromCurrentNode;
                             link.Qnumber = random.Next(1,4).ToString();
                             links.Add(link);
+                            //add Qnumber * c to maxE2E
                         }
                     }
                 }
-
                 var m = new Output.Message();
                 m.Link = links;
                 m.Name = message.Name;
+                //set m.MaxE2E to a string convertet value of the calculated maxE2E. 
+                //m.MaxE2E = maxE2E
                 // indsæt formel for maxe2e etc.
                 solution.Message.Add(m);
                 i++;
@@ -108,16 +125,16 @@ namespace So_CSHARP
             foreach (var vertex in arch.Vertex)
             {
                 List<string> sList = new List<string>();
-                foreach (var ed in arch.Edge)
+                foreach (var edge in arch.Edge)
                 {
-                    if (vertex.Name == ed.Source)
+                    if (vertex.Name == edge.Source)
                     {
-                        sList.Add(ed.Destination);
+                        sList.Add(edge.Destination);
                     }
 
-                    if (vertex.Name == ed.Destination)
+                    if (vertex.Name == edge.Destination)
                     {
-                        sList.Add(ed.Source);
+                        sList.Add(edge.Source);
                     }
                 }
 
@@ -127,22 +144,6 @@ namespace So_CSHARP
                 }
             }
             Console.WriteLine(dict.Count);
-        }
-
-        public void AssignQueNumber()
-        {
-
-        }
-
-        public void CSQF(Dictionary<Vertex, List<string>> dict)
-        {
-            int counter = 0;
-            int cycleLen = 12; // 12 micro-seconds
-            //every time we go across a link in a possible route, a local counter is incremented.
-            //depending on the the AssignQueue function, this counter corresponds to 1, 2, or 3 multipled by cycleLen.
-            //
-            AssignQueNumber(); //when traversing from one vertex to another, assign queue number(1-3) to link object
-            
         }
 
         
@@ -172,6 +173,8 @@ namespace So_CSHARP
         public class Vertex {
             [XmlAttribute(AttributeName="Name")]
             public string Name { get; set; }
+            [XmlAttribute(AttributeName="MaxE2E")]
+            public string MaxE2E { get; set; }
         }
 
         [XmlRoot(ElementName="Edge")]
