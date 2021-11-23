@@ -54,12 +54,10 @@ namespace So_CSHARP
             foreach (var message in apps.Message)
             {
                 //Initiate maxE2E at 0 and cycle length, c at 12(microsec) for each message. 
-                //int maxE2E = 0;
-                //int cycleLength = 12;
+                int maxE2E = 0;
+                int cycleLength = 12;
                 var links = new List<Output.Link>();
                 string destination = message.Destination;
-                //add propDelay of given edge to maxE2E. 
-                //maxE2E = maxE2E + arch.Edge.
 
                 if (dict.ContainsKey(message.Source))
                 {
@@ -73,8 +71,18 @@ namespace So_CSHARP
                     link.Source = message.Source;
                     link.Destination = selectedDestinationFromCurrentNode;
                     link.Qnumber = random.Next(1,4).ToString();
-                    links.Add(link);
+
+                    //add PropDelay of given edge to maxE2E.
+                    foreach (var edge in arch.Edge)
+                    {
+                        if (link.Source == edge.Source && link.Destination == edge.Destination)
+                        {
+                            maxE2E += Int32.Parse(edge.PropDelay);
+                        }
+                    }
                     //add QNumber * c to maxE2E
+                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
+                    links.Add(link);
                     while (selectedDestinationFromCurrentNode != destination)
                     {
                         // tilføjer besøgte vertexes
@@ -95,18 +103,23 @@ namespace So_CSHARP
                                 selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
                             }
                             link.Destination = selectedDestinationFromCurrentNode;
+                            foreach (var edge in arch.Edge)
+                            {
+                                if (link.Source == edge.Source && link.Destination == edge.Destination)
+                                {
+                                    maxE2E += Int32.Parse(edge.PropDelay);
+                                }
+                            }
                             link.Qnumber = random.Next(1,4).ToString();
+                            maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
                             links.Add(link);
-                            //add Qnumber * c to maxE2E
                         }
                     }
                 }
                 var m = new Output.Message();
                 m.Link = links;
                 m.Name = message.Name;
-                //set m.MaxE2E to a string convertet value of the calculated maxE2E. 
-                //m.MaxE2E = maxE2E
-                // indsæt formel for maxe2e etc.
+                m.MaxE2E = maxE2E.ToString();
                 solution.Message.Add(m);
                 i++;
             }
