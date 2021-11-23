@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -8,20 +9,24 @@ namespace So_CSHARP
     {
         public void GiveOutput(Report rep)
         {
-
+            // Init path
+            string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory; 
+            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Output\ReportTest.xml");
+            string sFilePath = System.IO.Path.GetFullPath(sFile);
+            
             var xs2 = new XmlSerializer(typeof(Report));
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml"))
+            if (File.Exists(sFilePath))
             {
                 {
-                    File.Delete("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml");
-                }
+                    File.Delete(sFilePath);
+                } 
             }
 
             using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml",
+                new FileStream(sFilePath,
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);
