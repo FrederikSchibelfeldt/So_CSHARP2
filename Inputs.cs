@@ -16,21 +16,21 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Application));
             using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
             {
                 res = (Application) xs.Deserialize(fileStream);
             }
 
             return res;
         }
-        
+
         public static Architecture readConfig()
         {
             Architecture res = new Architecture();
 
             var xs = new XmlSerializer(typeof(Architecture));
             using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
             {
                 res = (Architecture) xs.Deserialize(fileStream);
             }
@@ -53,7 +53,7 @@ namespace So_CSHARP
             int i = 0;
             foreach (var message in apps.Message)
             {
-                //Initiate maxE2E at 0 and cycle length, c at 12(microsec) for each message. 
+                //Initiate maxE2E at 0 and cycle length, c at 12(microsec) for each message.
                 int maxE2E = 0;
                 int cycleLength = 12;
                 var links = new List<Output.Link>();
@@ -75,7 +75,7 @@ namespace So_CSHARP
                     //add PropDelay of given edge to maxE2E.
                     foreach (var edge in arch.Edge)
                     {
-                        if (link.Source == edge.Source && link.Destination == edge.Destination)
+                        if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
                         {
                             maxE2E += Int32.Parse(edge.PropDelay);
                         }
@@ -105,7 +105,7 @@ namespace So_CSHARP
                             link.Destination = selectedDestinationFromCurrentNode;
                             foreach (var edge in arch.Edge)
                             {
-                                if (link.Source == edge.Source && link.Destination == edge.Destination)
+                                if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
                                 {
                                     maxE2E += Int32.Parse(edge.PropDelay);
                                 }
@@ -128,10 +128,10 @@ namespace So_CSHARP
 
             return solution;
         }
-        
-        
-        
-        
+
+
+
+
 
         public static void mapVertex(Architecture arch)
         {
@@ -159,13 +159,13 @@ namespace So_CSHARP
             Console.WriteLine(dict.Count);
         }
 
-        
+
         [XmlRoot(ElementName="Application")]
         public class Application {
             [XmlElement(ElementName="Message")]
             public List<Message> Message { get; set; }
         }
-        
+
         [XmlRoot(ElementName="Message")]
         public class Message {
             [XmlAttribute(AttributeName="Name")]
