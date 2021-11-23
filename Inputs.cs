@@ -78,13 +78,16 @@ namespace So_CSHARP
                     link.Qnumber = random.Next(1,4).ToString();
 
                     //add PropDelay of given edge to maxE2E.
+                    /**
                     foreach (var edge in arch.Edge)
                     {
-                        if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
+                        if (link.Source == edge.Source && link.Destination == edge.Destination)
                         {
                             maxE2E += Int32.Parse(edge.PropDelay);
                         }
                     }
+                    */
+                    maxE2E += 10;
                     //add QNumber * c to maxE2E
                     maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
                     links.Add(link);
@@ -108,13 +111,16 @@ namespace So_CSHARP
                                 selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
                             }
                             link.Destination = selectedDestinationFromCurrentNode;
+                            /**
                             foreach (var edge in arch.Edge)
                             {
-                                if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
+                                if (link.Source == edge.Source && link.Destination == edge.Destination)
                                 {
                                     maxE2E += Int32.Parse(edge.PropDelay);
                                 }
                             }
+                            */
+                            maxE2E += 10;
                             link.Qnumber = random.Next(1,4).ToString();
                             maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
                             links.Add(link);
@@ -134,8 +140,50 @@ namespace So_CSHARP
             return solution;
         }
 
+        public static int meanBandWidth(Application apps, Architecture arch)
+        {
+            int counter = 0;
+            int sum = 0;
+            foreach (var arc in arch.Edge)
+            {
+                sum += Int32.Parse(arc.BW);
+                counter++;
+
+            }
+            return sum / counter;
+        }
+
+        public static int meanE2E(Application apps, Architecture arch)
+        {
+            int counter = 0;
+            int sum = 0;
+            foreach (var vertex in arch.Vertex)
+            {
+                sum += Int32.Parse(vertex.MaxE2E);
+                counter++;
+            }
+            return sum / counter;
+        }
 
 
+        public static int deadlineConstraint(Application apps, Architecture arch)
+        {
+            //Make sure to tie together, the name (e.g. Name="F1", in Aps.xml), with
+            //the corresponding maxE2E.
+            //The solution is properbly best of, when returning an int, at which the
+            //int indicates how many deadlines are not currently being met,
+            //and zero meaning that all deadlines are met.
+            //In ReportTest.xml, it can be seen that a mesage consists of e.g.
+            //(  <Message Name="F1" maxE2E="90">). thus it should be easy to tie together.
+
+            foreach (var app in apps.Message)
+            {
+                string str = app.Name;
+                string deadline = app.Deadline;
+
+
+            }
+        }
 
 
         public static void mapVertex(Architecture arch)
@@ -164,13 +212,12 @@ namespace So_CSHARP
             Console.WriteLine(dict.Count);
         }
 
-
         [XmlRoot(ElementName="Application")]
         public class Application {
             [XmlElement(ElementName="Message")]
             public List<Message> Message { get; set; }
         }
-
+        
         [XmlRoot(ElementName="Message")]
         public class Message {
             [XmlAttribute(AttributeName="Name")]
