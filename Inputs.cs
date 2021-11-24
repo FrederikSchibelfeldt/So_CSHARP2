@@ -10,18 +10,14 @@ namespace So_CSHARP
     public class Inputs
     {
         static Dictionary<string,List<string>> dict = new();
-        static string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;  
         public static Application readApps()
         {
-
-            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Input\Apps.xml");
-            string sFilePath = Path.GetFullPath(sFile);
             Application res = new Application();
 
             var xs = new XmlSerializer(typeof(Application));
-            using (FileStream fileStream =
-                new FileStream(sFilePath, FileMode.Open))
             {
+                using (FileStream fileStream =
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
                 res = (Application) xs.Deserialize(fileStream);
             }
 
@@ -31,13 +27,11 @@ namespace So_CSHARP
         public static Architecture readConfig()
         {
             Architecture res = new Architecture();
-            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Input\Config.xml");
-            string sFilePath = Path.GetFullPath(sFile);
             var xs = new XmlSerializer(typeof(Architecture));
-            using (FileStream fileStream =
-                new FileStream(sFilePath, FileMode.Open))
             {
-                res = (Architecture) xs.Deserialize(fileStream);
+                using (FileStream fileStream =
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                    res = (Architecture) xs.Deserialize(fileStream);
             }
             mapVertex(res);
 
@@ -78,16 +72,13 @@ namespace So_CSHARP
                     link.Qnumber = random.Next(1,4).ToString();
 
                     //add PropDelay of given edge to maxE2E.
-                    /**
                     foreach (var edge in arch.Edge)
                     {
-                        if (link.Source == edge.Source && link.Destination == edge.Destination)
+                        if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
                         {
                             maxE2E += Int32.Parse(edge.PropDelay);
                         }
                     }
-                    */
-                    maxE2E += 10;
                     //add QNumber * c to maxE2E
                     maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
                     links.Add(link);
@@ -111,16 +102,14 @@ namespace So_CSHARP
                                 selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
                             }
                             link.Destination = selectedDestinationFromCurrentNode;
-                            /**
                             foreach (var edge in arch.Edge)
                             {
-                                if (link.Source == edge.Source && link.Destination == edge.Destination)
+                                if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
                                 {
                                     maxE2E += Int32.Parse(edge.PropDelay);
                                 }
                             }
-                            */
-                            maxE2E += 10;
+                            
                             link.Qnumber = random.Next(1,4).ToString();
                             maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
                             links.Add(link);
@@ -135,10 +124,48 @@ namespace So_CSHARP
                 i++;
             }
 
-            output.GiveOutput(solution);
-
             return solution;
         }
+
+
+        //Add functionsimilar to NweRandomSOlution in the master branch. 
+
+
+        public static Output.Report simmulatedAnnealing(Application application, Architecture arch)
+        {
+
+
+            var random = new Random();
+            var solution = new solution;
+            var finalsolution = new Output.Report();
+            var output = new Output();
+            List<solution> SolutionSpace = new List<solution>;
+
+            var T = 1000;
+            var alpha = 0.003;
+            var initialSolution = findPath(application, arch);
+
+            while (T > 1)
+            {
+
+            }
+
+            output.GiveOutput(solution);
+
+            return finalSolution;
+
+        }
+
+
+        public static int costFunction()
+        {
+            //should go through every elem in the solution, and
+            //compute whether the solution is better than the original solution
+            //by the use of the three constraint functions below.
+            //if a particular constraint is not fulfilled -> miss penalty. 
+        }
+
+
 
         public static int meanBandWidth(Application apps, Architecture arch)
         {
@@ -148,7 +175,6 @@ namespace So_CSHARP
             {
                 sum += Int32.Parse(arc.BW);
                 counter++;
-
             }
             return sum / counter;
         }
@@ -166,27 +192,18 @@ namespace So_CSHARP
         }
 
 
-        public static int deadlineConstraint(Application apps, Architecture arch)
-        {
-            //Make sure to tie together, the name (e.g. Name="F1", in Aps.xml), with
-            //the corresponding maxE2E.
-            //The solution is properbly best of, when returning an int, at which the
-            //int indicates how many deadlines are not currently being met,
-            //and zero meaning that all deadlines are met.
-            //In ReportTest.xml, it can be seen that a mesage consists of e.g.
-            //(  <Message Name="F1" maxE2E="90">). thus it should be easy to tie together.
-
-            foreach (var app in apps.Message)
+        public static bool deadlineContraint(int maxE2E, string deadline) {
+            if (maxE2E < Int32.Parse(deadline))
             {
-                string str = app.Name;
-                string deadline = app.Deadline;
-
-
+                return true;
+            }
+            else {
+                return false;
             }
         }
 
 
-        public static void mapVertex(Architecture arch)
+public static void mapVertex(Architecture arch)
         {
             foreach (var vertex in arch.Vertex)
             {

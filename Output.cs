@@ -9,24 +9,20 @@ namespace So_CSHARP
     {
         public void GiveOutput(Report rep)
         {
-            // Init path
-            string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory; 
-            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Output\ReportTest.xml");
-            string sFilePath = System.IO.Path.GetFullPath(sFile);
-            
+
             var xs2 = new XmlSerializer(typeof(Report));
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists(sFilePath))
+            if (File.Exists("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml"))
             {
                 {
-                    File.Delete(sFilePath);
-                } 
+                    File.Delete("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml");
+                }
             }
 
             using (FileStream fileStream =
-                new FileStream(sFilePath,
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml",
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);
