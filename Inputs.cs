@@ -319,6 +319,7 @@ namespace So_CSHARP
                 }
 
                 vertex.vertexNeighbors = neighbors.ToList();
+            }
             System.Console.WriteLine();
         
         }
