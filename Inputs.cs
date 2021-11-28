@@ -9,7 +9,7 @@ namespace So_CSHARP
 {
     public class Inputs
     {
-        static Dictionary<string,List<string>> dict = new();
+        static Dictionary<string, List<string>> dict = new();
         public static Application readApps()
         {
             Application res = new Application();
@@ -18,7 +18,7 @@ namespace So_CSHARP
             {
                 using (FileStream fileStream =
                 new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
-                res = (Application) xs.Deserialize(fileStream);
+                    res = (Application)xs.Deserialize(fileStream);
             }
 
             return res;
@@ -31,7 +31,7 @@ namespace So_CSHARP
             {
                 using (FileStream fileStream =
                 new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
-                    res = (Architecture) xs.Deserialize(fileStream);
+                    res = (Architecture)xs.Deserialize(fileStream);
             }
             mapVertex(res);
 
@@ -69,7 +69,7 @@ namespace So_CSHARP
                     var link = new Output.Link();
                     link.Source = message.Source;
                     link.Destination = selectedDestinationFromCurrentNode;
-                    link.Qnumber = random.Next(1,4).ToString();
+                    link.Qnumber = random.Next(1, 4).ToString();
 
                     //add PropDelay of given edge to maxE2E.
                     foreach (var edge in arch.Edge)
@@ -109,8 +109,8 @@ namespace So_CSHARP
                                     maxE2E += Int32.Parse(edge.PropDelay);
                                 }
                             }
-                            
-                            link.Qnumber = random.Next(1,4).ToString();
+
+                            link.Qnumber = random.Next(1, 4).ToString();
                             maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
                             links.Add(link);
                         }
@@ -136,10 +136,10 @@ namespace So_CSHARP
 
 
             var random = new Random();
-            var solution = new solution;
+            var solution = new Output.Report();
             var finalsolution = new Output.Report();
             var output = new Output();
-            List<solution> SolutionSpace = new List<solution>;
+            var SolutionSpace = new List<Output.Report>();
 
             var T = 1000;
             var alpha = 0.003;
@@ -192,18 +192,20 @@ namespace So_CSHARP
         }
 
 
-        public static bool deadlineContraint(int maxE2E, string deadline) {
+        public static bool deadlineContraint(int maxE2E, string deadline)
+        {
             if (maxE2E < Int32.Parse(deadline))
             {
                 return true;
             }
-            else {
+            else
+            {
                 return false;
             }
         }
 
 
-public static void mapVertex(Architecture arch)
+        public static void mapVertex(Architecture arch)
         {
             foreach (var vertex in arch.Vertex)
             {
@@ -229,55 +231,60 @@ public static void mapVertex(Architecture arch)
             Console.WriteLine(dict.Count);
         }
 
-        [XmlRoot(ElementName="Application")]
-        public class Application {
-            [XmlElement(ElementName="Message")]
+        [XmlRoot(ElementName = "Application")]
+        public class Application
+        {
+            [XmlElement(ElementName = "Message")]
             public List<Message> Message { get; set; }
         }
-        
-        [XmlRoot(ElementName="Message")]
-        public class Message {
-            [XmlAttribute(AttributeName="Name")]
+
+        [XmlRoot(ElementName = "Message")]
+        public class Message
+        {
+            [XmlAttribute(AttributeName = "Name")]
             public string Name { get; set; }
-            [XmlAttribute(AttributeName="Source")]
+            [XmlAttribute(AttributeName = "Source")]/
             public string Source { get; set; }
-            [XmlAttribute(AttributeName="Destination")]
+            [XmlAttribute(AttributeName = "Destination")]
             public string Destination { get; set; }
-            [XmlAttribute(AttributeName="Size")]
+            [XmlAttribute(AttributeName = "Size")]
             public string Size { get; set; }
-            [XmlAttribute(AttributeName="Period")]
+            [XmlAttribute(AttributeName = "Period")]
             public string Period { get; set; }
-            [XmlAttribute(AttributeName="Deadline")]
+            [XmlAttribute(AttributeName = "Deadline")]
             public string Deadline { get; set; }
         }
 
-        [XmlRoot(ElementName="Vertex")]
-        public class Vertex {
-            [XmlAttribute(AttributeName="Name")]
+        [XmlRoot(ElementName = "Vertex")]
+        public class Vertex
+        {
+            [XmlAttribute(AttributeName = "Name")]
             public string Name { get; set; }
-            [XmlAttribute(AttributeName="MaxE2E")]
+            [XmlAttribute(AttributeName = "MaxE2E")]
             public string MaxE2E { get; set; }
         }
 
-        [XmlRoot(ElementName="Edge")]
-        public class Edge {
-            [XmlAttribute(AttributeName="Id")]
+        [XmlRoot(ElementName = "Edge")]
+        public class Edge
+        {
+            [XmlAttribute(AttributeName = "Id")]
             public string Id { get; set; }
-            [XmlAttribute(AttributeName="BW")]
+            [XmlAttribute(AttributeName = "BW")]
             public string BW { get; set; }
-            [XmlAttribute(AttributeName="PropDelay")]
+            [XmlAttribute(AttributeName = "PropDelay")]
             public string PropDelay { get; set; }
-            [XmlAttribute(AttributeName="Source")]
+            [XmlAttribute(AttributeName = "Source")]
             public string Source { get; set; }
-            [XmlAttribute(AttributeName="Destination")]
+            [XmlAttribute(AttributeName = "Destination")]
             public string Destination { get; set; }
         }
 
-        [XmlRoot(ElementName="Architecture")]
-        public class Architecture {
-            [XmlElement(ElementName="Vertex")]
+        [XmlRoot(ElementName = "Architecture")]
+        public class Architecture
+        {
+            [XmlElement(ElementName = "Vertex")]
             public List<Vertex> Vertex { get; set; }
-            [XmlElement(ElementName="Edge")]
+            [XmlElement(ElementName = "Edge")]
             public List<Edge> Edge { get; set; }
         }
     }
