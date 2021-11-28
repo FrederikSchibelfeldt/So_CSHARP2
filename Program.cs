@@ -19,6 +19,8 @@ namespace So_CSHARP
             var application = readApps();
             var arch = readConfig();
             populateFields(application,arch);
+            mapVertex(arch);
+            mapVertexNeighbors(arch);
  //           findPath(application,arch);
             FindMessageRoutes(application,arch);
         //    simmulatedAnnealing(findPath(application,arch), application, arch)

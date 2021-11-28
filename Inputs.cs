@@ -33,8 +33,6 @@ namespace So_CSHARP
                 new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
-            mapVertex(res);
-            mapVertexNeighbors(res);
 
             return res;
         }
@@ -370,7 +368,7 @@ namespace So_CSHARP
             isVisited.Add(source);
     
             // For all neighbor vertices 
-            foreach(Vertex vertex in source.vertexNeighbors)
+            foreach(var vertex in source.vertexNeighbors)
             {
                                     Console.WriteLine(string.Join(" ", vertex));
                 if (!isVisited.Contains(vertex)) {
