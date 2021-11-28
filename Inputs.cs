@@ -34,9 +34,64 @@ namespace So_CSHARP
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             mapVertex(res);
+            mapVertexNeighbors(res);
 
             return res;
         }
+
+        public static void populateFields(Application apps, Architecture arch){
+            
+            foreach (Message message in apps.Messages)
+            {
+                // Populate message with source and dist Vertex objects
+                foreach (Vertex vertex in arch.Vertices)
+                {
+                    if (vertex.Name == message.Source)
+                    {
+                        message.SourceVertex = vertex;
+                    }
+
+                    if (vertex.Name == message.Destination)
+                    {
+                        message.DestinationVertex = vertex;
+                    }
+                }
+
+                if (message.Source == null || message.Destination == null)
+                {
+                    Console.WriteLine("Source or Destination EMPTY message: " + message);
+                     Console.WriteLine("HUH HUH ?? \n");
+                    Environment.Exit(0);
+                }
+            
+            }
+
+            foreach (Edge edge in arch.Edges)
+            {
+                // Populate message with source and dist Vertex objects
+                foreach (Vertex vertex in arch.Vertices)
+                {
+                    if (vertex.Name == edge.Source)
+                    {
+                        edge.SourceVertex = vertex;
+                    }
+
+                    if (vertex.Name == edge.Destination)
+                    {
+                        edge.DestinationVertex = vertex;
+                    }
+                }
+
+                if (edge.Source == null || edge.Destination == null)
+                {
+                    Console.WriteLine("Source or Destination EMPTY EDGE: " + edge);
+                     Console.WriteLine("HUH HUH ?? \n");
+                    Environment.Exit(0);
+                }
+            
+            }
+        }
+        
 
         public static Output.Report initialSolution(Application apps, Architecture arch)
         {
@@ -50,7 +105,7 @@ namespace So_CSHARP
             var output = new Output();
             solution.Message = new List<Output.Message>();
             int i = 0;
-            foreach (var message in apps.Message)
+            foreach (var message in apps.Messages)
             {
                 //Initiate maxE2E at 0 and cycle length, c at 12(microsec) for each message.
                 int maxE2E = 0;
@@ -72,7 +127,7 @@ namespace So_CSHARP
                     link.Qnumber = random.Next(1, 4).ToString();
 
                     //add PropDelay of given edge to maxE2E.
-                    foreach (var edge in arch.Edge)
+                    foreach (var edge in arch.Edges)
                     {
                         if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
                         {
@@ -102,7 +157,7 @@ namespace So_CSHARP
                                 selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
                             }
                             link.Destination = selectedDestinationFromCurrentNode;
-                            foreach (var edge in arch.Edge)
+                            foreach (var edge in arch.Edges)
                             {
                                 if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
                                 {
@@ -131,7 +186,7 @@ namespace So_CSHARP
         //Add functionsimilar to NweRandomSOlution in the master branch. 
 
 
-        public static Output.Report simmulatedAnnealing(Application application, Architecture arch)
+        public static void simmulatedAnnealing(Application application, Architecture arch)
         {
 
 
@@ -152,12 +207,12 @@ namespace So_CSHARP
 
             output.GiveOutput(solution);
 
-            return finalSolution;
+         //   return finalSolution;
 
         }
 
 
-        public static int costFunction()
+        public static void costFunction()
         {
             //should go through every elem in the solution, and
             //compute whether the solution is better than the original solution
@@ -171,7 +226,7 @@ namespace So_CSHARP
         {
             int counter = 0;
             int sum = 0;
-            foreach (var arc in arch.Edge)
+            foreach (var arc in arch.Edges)
             {
                 sum += Int32.Parse(arc.BW);
                 counter++;
@@ -183,7 +238,7 @@ namespace So_CSHARP
         {
             int counter = 0;
             int sum = 0;
-            foreach (var vertex in arch.Vertex)
+            foreach (var vertex in arch.Vertices)
             {
                 sum += Int32.Parse(vertex.MaxE2E);
                 counter++;
@@ -207,10 +262,10 @@ namespace So_CSHARP
 
         public static void mapVertex(Architecture arch)
         {
-            foreach (var vertex in arch.Vertex)
+            foreach (var vertex in arch.Vertices)
             {
                 List<string> sList = new List<string>();
-                foreach (var edge in arch.Edge)
+                foreach (var edge in arch.Edges)
                 {
                     if (vertex.Name == edge.Source)
                     {
@@ -231,11 +286,114 @@ namespace So_CSHARP
             Console.WriteLine(dict.Count);
         }
 
+        public static void mapVertexNeighbors(Architecture arch)
+        {
+            foreach (var vertex in arch.Vertices)
+
+            {
+
+
+                List<Vertex> neighbors = new();
+                List<Edge> edgeNeighbors = new();
+
+
+                foreach (Edge edge in arch.Edges)
+                {
+                    if (edge.Destination == vertex.Name || edge.Source == vertex.Name)
+                    {
+                        edgeNeighbors.Add(edge);
+                    }
+                }
+
+                foreach (Edge edge in edgeNeighbors)
+                {
+                    if (edge.Source != vertex.Name)
+                    {
+                        neighbors.Add(edge.SourceVertex);
+                    }
+
+                    if (edge.Destination != vertex.Name)
+                    {
+                        neighbors.Add(edge.DestinationVertex);
+                    }
+                }
+
+                vertex.vertexNeighbors = neighbors.ToList();
+            System.Console.WriteLine();
+        
+        }
+
+        public static void FindMessageRoutes(Application apps, Architecture arch)
+        {
+            int count_test = 0;
+
+            List<string> visited;
+
+            foreach (Message message in apps.Messages)
+            {
+                visited = new();
+                visited.Add(message.Source);
+
+                
+                // Color console "skrift" for testing purposes
+                Console.ForegroundColor =  count_test % 2 ==  0 ? ConsoleColor.Cyan :  ConsoleColor.Green; 
+                
+
+            List<Vertex> isVisited =new();
+            List<Vertex> pathList = new();
+    
+            // add source to path
+            pathList.Add(message.SourceVertex);
+            isVisited.Add(message.SourceVertex);
+    
+            Console.WriteLine("--------------------findAPath--------------------");
+            findAPath(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
+
+                count_test++;
+
+                Console.WriteLine("------------------------------------------");
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        private static void findAPath(Vertex source, Vertex destination,Message message,List<Vertex> isVisited, List<Vertex> localPathList)
+        {
+            Console.WriteLine(string.Join(" start FIND A PATH", ""));
+            if (source.Equals(destination)) {
+                message.PossibleVerticesPath.Add(localPathList);
+
+                return;
+            }
+    
+            // Mark the current node
+            isVisited.Add(source);
+    
+            // For all neighbor vertices 
+            foreach(Vertex vertex in source.vertexNeighbors)
+            {
+                                    Console.WriteLine(string.Join(" ", vertex));
+                if (!isVisited.Contains(vertex)) {
+                    // store current node
+                    // in path[]
+                    localPathList.Add(vertex);
+
+                    findAPath(vertex, destination, message, isVisited,
+                                    localPathList);
+    
+                    // remove current node in path
+                    localPathList.Remove(vertex);
+                }
+            }
+            isVisited.Remove(source);
+        }
+    
+
+
         [XmlRoot(ElementName = "Application")]
         public class Application
         {
             [XmlElement(ElementName = "Message")]
-            public List<Message> Message { get; set; }
+            public List<Message> Messages { get; set; }
         }
 
         [XmlRoot(ElementName = "Message")]
@@ -243,16 +401,19 @@ namespace So_CSHARP
         {
             [XmlAttribute(AttributeName = "Name")]
             public string Name { get; set; }
-            [XmlAttribute(AttributeName = "Source")]/
+            [XmlAttribute(AttributeName = "Source")]
             public string Source { get; set; }
+            public Vertex SourceVertex { get; set; }
             [XmlAttribute(AttributeName = "Destination")]
             public string Destination { get; set; }
+            public Vertex DestinationVertex { get; set; }
             [XmlAttribute(AttributeName = "Size")]
             public string Size { get; set; }
             [XmlAttribute(AttributeName = "Period")]
             public string Period { get; set; }
             [XmlAttribute(AttributeName = "Deadline")]
             public string Deadline { get; set; }
+            public List<List<Vertex>> PossibleVerticesPath { get; set; }
         }
 
         [XmlRoot(ElementName = "Vertex")]
@@ -262,6 +423,7 @@ namespace So_CSHARP
             public string Name { get; set; }
             [XmlAttribute(AttributeName = "MaxE2E")]
             public string MaxE2E { get; set; }
+            public List<Vertex> vertexNeighbors { get; set; }
         }
 
         [XmlRoot(ElementName = "Edge")]
@@ -277,15 +439,18 @@ namespace So_CSHARP
             public string Source { get; set; }
             [XmlAttribute(AttributeName = "Destination")]
             public string Destination { get; set; }
+            public Vertex SourceVertex { get; set; }
+            public Vertex DestinationVertex { get; set; }
         }
 
         [XmlRoot(ElementName = "Architecture")]
         public class Architecture
         {
             [XmlElement(ElementName = "Vertex")]
-            public List<Vertex> Vertex { get; set; }
+            public List<Vertex> Vertices { get; set; 
+            }
             [XmlElement(ElementName = "Edge")]
-            public List<Edge> Edge { get; set; }
+            public List<Edge> Edges { get; set; }
         }
     }
 }

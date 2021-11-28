@@ -18,8 +18,10 @@ namespace So_CSHARP
         {
             var application = readApps();
             var arch = readConfig();
-            findPath(application,arch);
-            simmulatedAnnealing(findPath(application,arch), application, arch)
+            populateFields(application,arch);
+ //           findPath(application,arch);
+            FindMessageRoutes(application,arch);
+        //    simmulatedAnnealing(findPath(application,arch), application, arch)
         }
 
     }
