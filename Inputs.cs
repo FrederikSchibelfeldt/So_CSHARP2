@@ -92,11 +92,6 @@ namespace So_CSHARP
         }
         
 
-        public static Output.Report initialSolution(Application apps, Architecture arch)
-        {
-            return findPath(apps, arch);
-        }
-
         public static Output.Report findPath(Application apps, Architecture arch)
         {
             var random = new Random();
@@ -123,7 +118,7 @@ namespace So_CSHARP
                     var link = new Output.Link();
                     link.Source = message.Source;
                     link.Destination = selectedDestinationFromCurrentNode;
-                    link.Qnumber = random.Next(1, 4).ToString();
+                    link.Qnumber = random.Next(1,4).ToString();
 
                     //add PropDelay of given edge to maxE2E.
                     foreach (var edge in arch.Edges)
@@ -163,8 +158,8 @@ namespace So_CSHARP
                                     maxE2E += Int32.Parse(edge.PropDelay);
                                 }
                             }
-
-                            link.Qnumber = random.Next(1, 4).ToString();
+                            
+                            link.Qnumber = random.Next(1,4).ToString();
                             maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
                             links.Add(link);
                         }
@@ -181,35 +176,7 @@ namespace So_CSHARP
             return solution;
         }
 
-
-        //Add functionsimilar to NweRandomSOlution in the master branch. 
-
-
-        public static void simmulatedAnnealing(Application application, Architecture arch)
-        {
-
-
-            var random = new Random();
-            var solution = new Output.Report();
-            var finalsolution = new Output.Report();
-            var output = new Output();
-            var SolutionSpace = new List<Output.Report>();
-
-            var T = 1000;
-            var alpha = 0.003;
-            var initialSolution = findPath(application, arch);
-
-            while (T > 1)
-            {
-
-            }
-
-            output.GiveOutput(solution);
-
-         //   return finalSolution;
-
-        }
-
+        
 
         public static void costFunction()
         {
@@ -218,34 +185,7 @@ namespace So_CSHARP
             //by the use of the three constraint functions below.
             //if a particular constraint is not fulfilled -> miss penalty. 
         }
-
-
-
-        public static int meanBandWidth(Application apps, Architecture arch)
-        {
-            int counter = 0;
-            int sum = 0;
-            foreach (var arc in arch.Edges)
-            {
-                sum += Int32.Parse(arc.BW);
-                counter++;
-            }
-            return sum / counter;
-        }
-
-        public static int meanE2E(Application apps, Architecture arch)
-        {
-            int counter = 0;
-            int sum = 0;
-            foreach (var vertex in arch.Vertices)
-            {
-                sum += Int32.Parse(vertex.MaxE2E);
-                counter++;
-            }
-            return sum / counter;
-        }
-
-
+        
         public static bool deadlineContraint(int maxE2E, string deadline)
         {
             if (maxE2E < Int32.Parse(deadline))
@@ -402,9 +342,45 @@ namespace So_CSHARP
             return population;
         }
 
+        public static int meanBandWidth(Application apps, Architecture arch)
+        {
+            int counter = 0;
+            int sum = 0;
+            foreach (var arc in arch.Edges)
+            {
+                sum += Int32.Parse(arc.BW);
+                counter++;
+            }
+            return sum / counter;
+        }
+
+        public static int meanE2E(Output.Report report)
+        {
+            int counter = 0;
+            int sum = 0;
+            foreach (Output.Message message in report.Message)
+            {
+                sum += Int32.Parse(message.MaxE2E);
+                counter++;
+            }
+            return sum / counter;
+        }
+        public static double ObjectiveFunction(Output.Report report)
+        {
+            int meane2e = meanE2E(report);
+            return meane2e;
+        }
+
         public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize)
         {
+            // Initialize population
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
+            // Evaluate population
+            List<double> evaluations = new();
+            foreach (Output.Report report in population)
+            {
+                evaluations.Add(ObjectiveFunction(report));
+            }
             
         }
     

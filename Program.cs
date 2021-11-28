@@ -16,11 +16,12 @@ namespace So_CSHARP
     {
         static void Main(string[] args)
         {
+            // Initialization line 19-24
             var application = readApps();
             var arch = readConfig();
-            // populateFields(application,arch);
-            // mapVertex(arch);
-            // mapVertexNeighbors(arch)
+            populateFields(application,arch);
+            mapVertex(arch);
+            mapVertexNeighbors(arch);
             // findPath(application,arch);
             // FindMessageRoutes(application,arch);
             // simmulatedAnnealing(findPath(application,arch), application, arch)
