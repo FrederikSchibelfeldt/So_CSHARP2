@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using Microsoft.VisualBasic;
 
 namespace So_CSHARP
 {
@@ -37,8 +36,9 @@ namespace So_CSHARP
             return res;
         }
 
-        public static void populateFields(Application apps, Architecture arch){
-            
+        public static void populateFields(Application apps, Architecture arch)
+        {
+
             foreach (Message message in apps.Messages)
             {
                 // Populate message with source and dist Vertex objects
@@ -58,10 +58,10 @@ namespace So_CSHARP
                 if (message.Source == null || message.Destination == null)
                 {
                     Console.WriteLine("Source or Destination EMPTY message: " + message);
-                     Console.WriteLine("HUH HUH ?? \n");
+                    Console.WriteLine("HUH HUH ?? \n");
                     Environment.Exit(0);
                 }
-            
+
             }
 
             foreach (Edge edge in arch.Edges)
@@ -83,13 +83,13 @@ namespace So_CSHARP
                 if (edge.Source == null || edge.Destination == null)
                 {
                     Console.WriteLine("Source or Destination EMPTY EDGE: " + edge);
-                     Console.WriteLine("HUH HUH ?? \n");
+                    Console.WriteLine("HUH HUH ?? \n");
                     Environment.Exit(0);
                 }
-            
+
             }
         }
-        
+
 
         public static Output.Report initialSolution(Application apps, Architecture arch)
         {
@@ -183,32 +183,7 @@ namespace So_CSHARP
 
         //Add functionsimilar to NweRandomSOlution in the master branch. 
 
-
-        public static void simmulatedAnnealing(Application application, Architecture arch)
-        {
-
-
-            var random = new Random();
-            var solution = new Output.Report();
-            var finalsolution = new Output.Report();
-            var output = new Output();
-            var SolutionSpace = new List<Output.Report>();
-
-            var T = 1000;
-            var alpha = 0.003;
-            var initialSolution = findPath(application, arch);
-
-            while (T > 1)
-            {
-
-            }
-
-            output.GiveOutput(solution);
-
-         //   return finalSolution;
-
-        }
-
+// MeanBW is the average of 
 
         public static void costFunction()
         {
@@ -317,9 +292,15 @@ namespace So_CSHARP
                 }
 
                 vertex.vertexNeighbors = neighbors.ToList();
+
+                // Console.WriteLine("---------------------- vertex ---------------------------------------------");
+                //     Console.WriteLine(vertex);  
+                //    Console.WriteLine("---------------------- neighbors ---------------------------------------------");
+                //    Console.WriteLine(neighbors);
             }
+            Console.WriteLine(" ----------------------Vertex Neighbors found---------------------------");
             System.Console.WriteLine();
-        
+
         }
 
         public static void FindMessageRoutes(Application apps, Architecture arch)
@@ -333,20 +314,34 @@ namespace So_CSHARP
                 visited = new();
                 visited.Add(message.Source);
 
-                
-                // Color console "skrift" for testing purposes
-                Console.ForegroundColor =  count_test % 2 ==  0 ? ConsoleColor.Cyan :  ConsoleColor.Green; 
-                
 
-            List<Vertex> isVisited =new();
-            List<Vertex> pathList = new();
-    
-            // add source to path
-            pathList.Add(message.SourceVertex);
-            isVisited.Add(message.SourceVertex);
-    
-            Console.WriteLine("--------------------findAPath--------------------");
-            findAPath(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
+                // Color console "skrift" for testing purposes
+                Console.ForegroundColor = count_test % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
+
+                Console.WriteLine("count_test");
+                Console.WriteLine(count_test);
+                Console.WriteLine("Finding Routes for Message: " + message.Name);
+                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
+                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
+                Console.WriteLine("------------------------------------------");
+
+                // Call recursive utility
+                List<Vertex> isVisited = new();
+                List<Vertex> pathList = new();
+
+                // add source to path
+                pathList.Add(message.SourceVertex);
+                isVisited.Add(message.SourceVertex);
+
+                // Call recursive utility
+                Console.WriteLine("--------------------findAPath--------------------");
+                findAPath(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
+
+                //message.PrintPossibleVertexPaths();
+
+                // message.VertexPathsToEdgePaths(edges);
+
+                //message.PrintPossiblePaths();
 
                 count_test++;
 
@@ -355,101 +350,111 @@ namespace So_CSHARP
 
             Console.ForegroundColor = ConsoleColor.White;
         }
-        private static void findAPath(Vertex source, Vertex destination,Message message,List<Vertex> isVisited, List<Vertex> localPathList)
+        private static void findAPath(Vertex source, Vertex destination, Message message, List<Vertex> isVisited, List<Vertex> localPathList)
         {
-            Console.WriteLine(string.Join(" start FIND A PATH", ""));
-            if (source.Equals(destination)) {
+            if (source.Equals(destination))
+            {
+                Console.WriteLine(string.Join("\n PATH:", "\n"));
+                localPathList.ForEach(p => Console.Write(p.Name));
                 message.PossibleVerticesPath.Add(localPathList);
+
 
                 return;
             }
-    
+
             // Mark the current node
             isVisited.Add(source);
-    
+
             // For all neighbor vertices 
-            foreach(var vertex in source.vertexNeighbors)
+            foreach (var vertex in source.vertexNeighbors)
             {
-                                    Console.WriteLine(string.Join(" ", vertex));
-                if (!isVisited.Contains(vertex)) {
+                if (!isVisited.Contains(vertex))
+                {
                     // store current node
                     // in path[]
                     localPathList.Add(vertex);
 
                     findAPath(vertex, destination, message, isVisited,
                                     localPathList);
-    
+
                     // remove current node in path
                     localPathList.Remove(vertex);
                 }
             }
             isVisited.Remove(source);
         }
-    
 
 
-        [XmlRoot(ElementName = "Application")]
-        public class Application
+    }
+
+    [XmlRoot(ElementName = "Application")]
+    public class Application
+    {
+        [XmlElement(ElementName = "Message")]
+        public List<Message> Messages { get; set; }
+    }
+
+    [XmlRoot(ElementName = "Message")]
+    public class Message
+    {
+        [XmlAttribute(AttributeName = "Name")]
+        public string Name { get; set; }
+        [XmlAttribute(AttributeName = "Source")]
+        public string Source { get; set; }
+        public Vertex SourceVertex { get; set; }
+        [XmlAttribute(AttributeName = "Destination")]
+        public string Destination { get; set; }
+        public Vertex DestinationVertex { get; set; }
+        [XmlAttribute(AttributeName = "Size")]
+        public string Size { get; set; }
+        [XmlAttribute(AttributeName = "Period")]
+        public string Period { get; set; }
+        [XmlAttribute(AttributeName = "Deadline")]
+        public string Deadline { get; set; }
+        public List<List<Vertex>> PossibleVerticesPath { get; set; }
+    }
+
+    [XmlRoot(ElementName = "Vertex")]
+    public class Vertex
+    {
+        [XmlAttribute(AttributeName = "Name")]
+        public string Name { get; set; }
+        [XmlAttribute(AttributeName = "MaxE2E")]
+        public string MaxE2E { get; set; }
+        public List<Vertex> vertexNeighbors { get; set; }
+    }
+
+    [XmlRoot(ElementName = "Edge")]
+    public class Edge
+    {
+        [XmlAttribute(AttributeName = "Id")]
+        public string Id { get; set; }
+        [XmlAttribute(AttributeName = "BW")]
+        public string BW { get; set; }
+        [XmlAttribute(AttributeName = "PropDelay")]
+        public string PropDelay { get; set; }
+        [XmlAttribute(AttributeName = "Source")]
+        public string Source { get; set; }
+        [XmlAttribute(AttributeName = "Destination")]
+        public string Destination { get; set; }
+        public Vertex SourceVertex { get; set; }
+    }
+
+    [XmlRoot(ElementName = "Architecture")]
+    public class Architecture
+    {
+        [XmlElement(ElementName = "Vertex")]
+        public List<Vertex> Vertices
         {
-            [XmlElement(ElementName = "Message")]
-            public List<Message> Messages { get; set; }
+            get; set;
         }
-
-        [XmlRoot(ElementName = "Message")]
-        public class Message
-        {
-            [XmlAttribute(AttributeName = "Name")]
-            public string Name { get; set; }
-            [XmlAttribute(AttributeName = "Source")]
-            public string Source { get; set; }
-            public Vertex SourceVertex { get; set; }
-            [XmlAttribute(AttributeName = "Destination")]
-            public string Destination { get; set; }
-            public Vertex DestinationVertex { get; set; }
-            [XmlAttribute(AttributeName = "Size")]
-            public string Size { get; set; }
-            [XmlAttribute(AttributeName = "Period")]
-            public string Period { get; set; }
-            [XmlAttribute(AttributeName = "Deadline")]
-            public string Deadline { get; set; }
-            public List<List<Vertex>> PossibleVerticesPath { get; set; }
-        }
-
-        [XmlRoot(ElementName = "Vertex")]
-        public class Vertex
-        {
-            [XmlAttribute(AttributeName = "Name")]
-            public string Name { get; set; }
-            [XmlAttribute(AttributeName = "MaxE2E")]
-            public string MaxE2E { get; set; }
-            public List<Vertex> vertexNeighbors { get; set; }
-        }
-
-        [XmlRoot(ElementName = "Edge")]
-        public class Edge
-        {
-            [XmlAttribute(AttributeName = "Id")]
-            public string Id { get; set; }
-            [XmlAttribute(AttributeName = "BW")]
-            public string BW { get; set; }
-            [XmlAttribute(AttributeName = "PropDelay")]
-            public string PropDelay { get; set; }
-            [XmlAttribute(AttributeName = "Source")]
-            public string Source { get; set; }
-            [XmlAttribute(AttributeName = "Destination")]
-            public string Destination { get; set; }
-            public Vertex SourceVertex { get; set; }
-            public Vertex DestinationVertex { get; set; }
-        }
-
-        [XmlRoot(ElementName = "Architecture")]
-        public class Architecture
-        {
-            [XmlElement(ElementName = "Vertex")]
-            public List<Vertex> Vertices { get; set; 
-            }
-            [XmlElement(ElementName = "Edge")]
-            public List<Edge> Edges { get; set; }
-        }
+        [XmlElement(ElementName = "Edge")]
+        public List<Edge> Edges { get; set; }
+    }
+    public class Cycle
+    {
+       
+        public int Length { get; set; }
+        
     }
 }
