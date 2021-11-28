@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -17,7 +18,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -30,7 +31,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
 
@@ -322,6 +323,8 @@ namespace So_CSHARP
         
         }
 
+        
+
         public static void FindMessageRoutes(Application apps, Architecture arch)
         {
             int count_test = 0;
@@ -385,7 +388,27 @@ namespace So_CSHARP
             }
             isVisited.Remove(source);
         }
+        
+        public static List<Output.Report> InitPopulation(int size, Architecture arch, Application apps)
+        {
+            List<Output.Report> population = new();
+            for (int i = 0; i < size; i++) 
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(i);
+                population.Add(findPath(apps, arch));
+            }
+
+            return population;
+        }
+
+        public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize)
+        {
+            List<Output.Report> population = InitPopulation(populationSize, arch, apps);
+            
+        }
     
+        
 
 
         [XmlRoot(ElementName = "Application")]
