@@ -9,17 +9,15 @@ namespace So_CSHARP
     public class Inputs
     {
         // Try with inputPath later
-        static string inputPath = "..\\..\\..\\..\\..\\test_cases";
+        static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
-        static string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;  // temp path
+        static string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;  
         static Dictionary<string, List<string>> dict = new();
         public static Application readApps()
         {
             Application res = new Application();
-
             var xs = new XmlSerializer(typeof(Application));
-            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Input\Apps.xml");
-            string sFilePath = Path.GetFullPath(sFile);
+            string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
             {
                 using (FileStream fileStream =
                 new FileStream(sFilePath, FileMode.Open))
@@ -33,8 +31,7 @@ namespace So_CSHARP
         {
             Architecture res = new Architecture();
             var xs = new XmlSerializer(typeof(Architecture));
-            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Input\Config.xml");
-            string sFilePath = Path.GetFullPath(sFile);
+            string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
             {
                 using (FileStream fileStream =
                 new FileStream(sFilePath, FileMode.Open))
@@ -188,10 +185,9 @@ namespace So_CSHARP
             return solution;
         }
 
-
         //Add functionsimilar to NweRandomSOlution in the master branch. 
 
-// MeanBW is the average of 
+        // MeanBW is the average of 
 
         public static void costFunction()
         {
@@ -203,16 +199,21 @@ namespace So_CSHARP
 
 
 
-        public static int meanBandWidth(Application apps, Architecture arch)
+
+        // INFO: THIS FUNCTION SHOULD BE INCLUDED AS PART OF message loop (the intention is for an outer variable to keep track) 
+        // PARAM: "message": the message being sent 
+        // PARAM: "edges": the edges the message is going through 
+        private long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
         {
-            int counter = 0;
-            int sum = 0;
-            foreach (var arc in arch.Edges)
+            int sumBW = 0;
+
+            foreach (Edge edge in edges)
             {
-                sum += Int32.Parse(arc.BW);
-                counter++;
+                edge.BWConsumption = Int32.Parse(message.Size); // BW_Consumption is just size of message sent through edge
+                sumBW += edge.BWConsumption;          // SUM UP for each edge message is going through
             }
-            return sum / counter;
+
+            return sumBW / edges.Count;
         }
 
         public static int meanE2E(Application apps, Architecture arch)
@@ -467,8 +468,8 @@ namespace So_CSHARP
     }
     public class Cycle
     {
-       
+
         public int Length { get; set; }
-        
+
     }
 }

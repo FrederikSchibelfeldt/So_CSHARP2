@@ -15,6 +15,7 @@ namespace So_CSHARP
 
         private List<Edge> edges;
 
+        private int iteration = 0;
         private int IterationBuffer;
         private List<Message> messages;
         private int T = 1000;
