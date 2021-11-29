@@ -8,15 +8,21 @@ namespace So_CSHARP
 {
     public class Inputs
     {
+        // Try with inputPath later
+        static string inputPath = "..\\..\\..\\..\\..\\test_cases";
+
+        static string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;  // temp path
         static Dictionary<string, List<string>> dict = new();
         public static Application readApps()
         {
             Application res = new Application();
 
             var xs = new XmlSerializer(typeof(Application));
+            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Input\Apps.xml");
+            string sFilePath = Path.GetFullPath(sFile);
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                new FileStream(sFilePath, FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -27,9 +33,11 @@ namespace So_CSHARP
         {
             Architecture res = new Architecture();
             var xs = new XmlSerializer(typeof(Architecture));
+            string sFile = System.IO.Path.Combine(sCurrentDirectory, @"..\..\..\files\Example\Input\Config.xml");
+            string sFilePath = Path.GetFullPath(sFile);
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                new FileStream(sFilePath, FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
 
