@@ -438,6 +438,12 @@ namespace So_CSHARP
         [XmlAttribute(AttributeName = "Destination")]
         public string Destination { get; set; }
         public Vertex SourceVertex { get; set; }
+        public Vertex DestinationVertex { get; set; }
+        public int BWConsumption { get; set; }
+        public long BWConsumptionPerCycle { get; set; }
+        public int BWCylceTransferCapacity { get; set; }
+        public int BWCycleDelay { get; set; }
+        public int Latency { get; set; }
     }
 
     [XmlRoot(ElementName = "Architecture")]
