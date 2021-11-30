@@ -381,13 +381,13 @@ namespace So_CSHARP
             return evaluations;
         }
         
-        public static List<Output.Report> SelectedPopulation(List<Output.Report> population, List<double> evaluations)
+        public static List<Output.Report> SelectedPopulation(int n,List<Output.Report> population, List<double> evaluations)
         {
             List<Output.Report> selectedPopulation = new List<Output.Report>();
-            double min = evaluations.Min();
-            selectedPopulation.Add(population[evaluations.IndexOf(min)]);
-            double secondMin = evaluations.Where(x => x > min).Min();
-            selectedPopulation.Add(population[evaluations.IndexOf(secondMin)]);
+            var nums = evaluations.OrderBy(x => x).Take(n).ToList();
+            for(int i = 0; i<nums.Count()-1;i++){
+                selectedPopulation.Add(population[evaluations.FindIndex(x => x == nums[i])]);
+            }
             return selectedPopulation;
         }
         
@@ -400,7 +400,8 @@ namespace So_CSHARP
             // Evaluate population
             List<double> evaluations = EvaluationList(population);
             // Selection using elitism (fitness proportionate and tournament selection)
-            List<Output.Report> selectedPopulation = SelectedPopulation(population, evaluations);
+            List<Output.Report> selectedPopulation = SelectedPopulation(2,population, evaluations);
+            Console.WriteLine(selectedPopulation.Count());
             Console.WriteLine("----------------------------------------");
 
 
