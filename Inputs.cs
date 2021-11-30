@@ -206,11 +206,15 @@ namespace So_CSHARP
         private static long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
         {
             int sumBW = 0;
+            Console.WriteLine("CalculateMeanBWforCurrentMessage");
+            Console.WriteLine(message.Name);
 
             foreach (Edge edge in edges)
             {
+                            Console.WriteLine("CalculateMeanBWforCurrentMessage LOOP");
                 edge.BWConsumption = Int32.Parse(message.Size); // BW_Consumption is just size of message sent through edge
-                sumBW += edge.BWConsumption;          // SUM UP for each edge message is going through
+                Console.WriteLine(message.Size);
+                 sumBW = sumBW + edge.BWConsumption;          // SUM UP for each edge message is going through
             }
 
             return sumBW / edges.Count;
@@ -446,7 +450,8 @@ namespace So_CSHARP
                 var links = new List<Output.Link>();
 
                 List<Edge> chosenPath = message.PossibleEdgePaths[0]; // just take first path for now 
-                sumBWForSolution = +CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
+                
+                sumBWForSolution =sumBWForSolution+ CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
 
                 foreach (Edge edge in chosenPath)
                 {
@@ -476,9 +481,8 @@ namespace So_CSHARP
             solutionSpace.Solution =solution;
             output.GiveOutput(solutionSpace);
             return solutionSpace;
-            }
-
         }
+     
     }
 
 
