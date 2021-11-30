@@ -394,15 +394,14 @@ namespace So_CSHARP
         public static List<Output.Report> RecombinedPopulation(List<Output.Report> selectedPopulation)
         {
             List<Output.Report> recombinedPopulation = new List<Output.Report>();
-            // FRAT RECOMBINE HER
             int m = selectedPopulation[0].Message.Count/2;
-            int j = selectedPopulation[0].Message.Count*(3/4);
+            int j = (3*selectedPopulation[0].Message.Count)/4;
             Output.Report tempReport = selectedPopulation[0];
 
             for(int i = 0;i <= selectedPopulation.Count;i++){
                 Output.Report tmp = new Output.Report();
 
-                if(i == selectedPopulation.Count){
+                if(i == selectedPopulation.Count-1){
                 selectedPopulation[i].Message[m] = tempReport.Message[m];
                 recombinedPopulation.Add(tmp);
 
@@ -410,25 +409,42 @@ namespace So_CSHARP
                 while(m<= j){
                 selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
                 tmp = selectedPopulation[i];
-                recombinedPopulation.Add(tmp);
                 m++;
                 }
+                recombinedPopulation.Add(tmp);
             }
-            Console.Write(selectedPopulation.SequenceEqual(recombinedPopulation));
+            Console.WriteLine(selectedPopulation.SequenceEqual(recombinedPopulation));
             return recombinedPopulation;
         }
 
+        public static List<Output.Report> MutatePopulation(int populationSize, List<Output.Report> recombinedPopulation)
+        {
+            List<Output.Report> mutatedPopulation = recombinedPopulation;
+            var random = new Random();
+            for (int i = 0; i < populationSize - recombinedPopulation.Count; i++)
+            {
+                int j = i % recombinedPopulation.Count;
+                Output.Report currentSolution = recombinedPopulation[j];
+                // currentSolution.Message[random.Next(0, currentSolution.Message.Count)] == Abdi skadet funktion;
+                mutatedPopulation.Add(currentSolution);
+            }
+            return mutatedPopulation;
+        }
+        
         public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize, int selectedSize)
         {
             // Initialize population
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
             // Evaluate population
             List<double> evaluations = EvaluationList(population);
+            // Return best solution if stopping criteria met
+            
             // Selection using elitism (fitness proportionate and tournament selection)
             List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
             // Recombine 
             List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
-
+            // Mutation to create new generation
+            List<Output.Report> mutatedPopulation = MutatePopulation(populationSize, recombinedPopulation);
 
         }
     
