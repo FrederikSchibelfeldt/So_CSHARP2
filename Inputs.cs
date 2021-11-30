@@ -370,7 +370,7 @@ namespace So_CSHARP
             {
                 Console.WriteLine(string.Join("\n PATH:", "\n"));
                 localPathList.ForEach(p => Console.Write(p.Name));
-                message.PossibleVerticesPath.Add(localPathList);
+                message.PossibleVerticesPath.Add(localPathList.ToList());
 
 
                 return;
@@ -407,9 +407,10 @@ namespace So_CSHARP
 
             foreach (List<Vertex> route in message.PossibleVerticesPath)
             {
-                path = new();
+                path =  new();
                 for (int i = 0; i < route.Count; i++)
                 {
+
                     if (i < route.Count - 1)
                     {
                         path.Add(EdgeFromVerticies(route.ElementAt(i), route.ElementAt(i + 1), arch));
@@ -457,8 +458,8 @@ namespace So_CSHARP
                 {
                     var link = new Output.Link();
                     link.Qnumber = random.Next(1, 4).ToString();
-                    link.Source = message.Source;
-                    link.Destination = message.Destination;
+                    link.Source = edge.Source;
+                    link.Destination = edge.Destination;
                     links.Add(link);
                 }
                 var m = new Output.Message();
