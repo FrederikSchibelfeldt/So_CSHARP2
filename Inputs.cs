@@ -203,7 +203,7 @@ namespace So_CSHARP
         // INFO: THIS FUNCTION SHOULD BE INCLUDED AS PART OF message loop (the intention is for an outer variable to keep track) 
         // PARAM: "message": the message being sent 
         // PARAM: "edges": the edges the message is going through 
-        private long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
+        private static long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
         {
             int sumBW = 0;
 
@@ -348,8 +348,8 @@ namespace So_CSHARP
 
                 // DEFINE  possible edge paths from possible vertex paths 
                 // then add to message 
-                message.PossibleEdgePaths = MessageVertexPathsToEdgePaths(message,arch);
-                
+                message.PossibleEdgePaths = MessageVertexPathsToEdgePaths(message, arch);
+
 
                 //message.PrintPossiblePaths();
 
@@ -393,7 +393,7 @@ namespace So_CSHARP
             }
             isVisited.Remove(source);
         }
-                    // possibly return List<List<Edge>>
+        // possibly return List<List<Edge>>
         public static List<List<Edge>> MessageVertexPathsToEdgePaths(Message message, Architecture arch)
         {
 
@@ -404,7 +404,6 @@ namespace So_CSHARP
             foreach (List<Vertex> route in message.PossibleVerticesPath)
             {
                 path = new();
-
                 for (int i = 0; i < route.Count; i++)
                 {
                     if (i < route.Count - 1)
@@ -417,7 +416,7 @@ namespace So_CSHARP
             }
 
             //Return and add to possible edge paths for a message. 
-           // message.PossibleEdgePaths.Add();                 // ADD TO MESSAGES AS WELL
+            // message.PossibleEdgePaths.Add();                 // ADD TO MESSAGES AS WELL
             return possiblePaths.ToList();
         }
         public static Edge EdgeFromVerticies(Vertex source, Vertex destination, Architecture arch)
@@ -430,6 +429,55 @@ namespace So_CSHARP
                 }
             }
             return null;
+        }
+        public static Output.Report GenerateRandomSolution(Architecture arch, Application app)
+        {
+            var random = new Random();
+            var solutionSpace = new Output.Report();
+            var output = new Output();
+            solutionSpace.Message = new List<Output.Message>();
+            int i = 0;
+
+            long sumBWForSolution = 0;
+            foreach (Message message in app.Messages)
+            {
+                int maxE2E = 0;
+                int cycleLength = 12;
+                var links = new List<Output.Link>();
+
+                List<Edge> chosenPath = message.PossibleEdgePaths[0]; // just take first path for now 
+                sumBWForSolution = +CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
+
+                foreach (Edge edge in chosenPath)
+                {
+                    var link = new Output.Link();
+                    link.Qnumber = random.Next(1, 4).ToString();
+                    link.Source = message.Source;
+                    link.Destination = message.Destination;
+                    links.Add(link);
+                }
+                var m = new Output.Message();
+                m.Link = links;
+                m.Name = message.Name;
+                m.MaxE2E = maxE2E.ToString();
+                solutionSpace.Message.Add(m);
+                i++;
+                // Color console "skrift" for testing purposes
+                Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
+
+                Console.WriteLine("message solved");
+                Console.WriteLine(i);
+                Console.WriteLine("Solving message: " + message.Name);
+                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
+                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
+                Console.WriteLine("------------------------------------------");
+            }
+            var solution = new Output.Solution();
+            solutionSpace.Solution =solution;
+            output.GiveOutput(solutionSpace);
+            return solutionSpace;
+            }
+
         }
     }
 

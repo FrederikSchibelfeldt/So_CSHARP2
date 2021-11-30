@@ -24,6 +24,7 @@ namespace So_CSHARP
  //           findPath(application,arch);
             FindMessageRoutes(application,arch);
         //    simmulatedAnnealing(findPath(application,arch), application, arch)
+        GenerateRandomSolution(arch, application);
         }
 
     }
