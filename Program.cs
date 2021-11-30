@@ -18,13 +18,13 @@ namespace So_CSHARP
         {
             var application = readApps();
             var arch = readConfig();
-            populateFields(application,arch);
+            PopulateFields(application,arch);
             mapVertex(arch);
             mapVertexNeighbors(arch);
  //           findPath(application,arch);
             FindMessageRoutes(application,arch);
         //    simmulatedAnnealing(findPath(application,arch), application, arch)
-        GenerateRandomSolution(arch, application);
+            GenerateRandomSolution(arch, application);
         }
 
     }

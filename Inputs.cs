@@ -19,9 +19,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
             {
-                using (FileStream fileStream =
-                new FileStream(sFilePath, FileMode.Open))
-                    res = (Application)xs.Deserialize(fileStream);
+                res = (Application)xs.Deserialize(fileStream);
             }
 
             return res;
@@ -30,18 +28,22 @@ namespace So_CSHARP
         public static Architecture readConfig()
         {
             Architecture res = new Architecture();
-            var xs = new XmlSerializer(typeof(Architecture));
-            string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
-            {
-                using (FileStream fileStream =
-                new FileStream(sFilePath, FileMode.Open))
-                    res = (Architecture)xs.Deserialize(fileStream);
-            }
 
+            var xs = new XmlSerializer(typeof(Architecture));
+            using (FileStream fileStream =
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+            {
+                res = (Architecture)xs.Deserialize(fileStream);
+            }
             return res;
         }
 
-        public static void populateFields(Application apps, Architecture arch)
+
+        /// <summary>
+        /// Creates properties SourceVertex and DestinationVertex for message and edge object.
+        /// This is used in generating the initial solution.
+        /// </summary>
+        public static void PopulateFields(Application apps, Architecture arch)
         {
 
             foreach (Message message in apps.Messages)
@@ -64,6 +66,7 @@ namespace So_CSHARP
                 {
                     Console.WriteLine("Source or Destination EMPTY message: " + message);
                     Console.WriteLine("HUH HUH ?? \n");
+                    //Invalid input
                     Environment.Exit(0);
                 }
 
@@ -89,6 +92,7 @@ namespace So_CSHARP
                 {
                     Console.WriteLine("Source or Destination EMPTY EDGE: " + edge);
                     Console.WriteLine("HUH HUH ?? \n");
+                    //invalid input
                     Environment.Exit(0);
                 }
 
@@ -96,106 +100,69 @@ namespace So_CSHARP
         }
 
 
-        public static Output.Report initialSolution(Application apps, Architecture arch)
-        {
-            return findPath(apps, arch);
-        }
-
-        public static Output.Report findPath(Application apps, Architecture arch)
+        public static Output.Report GenerateRandomSolution(Architecture arch, Application app)
         {
             var random = new Random();
-            var solution = new Output.Report();
+            var solutionSpace = new Output.Report();
             var output = new Output();
-            solution.Message = new List<Output.Message>();
+            solutionSpace.Message = new List<Output.Message>();
             int i = 0;
-            foreach (var message in apps.Messages)
+
+            long sumBWForSolution = 0;
+            foreach (Message message in app.Messages)
             {
-                //Initiate maxE2E at 0 and cycle length, c at 12(microsec) for each message.
                 int maxE2E = 0;
                 int cycleLength = 12;
                 var links = new List<Output.Link>();
-                string destination = message.Destination;
 
-                if (dict.ContainsKey(message.Source))
+                List<Edge> chosenPath = message.PossibleEdgePaths[0]; // just take first path for now 
+
+                sumBWForSolution = sumBWForSolution + CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
+
+                foreach (Edge edge in chosenPath)
                 {
-                    // Liste til at tilføje besgøte vertexes så vi ikke ender i et loop og besøger de samme vertexes
-                    List<string> visitedNodes = new List<string>();
-                    visitedNodes.Add(message.Source);
-                    List<string> optionsFromCurrentNode = dict[message.Source];
-                    int randomIndex = random.Next(optionsFromCurrentNode.Count);
-                    string selectedDestinationFromCurrentNode = optionsFromCurrentNode[randomIndex];
                     var link = new Output.Link();
-                    link.Source = message.Source;
-                    link.Destination = selectedDestinationFromCurrentNode;
                     link.Qnumber = random.Next(1, 4).ToString();
-
-                    //add PropDelay of given edge to maxE2E.
-                    foreach (var edge in arch.Edges)
-                    {
-                        if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
-                        {
-                            maxE2E += Int32.Parse(edge.PropDelay);
-                        }
-                    }
-                    //add QNumber * c to maxE2E
-                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
+                    link.Source = edge.Source;
+                    link.Destination = edge.Destination;
                     links.Add(link);
-                    while (selectedDestinationFromCurrentNode != destination)
-                    {
-                        // tilføjer besøgte vertexes
-                        visitedNodes.Add(selectedDestinationFromCurrentNode);
-                        if (dict.ContainsKey(selectedDestinationFromCurrentNode))
-                        {
-                            var source = selectedDestinationFromCurrentNode;
-                            List<string> selectedDestinationFromCurrentNode2 = dict[selectedDestinationFromCurrentNode];
-                            link = new Output.Link();
-                            link.Source = source;
-
-                            randomIndex = random.Next(selectedDestinationFromCurrentNode2.Count);
-                            selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
-                            //Make sure selectedDestinationFromCurrentNode is not one which is already within visitedNodes.
-                            while (visitedNodes.Contains(selectedDestinationFromCurrentNode))
-                            {
-                                randomIndex = random.Next(selectedDestinationFromCurrentNode2.Count);
-                                selectedDestinationFromCurrentNode = selectedDestinationFromCurrentNode2[randomIndex];
-                            }
-                            link.Destination = selectedDestinationFromCurrentNode;
-                            foreach (var edge in arch.Edges)
-                            {
-                                if (link.Source == edge.Source && link.Destination == edge.Destination || link.Source == edge.Destination && link.Destination == edge.Source)
-                                {
-                                    maxE2E += Int32.Parse(edge.PropDelay);
-                                }
-                            }
-
-                            link.Qnumber = random.Next(1, 4).ToString();
-                            maxE2E += Int32.Parse(link.Qnumber) * cycleLength;
-                            links.Add(link);
-                        }
-                    }
                 }
                 var m = new Output.Message();
                 m.Link = links;
                 m.Name = message.Name;
                 m.MaxE2E = maxE2E.ToString();
-                solution.Message.Add(m);
+                solutionSpace.Message.Add(m);
                 i++;
-            }
+                // Color console "skrift" for testing purposes
+                Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
 
-            return solution;
+                Console.WriteLine("message solved");
+                Console.WriteLine(i);
+                Console.WriteLine("Solving message: " + message.Name);
+                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
+                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
+                Console.WriteLine("------------------------------------------");
+            }
+            var solution = new Output.Solution();
+            solutionSpace.Solution = solution;
+            output.GiveOutput(solutionSpace);
+            return solutionSpace;
         }
 
-        //Add functionsimilar to NweRandomSOlution in the master branch. 
 
-        // MeanBW is the average of 
 
-        public static void costFunction()
+
+    //Add functionsimilar to NweRandomSOlution in the master branch. 
+
+    // MeanBW is the average of 
+
+    public static void costFunction()
         {
             //should go through every elem in the solution, and
             //compute whether the solution is better than the original solution
             //by the use of the three constraint functions below.
             //if a particular constraint is not fulfilled -> miss penalty. 
-        }
+    }
 
 
 
@@ -211,7 +178,7 @@ namespace So_CSHARP
 
             foreach (Edge edge in edges)
             {
-                            Console.WriteLine("CalculateMeanBWforCurrentMessage LOOP");
+                Console.WriteLine("CalculateMeanBWforCurrentMessage LOOP");
                 edge.BWConsumption = Int32.Parse(message.Size); // BW_Consumption is just size of message sent through edge
                 Console.WriteLine(message.Size);
                  sumBW = sumBW + edge.BWConsumption;          // SUM UP for each edge message is going through
@@ -245,40 +212,14 @@ namespace So_CSHARP
             }
         }
 
-
-        public static void mapVertex(Architecture arch)
-        {
-            foreach (var vertex in arch.Vertices)
-            {
-                List<string> sList = new List<string>();
-                foreach (var edge in arch.Edges)
-                {
-                    if (vertex.Name == edge.Source)
-                    {
-                        sList.Add(edge.Destination);
-                    }
-
-                    if (vertex.Name == edge.Destination)
-                    {
-                        sList.Add(edge.Source);
-                    }
-                }
-
-                if (sList.Count > 0)
-                {
-                    dict.Add(vertex.Name, sList);
-                }
-            }
-            Console.WriteLine(dict.Count);
-        }
-
+        /// <summary>
+        /// Adds property vertexneighbors to all vertex objects. 
+        /// </summary>
+        /// <param name="arch"></param>
         public static void mapVertexNeighbors(Architecture arch)
         {
             foreach (var vertex in arch.Vertices)
-
             {
-
-
                 List<Vertex> neighbors = new();
                 List<Edge> edgeNeighbors = new();
 
@@ -313,7 +254,6 @@ namespace So_CSHARP
             }
             Console.WriteLine(" ----------------------Vertex Neighbors found---------------------------");
             System.Console.WriteLine();
-
         }
 
         public static void FindMessageRoutes(Application apps, Architecture arch)
@@ -364,6 +304,16 @@ namespace So_CSHARP
 
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+
+        /// <summary>
+        /// Finds all possible paths a message can take. 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="message"></param>
+        /// <param name="isVisited"></param>
+        /// <param name="localPathList"></param>
         private static void findAllPossiblePaths(Vertex source, Vertex destination, Message message, List<Vertex> isVisited, List<Vertex> localPathList)
         {
             if (source.Equals(destination))
@@ -371,8 +321,6 @@ namespace So_CSHARP
                 Console.WriteLine(string.Join("\n PATH:", "\n"));
                 localPathList.ForEach(p => Console.Write(p.Name));
                 message.PossibleVerticesPath.Add(localPathList.ToList());
-
-
                 return;
             }
 
@@ -397,6 +345,8 @@ namespace So_CSHARP
             }
             isVisited.Remove(source);
         }
+
+
         // possibly return List<List<Edge>>
         public static List<List<Edge>> MessageVertexPathsToEdgePaths(Message message, Architecture arch)
         {
@@ -435,56 +385,7 @@ namespace So_CSHARP
             }
             return null;
         }
-        public static Output.Report GenerateRandomSolution(Architecture arch, Application app)
-        {
-            var random = new Random();
-            var solutionSpace = new Output.Report();
-            var output = new Output();
-            solutionSpace.Message = new List<Output.Message>();
-            int i = 0;
-
-            long sumBWForSolution = 0;
-            foreach (Message message in app.Messages)
-            {
-                int maxE2E = 0;
-                int cycleLength = 12;
-                var links = new List<Output.Link>();
-
-                List<Edge> chosenPath = message.PossibleEdgePaths[0]; // just take first path for now 
-                
-                sumBWForSolution =sumBWForSolution+ CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
-
-                foreach (Edge edge in chosenPath)
-                {
-                    var link = new Output.Link();
-                    link.Qnumber = random.Next(1, 4).ToString();
-                    link.Source = edge.Source;
-                    link.Destination = edge.Destination;
-                    links.Add(link);
-                }
-                var m = new Output.Message();
-                m.Link = links;
-                m.Name = message.Name;
-                m.MaxE2E = maxE2E.ToString();
-                solutionSpace.Message.Add(m);
-                i++;
-                // Color console "skrift" for testing purposes
-                Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
-
-                Console.WriteLine("message solved");
-                Console.WriteLine(i);
-                Console.WriteLine("Solving message: " + message.Name);
-                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
-                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
-                Console.WriteLine("------------------------------------------");
-            }
-            var solution = new Output.Solution();
-            solutionSpace.Solution =solution;
-            output.GiveOutput(solutionSpace);
-            return solutionSpace;
-        }
-     
-    }
+  
 
 
     [XmlRoot(ElementName = "Application")]
