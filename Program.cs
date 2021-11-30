@@ -19,7 +19,7 @@ namespace So_CSHARP
             var application = readApps();
             var arch = readConfig();
             PopulateFields(application,arch);
-            mapVertex(arch);
+         //   mapVertex(arch);
             mapVertexNeighbors(arch);
  //           findPath(application,arch);
             FindMessageRoutes(application,arch);

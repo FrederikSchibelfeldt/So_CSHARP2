@@ -349,11 +349,10 @@ namespace So_CSHARP
         // possibly return List<List<Edge>>
         public static List<List<Edge>> MessageVertexPathsToEdgePaths(Message message, Architecture arch)
         {
+            Console.WriteLine(" \n --------------------MessageVertexPathsToEdgePaths--------------------");
 
             List<List<Edge>> possiblePaths = new();
             List<Edge> path;
-
-
             foreach (List<Vertex> route in message.PossibleVerticesPath)
             {
                 path =  new();
@@ -362,11 +361,15 @@ namespace So_CSHARP
 
                     if (i < route.Count - 1)
                     {
+                        Console.WriteLine(route.ElementAt(i).Name);
+                        Console.WriteLine(route.ElementAt(i + 1).Name);
                         path.Add(EdgeFromVerticies(route.ElementAt(i), route.ElementAt(i + 1), arch));
                     }
                 }
-
+                Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
+                path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"    ));
                 possiblePaths.Add(path);
+                Console.WriteLine("\n");
             }
 
             //Return and add to possible edge paths for a message. 
@@ -377,13 +380,17 @@ namespace So_CSHARP
         {
             foreach (Edge edge in arch.Edges)
             {
-                if (String.Equals(edge.Source, source.Name) && String.Equals(edge.Destination, destination.Name) || String.Equals(edge.Source, destination.Name) && String.Equals(edge.Destination, source.Name))
+                // maybe???
+                // We should check direction before invoking this function thus, the deleted part of the if statement. 
+                // since edges are biderctional we can possibly recieve a wrong direction 
+                if (String.Equals(edge.Source, source.Name) && String.Equals(edge.Destination, destination.Name)) //|| String.Equals(edge.Source, destination.Name) && String.Equals(edge.Destination, source.Name))
                 {
                     return edge;
                 }
             }
             return null;
         }
+    }
   
 
 
