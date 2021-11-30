@@ -34,11 +34,11 @@ namespace So_CSHARP
         public class Solution
         {
             [XmlAttribute(AttributeName = "Runtime")]
-            public string Runtime { get; set; }
+            public long Runtime { get; set; }
             [XmlAttribute(AttributeName = "MeanE2E")]
-            public string MeanE2E { get; set; }
+            public int MeanE2E { get; set; }
             [XmlAttribute(AttributeName = "MeanBW")]
-            public string MeanBW { get; set; }
+            public long MeanBW { get; set; }
         }
 
         [XmlRoot(ElementName = "Link")]

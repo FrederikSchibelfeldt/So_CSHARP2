@@ -37,11 +37,12 @@ namespace So_CSHARP
             return res;
         }
 
-
         /// <summary>
         /// Creates properties SourceVertex and DestinationVertex for message and edge object.
         /// This is used in generating the initial solution.
         /// </summary>
+        /// <param name="apps"></param>
+        /// <param name="arch"></param>
         public static void PopulateFields(Application apps, Architecture arch)
         {
 
@@ -98,13 +99,57 @@ namespace So_CSHARP
             }
         }
 
+        /// <summary>
+        /// Adds property vertexneighbors to all vertex objects. 
+        /// </summary>
+        /// <param name="arch"></param>
+        public static void mapVertexNeighbors(Architecture arch)
+        {
+            foreach (var vertex in arch.Vertices)
+            {
+                List<Vertex> neighbors = new();
+                List<Edge> edgeNeighbors = new();
+
+
+                foreach (Edge edge in arch.Edges)
+                {
+                    if (edge.Destination == vertex.Name || edge.Source == vertex.Name)
+                    {
+                        edgeNeighbors.Add(edge);
+                    }
+                }
+
+                foreach (Edge edge in edgeNeighbors)
+                {
+                    if (edge.Source != vertex.Name)
+                    {
+                        neighbors.Add(edge.SourceVertex);
+                    }
+
+                    if (edge.Destination != vertex.Name)
+                    {
+                        neighbors.Add(edge.DestinationVertex);
+                    }
+                }
+
+                vertex.vertexNeighbors = neighbors.ToList();
+
+                // Console.WriteLine("---------------------- vertex ---------------------------------------------");
+                //     Console.WriteLine(vertex);  
+                //    Console.WriteLine("---------------------- neighbors ---------------------------------------------");
+                //    Console.WriteLine(neighbors);
+            }
+            Console.WriteLine(" ----------------------Vertex Neighbors found---------------------------");
+            System.Console.WriteLine();
+        }
+
 
         public static Output.Report GenerateRandomSolution(Architecture arch, Application app)
         {
             var random = new Random();
-            var solutionSpace = new Output.Report();
+            var report = new Output.Report();
             var output = new Output();
-            solutionSpace.Message = new List<Output.Message>();
+            report.Message = new List<Output.Message>();
             int i = 0;
 
             long sumBWForSolution = 0;
@@ -114,7 +159,7 @@ namespace So_CSHARP
                 int cycleLength = 12;
                 var links = new List<Output.Link>();
 
-                List<Edge> chosenPath = message.PossibleEdgePaths[0]; // just take first path for now 
+                List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
 
                 sumBWForSolution = sumBWForSolution + CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
 
@@ -130,7 +175,7 @@ namespace So_CSHARP
                 m.Link = links;
                 m.Name = message.Name;
                 m.MaxE2E = maxE2E.ToString();
-                solutionSpace.Message.Add(m);
+                report.Message.Add(m);
                 i++;
                 // Color console "skrift" for testing purposes
                 Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
@@ -143,9 +188,14 @@ namespace So_CSHARP
                 Console.WriteLine("------------------------------------------");
             }
             var solution = new Output.Solution();
-            solutionSpace.Solution = solution;
-            output.GiveOutput(solutionSpace);
-            return solutionSpace;
+            solution.MeanBW = sumBWForSolution;
+            solution.Runtime = 0;
+            solution.MeanE2E = 0;
+            Console.WriteLine("---Solution---");
+            Console.WriteLine(solution); ;
+            report.Solution = solution;
+            output.GiveOutput(report);
+            return report;
         }
 
 
@@ -160,8 +210,14 @@ namespace So_CSHARP
             //should go through every elem in the solution, and
             //compute whether the solution is better than the original solution
             //by the use of the three constraint functions below.
-            //if a particular constraint is not fulfilled -> miss penalty. 
-    }
+            //if a particular constraint is not fulfilled -> miss penalty.
+
+            //Hvis alle edges har Quenumber 1 bliver der ofte sendt for meget over et link medium
+            //på en gang (bandwidth constraint).
+            //Derfor skal vi sørge for at minimere meanE2E, mens vi samtidig sikre os at der ikke bliver overført for meget
+            //på et link medium i løbetr af en cycle.
+
+        }
 
 
 
@@ -211,49 +267,6 @@ namespace So_CSHARP
             }
         }
 
-        /// <summary>
-        /// Adds property vertexneighbors to all vertex objects. 
-        /// </summary>
-        /// <param name="arch"></param>
-        public static void mapVertexNeighbors(Architecture arch)
-        {
-            foreach (var vertex in arch.Vertices)
-            {
-                List<Vertex> neighbors = new();
-                List<Edge> edgeNeighbors = new();
-
-
-                foreach (Edge edge in arch.Edges)
-                {
-                    if (edge.Destination == vertex.Name || edge.Source == vertex.Name)
-                    {
-                        edgeNeighbors.Add(edge);
-                    }
-                }
-
-                foreach (Edge edge in edgeNeighbors)
-                {
-                    if (edge.Source != vertex.Name)
-                    {
-                        neighbors.Add(edge.SourceVertex);
-                    }
-
-                    if (edge.Destination != vertex.Name)
-                    {
-                        neighbors.Add(edge.DestinationVertex);
-                    }
-                }
-
-                vertex.vertexNeighbors = neighbors.ToList();
-
-                // Console.WriteLine("---------------------- vertex ---------------------------------------------");
-                //     Console.WriteLine(vertex);  
-                //    Console.WriteLine("---------------------- neighbors ---------------------------------------------");
-                //    Console.WriteLine(neighbors);
-            }
-            Console.WriteLine(" ----------------------Vertex Neighbors found---------------------------");
-            System.Console.WriteLine();
-        }
 
         public static void FindMessageRoutes(Application apps, Architecture arch)
         {
@@ -367,7 +380,10 @@ namespace So_CSHARP
                     }
                 }
                 Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
-                path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"    ));
+                //path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"    ));
+                Console.WriteLine("\n");
+                Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
+                path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"));
                 possiblePaths.Add(path);
                 Console.WriteLine("\n");
             }
@@ -383,7 +399,7 @@ namespace So_CSHARP
                 // maybe???
                 // We should check direction before invoking this function thus, the deleted part of the if statement. 
                 // since edges are biderctional we can possibly recieve a wrong direction 
-                if (String.Equals(edge.Source, source.Name) && String.Equals(edge.Destination, destination.Name)) //|| String.Equals(edge.Source, destination.Name) && String.Equals(edge.Destination, source.Name))
+                if ( (String.Equals(edge.Source, source.Name) && String.Equals(edge.Destination, destination.Name)) || (String.Equals(edge.Source, destination.Name) && String.Equals(edge.Destination, source.Name)))
                 {
                     return edge;
                 }
