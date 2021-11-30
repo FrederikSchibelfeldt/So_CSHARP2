@@ -8,16 +8,15 @@ namespace So_CSHARP
 {
     public class Inputs
     {
-        // Try with inputPath later
-        static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
-        static string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         static Dictionary<string, List<string>> dict = new();
         public static Application readApps()
         {
             Application res = new Application();
+
             var xs = new XmlSerializer(typeof(Application));
-            string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
+            using (FileStream fileStream =
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
             {
                 res = (Application)xs.Deserialize(fileStream);
             }
