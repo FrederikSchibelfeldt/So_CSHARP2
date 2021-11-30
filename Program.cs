@@ -19,12 +19,16 @@ namespace So_CSHARP
             // Initialization line 19-24
             var application = readApps();
             var arch = readConfig();
-            populateFields(application,arch);
-            mapVertex(arch);
+            PopulateFields(application,arch);
             mapVertexNeighbors(arch);
-            // findPath(application,arch);
-            // FindMessageRoutes(application,arch);
-            // simmulatedAnnealing(findPath(application,arch), application, arch)
+            FindMessageRoutes(application,arch);
+            //It might be a problem that the outputtet source and destination of the
+            //particular links within a message looks wierd. But it should work.
+
+            //Whenever we want we can do a if condition somewhere that flips source
+            //and destination for a particular link if the destination of the
+            //previous link is not equal to the source of the current link.
+            GenerateRandomSolution(arch, application);
             GeneticAlgorithms(arch, application, 2000, 200);
         }
 
