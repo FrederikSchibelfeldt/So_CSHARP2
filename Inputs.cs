@@ -381,29 +381,33 @@ namespace So_CSHARP
             return evaluations;
         }
         
-        public static List<Output.Report> SelectedPopulation(int n,List<Output.Report> population, List<double> evaluations)
+        public static List<Output.Report> SelectedPopulation(int selectedSize,List<Output.Report> population, List<double> evaluations)
         {
             List<Output.Report> selectedPopulation = new List<Output.Report>();
-            var nums = evaluations.OrderBy(x => x).Take(n).ToList();
-            for(int i = 0; i<nums.Count()-1;i++){
+            var nums = evaluations.OrderBy(x => x).Take(selectedSize).ToList();
+            for(int i = 0; i<nums.Count();i++){
                 selectedPopulation.Add(population[evaluations.FindIndex(x => x == nums[i])]);
             }
             return selectedPopulation;
         }
-        
-        
 
-        public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize)
+        public static List<Output.Report> RecombinedPopulation(List<Output.Report> selectedPopulation)
+        {
+            List<Output.Report> recombinedPopulation = new List<Output.Report>();
+            // FRAT RECOMBINE HER
+            return recombinedPopulation;
+        }
+
+        public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize, int selectedSize)
         {
             // Initialize population
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
             // Evaluate population
             List<double> evaluations = EvaluationList(population);
             // Selection using elitism (fitness proportionate and tournament selection)
-            List<Output.Report> selectedPopulation = SelectedPopulation(2,population, evaluations);
-            Console.WriteLine(selectedPopulation.Count());
-            Console.WriteLine("----------------------------------------");
-
+            List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
+            // Recombine 
+            List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
 
 
         }
