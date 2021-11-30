@@ -11,7 +11,7 @@ namespace So_CSHARP
         // Try with inputPath later
         static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
-        static string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;  
+        static string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         static Dictionary<string, List<string>> dict = new();
         public static Application readApps()
         {
@@ -342,13 +342,14 @@ namespace So_CSHARP
                 pathList.Add(message.SourceVertex);
                 isVisited.Add(message.SourceVertex);
 
-                // Call recursive utility
-                Console.WriteLine("--------------------findAPath--------------------");
-                findAPath(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
+                // Call to find possible 
+                Console.WriteLine("--------------------findAllPossiblePaths--------------------");
+                findAllPossiblePaths(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
 
-                //message.PrintPossibleVertexPaths();
-
-                // message.VertexPathsToEdgePaths(edges);
+                // DEFINE  possible edge paths from possible vertex paths 
+                // then add to message 
+                message.PossibleEdgePaths = MessageVertexPathsToEdgePaths(message,arch);
+                
 
                 //message.PrintPossiblePaths();
 
@@ -359,7 +360,7 @@ namespace So_CSHARP
 
             Console.ForegroundColor = ConsoleColor.White;
         }
-        private static void findAPath(Vertex source, Vertex destination, Message message, List<Vertex> isVisited, List<Vertex> localPathList)
+        private static void findAllPossiblePaths(Vertex source, Vertex destination, Message message, List<Vertex> isVisited, List<Vertex> localPathList)
         {
             if (source.Equals(destination))
             {
@@ -383,7 +384,7 @@ namespace So_CSHARP
                     // in path[]
                     localPathList.Add(vertex);
 
-                    findAPath(vertex, destination, message, isVisited,
+                    findAllPossiblePaths(vertex, destination, message, isVisited,
                                     localPathList);
 
                     // remove current node in path
@@ -392,9 +393,46 @@ namespace So_CSHARP
             }
             isVisited.Remove(source);
         }
+                    // possibly return List<List<Edge>>
+        public static List<List<Edge>> MessageVertexPathsToEdgePaths(Message message, Architecture arch)
+        {
+
+            List<List<Edge>> possiblePaths = new();
+            List<Edge> path;
 
 
+            foreach (List<Vertex> route in message.PossibleVerticesPath)
+            {
+                path = new();
+
+                for (int i = 0; i < route.Count; i++)
+                {
+                    if (i < route.Count - 1)
+                    {
+                        path.Add(EdgeFromVerticies(route.ElementAt(i), route.ElementAt(i + 1), arch));
+                    }
+                }
+
+                possiblePaths.Add(path);
+            }
+
+            //Return and add to possible edge paths for a message. 
+           // message.PossibleEdgePaths.Add();                 // ADD TO MESSAGES AS WELL
+            return possiblePaths.ToList();
+        }
+        public static Edge EdgeFromVerticies(Vertex source, Vertex destination, Architecture arch)
+        {
+            foreach (Edge edge in arch.Edges)
+            {
+                if (String.Equals(edge.Source, source.Name) && String.Equals(edge.Destination, destination.Name) || String.Equals(edge.Source, destination.Name) && String.Equals(edge.Destination, source.Name))
+                {
+                    return edge;
+                }
+            }
+            return null;
+        }
     }
+
 
     [XmlRoot(ElementName = "Application")]
     public class Application
@@ -421,6 +459,8 @@ namespace So_CSHARP
         [XmlAttribute(AttributeName = "Deadline")]
         public string Deadline { get; set; }
         public List<List<Vertex>> PossibleVerticesPath { get; set; }
+
+        public List<List<Edge>> PossibleEdgePaths { get; set; } // Caculated after finding all possible paths using vertices.  
     }
 
     [XmlRoot(ElementName = "Vertex")]
