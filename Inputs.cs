@@ -395,6 +395,26 @@ namespace So_CSHARP
         {
             List<Output.Report> recombinedPopulation = new List<Output.Report>();
             // FRAT RECOMBINE HER
+            int m = selectedPopulation[0].Message.Count/2;
+            int j = selectedPopulation[0].Message.Count*(3/4);
+            Output.Report tempReport = selectedPopulation[0];
+
+            for(int i = 0;i <= selectedPopulation.Count;i++){
+                Output.Report tmp = new Output.Report();
+
+                if(i == selectedPopulation.Count){
+                selectedPopulation[i].Message[m] = tempReport.Message[m];
+                recombinedPopulation.Add(tmp);
+
+                }
+                while(m<= j){
+                selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
+                tmp = selectedPopulation[i];
+                recombinedPopulation.Add(tmp);
+                m++;
+                }
+            }
+            Console.Write(selectedPopulation.SequenceEqual(recombinedPopulation));
             return recombinedPopulation;
         }
 
