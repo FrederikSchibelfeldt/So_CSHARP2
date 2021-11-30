@@ -370,18 +370,41 @@ namespace So_CSHARP
             int meane2e = meanE2E(report);
             return meane2e;
         }
+        
+        public static List<double> EvaluationList(List<Output.Report> population)
+        {
+            List<double> evaluations = new();
+            foreach (Output.Report report in population)
+            {
+                evaluations.Add(ObjectiveFunction(report));
+            }
+            return evaluations;
+        }
+        
+        public static List<Output.Report> SelectedPopulation(List<Output.Report> population, List<double> evaluations)
+        {
+            List<Output.Report> selectedPopulation = new List<Output.Report>();
+            double min = evaluations.Min();
+            selectedPopulation.Add(population[evaluations.IndexOf(min)]);
+            double secondMin = evaluations.Where(x => x > min).Min();
+            selectedPopulation.Add(population[evaluations.IndexOf(secondMin)]);
+            return selectedPopulation;
+        }
+        
+        
 
         public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize)
         {
             // Initialize population
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
             // Evaluate population
-            List<double> evaluations = new();
-            foreach (Output.Report report in population)
-            {
-                evaluations.Add(ObjectiveFunction(report));
-            }
-            
+            List<double> evaluations = EvaluationList(population);
+            // Selection using elitism (fitness proportionate and tournament selection)
+            List<Output.Report> selectedPopulation = SelectedPopulation(population, evaluations);
+            Console.WriteLine("----------------------------------------");
+
+
+
         }
     
         
