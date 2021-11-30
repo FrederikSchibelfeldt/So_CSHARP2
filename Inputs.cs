@@ -400,15 +400,15 @@ namespace So_CSHARP
 
             for(int i = 0;i <= selectedPopulation.Count;i++){
                 Output.Report tmp = new Output.Report();
-
+                while(m<= j){
                 if(i == selectedPopulation.Count-1){
                 selectedPopulation[i].Message[m] = tempReport.Message[m];
-                recombinedPopulation.Add(tmp);
 
                 }
-                while(m<= j){
+                else{
                 selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
                 tmp = selectedPopulation[i];
+                }
                 m++;
                 }
                 recombinedPopulation.Add(tmp);
