@@ -160,8 +160,8 @@ namespace So_CSHARP
                 var links = new List<Output.Link>();
 
                 List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
-
-                sumBWForSolution = sumBWForSolution + CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
+                long mBW = CalculateMeanBWforCurrentMessage(message, chosenPath);
+                sumBWForSolution = sumBWForSolution + mBW; // ineffienct looping 
 
                 foreach (Edge edge in chosenPath)
                 {
@@ -175,6 +175,7 @@ namespace So_CSHARP
                 m.Link = links;
                 m.Name = message.Name;
                 m.MaxE2E = maxE2E.ToString();
+                m.BW = mBW;
                 report.Message.Add(m);
                 i++;
                 // Color console "skrift" for testing purposes
@@ -188,7 +189,7 @@ namespace So_CSHARP
                 Console.WriteLine("------------------------------------------");
             }
             var solution = new Output.Solution();
-            solution.MeanBW = sumBWForSolution;
+            solution.MeanBW = sumBWForSolution/app.Messages.Count;
             solution.Runtime = 0;
             solution.MeanE2E = 0;
             Console.WriteLine("---Solution---");
@@ -243,7 +244,7 @@ namespace So_CSHARP
                  sumBW = sumBW + edge.BWConsumption;          // SUM UP for each edge message is going through
             }
 
-            return sumBW / edges.Count;
+            return sumBW;
         }
 
         public static int meanE2E(Application apps, Architecture arch)
@@ -391,17 +392,17 @@ namespace So_CSHARP
             return meane2e;
         }
         
-        public static List<double> EvaluationList(List<Output.Report> population)
+        public static List<long> EvaluationList(List<Output.Report> population)
         {
-            List<double> evaluations = new();
+            List<long> evaluations = new();
             foreach (Output.Report report in population)
             {
-                evaluations.Add(ObjectiveFunction(report));
+                evaluations.Add(report.Solution.MeanBW);
             }
             return evaluations;
         }
         
-        public static List<Output.Report> SelectedPopulation(int selectedSize,List<Output.Report> population, List<double> evaluations)
+        public static List<Output.Report> SelectedPopulation(int selectedSize,List<Output.Report> population, List<long> evaluations)
         {
             List<Output.Report> selectedPopulation = new List<Output.Report>();
             var nums = evaluations.OrderBy(x => x).Take(selectedSize).ToList();
@@ -421,14 +422,14 @@ namespace So_CSHARP
             for(int i = 0;i < selectedPopulation.Count;i++){
                 Output.Report tmp = new Output.Report();
                 while(m<= j){
-                if(i == selectedPopulation.Count-1){
-                selectedPopulation[i].Message[m] = tempReport.Message[m];
-                }
-                else{
-                selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
-                tmp = selectedPopulation[i];
-                }
-                m++;
+                    if(i == selectedPopulation.Count-1){
+                        selectedPopulation[i].Message[m] = tempReport.Message[m];
+                    }
+                    else{
+                        selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
+                        tmp = selectedPopulation[i];
+                    }
+                    m++;
                 }
                 recombinedPopulation.Add(tmp);
             }
@@ -455,7 +456,7 @@ namespace So_CSHARP
             // Initialize population
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
             // Evaluate population
-            List<double> evaluations = EvaluationList(population);
+            List<long> evaluations = EvaluationList(population);
             // Return best solution if stopping criteria met
             
             // Selection using elitism (fitness proportionate and tournament selection)
@@ -464,7 +465,7 @@ namespace So_CSHARP
             List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
             // Mutation to create new generation
             List<Output.Report> mutatedPopulation = MutatePopulation(populationSize, recombinedPopulation);
-
+            Console.WriteLine("GIRLS WANTS GIRLS");
         }
     
         

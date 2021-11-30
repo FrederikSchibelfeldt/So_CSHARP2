@@ -28,8 +28,7 @@ namespace So_CSHARP
             //Whenever we want we can do a if condition somewhere that flips source
             //and destination for a particular link if the destination of the
             //previous link is not equal to the source of the current link.
-            GenerateRandomSolution(arch, application);
-            GeneticAlgorithms(arch, application, 2000, 200);
+            GeneticAlgorithms(arch, application, 10, 2);
         }
 
     }

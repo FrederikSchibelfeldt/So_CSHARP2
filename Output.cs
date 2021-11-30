@@ -61,6 +61,8 @@ namespace So_CSHARP
             public string Name { get; set; }
             [XmlAttribute(AttributeName = "maxE2E")]
             public string MaxE2E { get; set; }
+            [XmlAttribute(AttributeName = "BW")]
+            public long BW { get; set; }
         }
 
         [XmlRoot(ElementName = "Report")]
