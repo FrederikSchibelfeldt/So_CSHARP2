@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using static So_CSHARP.Inputs;
 using static So_CSHARP.Output;
+using static So_CSHARP.SimulatedAnnealing;
 using Google.OrTools;
 
 namespace So_CSHARP
@@ -28,8 +29,10 @@ namespace So_CSHARP
             //Whenever we want we can do a if condition somewhere that flips source
             //and destination for a particular link if the destination of the
             //previous link is not equal to the source of the current link.
-            GenerateRandomSolution(arch, application);
-            GeneticAlgorithms(arch, application, 2000, 200);
+       //     GenerateRandomSolution(arch, application);
+      //      GeneticAlgorithms(arch, application, 2000, 200);
+
+            runSimulatedAnnealing(arch,application);
         }
 
     }

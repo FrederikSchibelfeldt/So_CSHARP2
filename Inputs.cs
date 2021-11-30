@@ -149,7 +149,7 @@ namespace So_CSHARP
         {
             var random = new Random();
             var report = new Output.Report();
-            report.Message = new List<Output.Message>();
+            report.Messages = new List<Output.Message>();
             int i = 0;
 
             long sumBWForSolution = 0;
@@ -166,7 +166,9 @@ namespace So_CSHARP
                 foreach (Edge edge in chosenPath)
                 {
                     var link = new Output.Link();
+                 
                     link.Qnumber = random.Next(1, 4).ToString();
+                    maxE2E = maxE2E + Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);  // TODO: refractor 
                     link.Source = edge.Source;
                     link.Destination = edge.Destination;
                     links.Add(link);
@@ -174,8 +176,8 @@ namespace So_CSHARP
                 var m = new Output.Message();
                 m.Link = links;
                 m.Name = message.Name;
-                m.MaxE2E = maxE2E.ToString();
-                report.Message.Add(m);
+                m.MaxE2E =  maxE2E.ToString();
+                report.Messages.Add(m);
                 i++;
                 // Color console "skrift" for testing purposes
                 Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
@@ -188,7 +190,7 @@ namespace So_CSHARP
                 Console.WriteLine("------------------------------------------");
             }
             var solution = new Output.Solution();
-            solution.MeanBW = sumBWForSolution;
+            solution.MeanBW = (sumBWForSolution / report.Messages.Count);
             solution.Runtime = 0;
             solution.MeanE2E = 0;
             Console.WriteLine("---Solution---");
@@ -229,7 +231,7 @@ namespace So_CSHARP
         // INFO: THIS FUNCTION SHOULD BE INCLUDED AS PART OF message loop (the intention is for an outer variable to keep track) 
         // PARAM: "message": the message being sent 
         // PARAM: "edges": the edges the message is going through 
-        private static long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
+        public static long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
         {
             int sumBW = 0;
             Console.WriteLine("CalculateMeanBWforCurrentMessage");
@@ -242,8 +244,7 @@ namespace So_CSHARP
                 Console.WriteLine(message.Size);
                  sumBW = sumBW + edge.BWConsumption;          // SUM UP for each edge message is going through
             }
-
-            return sumBW / edges.Count;
+            return sumBW;
         }
 
         public static int meanE2E(Application apps, Architecture arch)
@@ -378,7 +379,7 @@ namespace So_CSHARP
         {
             int counter = 0;
             int sum = 0;
-            foreach (Output.Message message in report.Message)
+            foreach (Output.Message message in report.Messages)
             {
                 sum += Int32.Parse(message.MaxE2E);
                 counter++;
@@ -414,18 +415,18 @@ namespace So_CSHARP
         public static List<Output.Report> RecombinedPopulation(List<Output.Report> selectedPopulation)
         {
             List<Output.Report> recombinedPopulation = new List<Output.Report>();
-            int m = selectedPopulation[0].Message.Count/2;
-            int j = (3*selectedPopulation[0].Message.Count)/4;
+            int m = selectedPopulation[0].Messages.Count/2;
+            int j = (3*selectedPopulation[0].Messages.Count)/4;
             Output.Report tempReport = selectedPopulation[0];
 
             for(int i = 0;i < selectedPopulation.Count;i++){
                 Output.Report tmp = new Output.Report();
                 while(m<= j){
                 if(i == selectedPopulation.Count-1){
-                selectedPopulation[i].Message[m] = tempReport.Message[m];
+                selectedPopulation[i].Messages[m] = tempReport.Messages[m];
                 }
                 else{
-                selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
+                selectedPopulation[i].Messages[m] = selectedPopulation[i+1].Messages[m];
                 tmp = selectedPopulation[i];
                 }
                 m++;

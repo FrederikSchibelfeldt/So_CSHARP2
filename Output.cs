@@ -31,6 +31,7 @@ namespace So_CSHARP
         }
 
         [XmlRoot(ElementName = "Solution")]
+        [Serializable]
         public class Solution
         {
             [XmlAttribute(AttributeName = "Runtime")]
@@ -64,12 +65,21 @@ namespace So_CSHARP
         }
 
         [XmlRoot(ElementName = "Report")]
-        public class Report
+        public class Report : ICloneable
         {
             [XmlElement(ElementName = "Solution")]
             public Solution Solution { get; set; }
             [XmlElement(ElementName = "Message")]
-            public List<Message> Message { get; set; }
+            public List<Message> Messages { get; set; }
+            public object Clone()
+            {
+                var item = new Report()
+                {
+                    Solution = Solution,
+                    Messages = Messages
+                };
+                return item;
+            }
         }
     }
 }
