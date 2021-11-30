@@ -25,7 +25,7 @@ namespace So_CSHARP
             // findPath(application,arch);
             // FindMessageRoutes(application,arch);
             // simmulatedAnnealing(findPath(application,arch), application, arch)
-            GeneticAlgorithms(arch, application, 11, 2);
+            GeneticAlgorithms(arch, application, 2000, 200);
         }
 
     }

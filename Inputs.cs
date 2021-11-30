@@ -398,12 +398,11 @@ namespace So_CSHARP
             int j = (3*selectedPopulation[0].Message.Count)/4;
             Output.Report tempReport = selectedPopulation[0];
 
-            for(int i = 0;i <= selectedPopulation.Count;i++){
+            for(int i = 0;i < selectedPopulation.Count;i++){
                 Output.Report tmp = new Output.Report();
                 while(m<= j){
                 if(i == selectedPopulation.Count-1){
                 selectedPopulation[i].Message[m] = tempReport.Message[m];
-
                 }
                 else{
                 selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
