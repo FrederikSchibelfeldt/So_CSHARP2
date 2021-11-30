@@ -189,7 +189,7 @@ namespace So_CSHARP
                 Console.WriteLine("------------------------------------------");
             }
             var solution = new Output.Solution();
-            solution.MeanBW = sumBWForSolution/app.Messages.Count;
+            solution.MeanBW = sumBWForSolution/report.Message.Count;
             solution.Runtime = 0;
             solution.MeanE2E = 0;
             Console.WriteLine("---Solution---");
