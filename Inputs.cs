@@ -19,7 +19,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Apps.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Apps2.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -33,7 +33,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Config.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Config2.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;

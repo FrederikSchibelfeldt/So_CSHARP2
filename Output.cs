@@ -51,6 +51,7 @@ namespace So_CSHARP
             public string Destination { get; set; }
             [XmlAttribute(AttributeName = "Qnumber")]
             public int Qnumber { get; set; }
+            [XmlIgnore]
             public int LinkCycleTurn { get; set; }
 
             
@@ -77,7 +78,9 @@ namespace So_CSHARP
             public string MaxE2E { get; set; }
             [XmlAttribute(AttributeName = "BW")]
             public long BW { get; set; }
+            [XmlIgnore]
             public string Deadline { get; set; }
+            [XmlIgnore]
             public long Size { get; set; }
 
             public object Clone()
