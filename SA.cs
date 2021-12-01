@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 
 namespace So_CSHARP
 {
@@ -34,38 +35,37 @@ namespace So_CSHARP
 
         }
 */
-        public static void runSimulatedAnnealing(Architecture arch,Application app){
+        public static Output.Report runSimulatedAnnealing(Architecture arch,Application app){
             Stopwatch stopwatch = new Stopwatch();
             double T = 1000;
             double coolingRate = 0.003;
             List<Output.Report> solutionSpace = new();
             Output.Report initialRandomSolution = Inputs.GenerateRandomSolution(arch, app);
+            //solutionSpace.Add(initialRandomSolution);
+            ///var counter = 0;
             while(T>1){
-                Output.Report RandomSolution = newRandomSolution(arch,app,initialRandomSolution);
+                Output.Report RandomSolution = newRandomSolution(app,initialRandomSolution);
 
-                // TODO: check if RandomSolution is already contained in solution space. (very unlikely) // can be done by comparing BW for now ref: previous sol line 199
-
-                return;
-                int lambda = costFunction(initialRandomSolution) - costFunction(RandomSolution); 
+                // TODO: check if RandomSolution is already contained in solution space. (very unlikely) // can be done by comparing BW for now ref: previous sol line 199  
+                long lambda = Inputs.costFunction(initialRandomSolution, arch) - Inputs.costFunction(RandomSolution, arch); 
+                Console.WriteLine("-------------------------------------------------lambda");
+                Console.WriteLine(lambda);
                 if (lambda > 0 || lambda > Math.Exp(-(1 / T) * lambda))
-                {
+                {   
+                    
                     solutionSpace.Add(RandomSolution);
-
+                }
+                else
+                {
+                    initialRandomSolution = RandomSolution;
                 }
 
-
+               
                 T = T *( 1 - coolingRate);
             }
-                ;
+                return solutionSpace.Last();
         } 
-
-        public static int costFunction(Output.Report report){ // param: 
-                // Return/calcukat cost function for report/solution --- Look for it in inputs.cs (made already)
-
-                return 1; 
-
-        }
-        public static Output.Report newRandomSolution(Architecture arch, Application app, Output.Report currentRandomSolution){
+        public static Output.Report newRandomSolution(Application app, Output.Report currentRandomSolution){
             
 // remember to calculate new sumBWForSolution and to subtract older results (for changed messages solution )
 // Or just calculate the whole thing/sumBWForSolution again lol. 
@@ -73,8 +73,8 @@ namespace So_CSHARP
             int maxE2E = 0;
             int cycleLength = 12;
             var links = new List<Output.Link>();
-            Output.Report report = (Output.Report) currentRandomSolution.Clone();
-            int sumBWForSolution = 0;  
+            Output.Report report = (Output.Report) currentRandomSolution.
+            long sumBWForSolution = 0;  
             
             // ensure messages are sorted by name
             report.Messages.Sort((x, y) => x.Name.CompareTo(y.Name));
@@ -89,23 +89,22 @@ namespace So_CSHARP
             var message = app.Messages.Find( message => message.Name == randomMessageFromSolution.Name);
             
             List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
-
-       //   sumBWForSolution = sumBWForSolution + CalculateMeanBWforCurrentMessage(message, chosenPath); // ignore for now 
-
-                foreach (Edge edge in chosenPath)
+            sumBWForSolution += Inputs.CalculateMeanBWforCurrentMessage(message, chosenPath);
+               foreach (Edge edge in chosenPath)
                 {
+                    //  add cycleTurn for links
                     var link = new Output.Link();
-                    link.Qnumber = rand.Next(1, 4).ToString();
+                    link.Qnumber = rand.Next(1, 4);
+                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Source = edge.Source;
                     link.Destination = edge.Destination;
                     links.Add(link);
                 }
-            var m = new Output.Message();
-            m.Link = links;
-            m.Name = message.Name;
-            m.MaxE2E = maxE2E.ToString();
-            report.Messages.Add(m);
-           Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
+            randomMessageFromSolution.Links = links;
+            randomMessageFromSolution.Name = message.Name;
+            randomMessageFromSolution.MaxE2E = maxE2E.ToString();
+
+         //   Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
             return report;
 
         }

@@ -7,23 +7,24 @@ namespace So_CSHARP
 {
     public class Output
     {
+        static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
         public void GiveOutput(Report rep)
         {
-
+            string sFilePath = Path.GetFullPath(inputPath + "\\Output\\ReportTest1.xml");
             var xs2 = new XmlSerializer(typeof(Report));
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml"))
+            if (File.Exists(sFilePath))
             {
                 {
-                    File.Delete("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml");
+                    File.Delete(sFilePath);
                 }
             }
 
             using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml",
+                new FileStream(sFilePath,
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);
@@ -50,18 +51,21 @@ namespace So_CSHARP
             [XmlAttribute(AttributeName = "Destination")]
             public string Destination { get; set; }
             [XmlAttribute(AttributeName = "Qnumber")]
-            public string Qnumber { get; set; }
+            public int Qnumber { get; set; }
+            public int LinkCycleTurn { get; set; }
         }
 
         [XmlRoot(ElementName = "Message")]
         public class Message
         {
             [XmlElement(ElementName = "Link")]
-            public List<Link> Link { get; set; }
+            public List<Link> Links { get; set; }
             [XmlAttribute(AttributeName = "Name")]
             public string Name { get; set; }
             [XmlAttribute(AttributeName = "maxE2E")]
             public string MaxE2E { get; set; }
+            public string Deadline { get; set; }
+            public long Size { get; set; }
         }
 
         [XmlRoot(ElementName = "Report")]

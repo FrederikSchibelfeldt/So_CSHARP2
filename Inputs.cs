@@ -9,14 +9,18 @@ namespace So_CSHARP
 {
     public class Inputs
     {
+
+        static Dictionary<string, List<string>> dict = new();
+
+            static string inputPath = "..\\So_CSHARP2\\files\\Example";
         public static Application readApps()
         {
             Application res = new Application();
-
+string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                new FileStream(sFilePath, FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -26,11 +30,11 @@ namespace So_CSHARP
         public static Architecture readConfig()
         {
             Architecture res = new Architecture();
-
+string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                new FileStream(sFilePath, FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -149,8 +153,10 @@ namespace So_CSHARP
             int i = 0;
 
             long sumBWForSolution = 0;
+             int sumMaxE2E = 0;
             foreach (Message message in app.Messages)
             {
+               
                 int maxE2E = 0;
                 int cycleLength = 12;
                 var links = new List<Output.Link>();
@@ -158,21 +164,25 @@ namespace So_CSHARP
                 List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
 
                 sumBWForSolution += CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
-
+                var tempCycleTurn = 0;
                 foreach (Edge edge in chosenPath)
                 {
                     var link = new Output.Link();
-                 
-                    link.Qnumber = random.Next(1, 4).ToString();
-                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);  // TODO: refractor 
+                    link.Qnumber = random.Next(1, 4);
+                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);  // TODO: refractor 
                     link.Source = edge.Source;
                     link.Destination = edge.Destination;
+                    tempCycleTurn += link.Qnumber;  
+                    link.LinkCycleTurn = tempCycleTurn;
                     links.Add(link);
                 }
+                sumMaxE2E = sumMaxE2E + maxE2E;
                 var m = new Output.Message();
-                m.Link = links;
+                m.Links = links;
                 m.Name = message.Name;
+                m.Deadline = message.Deadline;
                 m.MaxE2E =  maxE2E.ToString();
+                m.Size =  Int32.Parse(message.Size) ;
                 report.Messages.Add(m);
                 i++;
                 // Color console "skrift" for testing purposes
@@ -188,10 +198,12 @@ namespace So_CSHARP
             var solution = new Output.Solution();
             solution.MeanBW = (sumBWForSolution / report.Messages.Count);
             solution.Runtime = 0;
-            solution.MeanE2E = 0;
-            Console.WriteLine("---Solution---");
+            solution.MeanE2E = sumMaxE2E/ report.Messages.Count;
+            Console.WriteLine("---Solution- --");
+
             Console.WriteLine(solution);
             report.Solution = solution;
+            linkCapacityContraint(report,arch);
             return report;
         }
 
@@ -201,19 +213,23 @@ namespace So_CSHARP
         }
 
 
-    public static void costFunction()
-        {
-            //should go through every elem in the solution, and
-            //compute whether the solution is better than the original solution
-            //by the use of the three constraint functions below.
-            //if a particular constraint is not fulfilled -> miss penalty.
+    public static long costFunction(Output.Report report, Architecture arch)
+        {  
+            long cost = report.Solution.MeanBW + report.Solution.MeanE2E;
 
-            //Hvis alle edges har Quenumber 1 bliver der ofte sendt for meget
-            //over et link medium på en gang (bandwidth constraint).
-            //Derfor skal vi sørge for at minimere meanE2E, mens vi samtidig
-            //sikre os at der ikke bliver overført for meget på et link medium
-            //i løbet af en cycle.
+            if(!linkCapacityContraint(report, arch)){
 
+                cost = cost + 1000; 
+            }
+
+            if(!deadlineContraint(report)){
+
+                cost = cost + 1000; 
+            }
+
+                Console.WriteLine("-------------------------------------------------cost");
+                Console.WriteLine(cost);
+        return cost; 
         }
 
 
@@ -247,22 +263,75 @@ namespace So_CSHARP
                 sum += Int32.Parse(vertex.MaxE2E);
                 counter++;
             }
-            return sum / counter;
+            return sum / counter;  
         }
 
 
-        public static bool deadlineContraint(int maxE2E, string deadline)
+        public static bool deadlineContraint(Output.Report report)
         {
-            if (maxE2E < Int32.Parse(deadline))
+            foreach (Output.Message message in report.Messages)
             {
-                return true;
+
+                if (Int32.Parse(message.MaxE2E) < Int32.Parse(message.Deadline))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
+        public static bool linkCapacityContraint(Output.Report report, Architecture arch)
+        {
+
+            Console.WriteLine("--------------------linkCapacityContraint--------------------");
+
+            for (int i = 1; i < (arch.Edges.Count() - 1) * 3; i++)
+            {
+                List<(Output.Link, Output.Message)> links = new();
+                foreach (Output.Message message in report.Messages)
+                {
+                    foreach (Output.Link link in message.Links)
+                    {
+
+                        if (link.LinkCycleTurn == i)
+                        {
+                            links.Add((link, message));
+
+                        }
+                    }
+
+                }
+            //    Console.WriteLine("--------------------message--------------------");
+             //   links.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
+              //  Console.WriteLine("");
+
+                // loops over (links,message) list
+                foreach ((Output.Link, Output.Message) linkandMessage in links)
+                {  
+
+                    var linkandMessages = links.FindAll(link2 => linkandMessage.Item1.Source == link2.Item1.Source && linkandMessage.Item1.Destination == link2.Item1.Destination);
+
+                //    Console.WriteLine("--------------------linkandMessage--------------------");
+                    linkandMessages.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
+                    var currentSource = linkandMessages[0].Item1.Source;
+                    var currentDestination = linkandMessages[0].Item1.Destination;
+                    var bw = arch.Edges.FindLast(edge => edge.Source == currentSource && edge.Destination == currentDestination).BW;
+
+                    var currentSize = linkandMessages.Sum(p => p.Item2.Size);
+                  //  Console.WriteLine("--------------------BW--------------------");
+                   // Console.WriteLine(bw);
+                   // Console.WriteLine(currentSize);
+                    if (currentSize > Int32.Parse(bw)) { return false; }
+                }
+
+            }
+
+            return true;
+        }
 
         public static void FindMessageRoutes(Application apps, Architecture arch)
         {
