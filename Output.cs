@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using System.Linq;
+
 
 namespace So_CSHARP
 {
@@ -44,7 +46,7 @@ namespace So_CSHARP
         }
 
         [XmlRoot(ElementName = "Link")]
-        public class Link
+        public class Link : ICloneable
         {
             [XmlAttribute(AttributeName = "Source")]
             public string Source { get; set; }
@@ -53,10 +55,22 @@ namespace So_CSHARP
             [XmlAttribute(AttributeName = "Qnumber")]
             public int Qnumber { get; set; }
             public int LinkCycleTurn { get; set; }
+
+            public object Clone()
+            {
+                var item = new Link()
+                {
+                    Source = Source,
+                    Destination = Destination,
+                    Qnumber = Qnumber,
+                    LinkCycleTurn = LinkCycleTurn
+                };
+                return item;
+            }
         }
 
         [XmlRoot(ElementName = "Message")]
-        public class Message
+        public class Message : ICloneable
         {
             [XmlElement(ElementName = "Link")]
             public List<Link> Links { get; set; }
@@ -66,6 +80,19 @@ namespace So_CSHARP
             public string MaxE2E { get; set; }
             public string Deadline { get; set; }
             public long Size { get; set; }
+            public long BW { get; set; }
+            public object Clone()
+            {
+                var item = new Message()
+                {
+                    Links = Links.Select(x => x.Clone()).Cast<Link>().ToList(),
+                    Name = Name,
+                    MaxE2E = MaxE2E,
+                    BW = BW
+                };
+                return item;
+            }
+
         }
 
         [XmlRoot(ElementName = "Report")]
@@ -80,10 +107,12 @@ namespace So_CSHARP
                 var item = new Report()
                 {
                     Solution = Solution,
-                    Messages = Messages
+                    Messages = Messages.Select(x => x.Clone()).Cast<Message>().ToList()
                 };
                 return item;
             }
         }
+
+
     }
 }

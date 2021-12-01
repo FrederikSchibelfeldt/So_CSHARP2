@@ -222,10 +222,6 @@ string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
                 cost = cost + 1000; 
             }
 
-            if(!deadlineContraint(report)){
-
-                cost = cost + 1000; 
-            }
 
                 Console.WriteLine("-------------------------------------------------cost");
                 Console.WriteLine(cost);

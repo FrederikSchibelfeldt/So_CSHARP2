@@ -73,7 +73,7 @@ namespace So_CSHARP
             int maxE2E = 0;
             int cycleLength = 12;
             var links = new List<Output.Link>();
-            Output.Report report = (Output.Report) currentRandomSolution.
+            Output.Report report = (Output.Report) currentRandomSolution.Clone();
             long sumBWForSolution = 0;  
             
             // ensure messages are sorted by name
@@ -104,7 +104,7 @@ namespace So_CSHARP
             randomMessageFromSolution.Name = message.Name;
             randomMessageFromSolution.MaxE2E = maxE2E.ToString();
 
-         //   Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
+            Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
             return report;
 
         }
