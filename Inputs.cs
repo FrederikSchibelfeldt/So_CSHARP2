@@ -19,7 +19,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps2.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Apps.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -33,7 +33,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config2.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Config.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -146,7 +146,7 @@ namespace So_CSHARP
         {
             var random = new Random();
             var report = new Output.Report();
-            report.Message = new List<Output.Message>();
+            report.Messages = new List<Output.Message>();
             int i = 0;
 
             long sumBWForSolution = 0;
@@ -158,29 +158,35 @@ namespace So_CSHARP
 
                 List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
                 long mBW = CalculateMeanBWforCurrentMessage(message, chosenPath);
-                sumBWForSolution = sumBWForSolution + mBW; // ineffienct looping 
+                sumBWForSolution = sumBWForSolution + mBW;
+                var tempCycleTurn = 0;
+ // ineffienct looping 
 
                 foreach (Edge edge in chosenPath)
                 {
                     var link = new Output.Link();
-                    link.Qnumber = random.Next(1, 4).ToString();
+                    link.Qnumber = random.Next(1, 4);
                     link.Source = edge.Source;
-                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);
+                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Destination = edge.Destination;
+                    tempCycleTurn += link.Qnumber;  
+                    link.LinkCycleTurn = tempCycleTurn;
                     links.Add(link);
                 }
                 var m = new Output.Message();
-                m.Link = links;
+                m.Links = links;
                 m.Name = message.Name;
                 m.MaxE2E = maxE2E.ToString();
+                m.Deadline = message.Deadline;
                 m.BW = mBW;
-                report.Message.Add(m);
+                m.Size = Int32.Parse(message.Size);
+                report.Messages.Add(m);
                 i++;
                 // Color console "skrift" for testing purposes
                
             }
             var solution = new Output.Solution();
-            solution.MeanBW = sumBWForSolution/report.Message.Count;
+            solution.MeanBW = sumBWForSolution/report.Messages.Count;
             solution.Runtime = 0;
             solution.MeanE2E = 0;
           
@@ -199,27 +205,32 @@ namespace So_CSHARP
             Output.Report report = (Output.Report) currentRandomSolution.Clone();
             
             // Choose a random message name from solution messages
-            var randomMessageFromSolution = report.Message[rand.Next(0,report.Message.Count)]; 
+            var randomMessageFromSolution = report.Messages[rand.Next(0,report.Messages.Count)]; 
        
 
             // Use chosen randomMessageFromSolution name to find a message in APP 
             // For extraction of values such as edgepath. 
             var message = app.Messages.Find( message => message.Name == randomMessageFromSolution.Name);
             
-            List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
+            List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0,message.PossibleEdgePaths.Count)];
+            var tempCycleTurn = 0; // just take first path for now 
             foreach (Edge edge in chosenPath)
                 {
                     var link = new Output.Link();
-                    link.Qnumber = rand.Next(1, 4).ToString();
+                    link.Qnumber = rand.Next(1, 4);
                     link.Source = edge.Source;
-                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);
+                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Destination = edge.Destination;
+                    tempCycleTurn += link.Qnumber;  
+                    link.LinkCycleTurn = tempCycleTurn;
                     links.Add(link);
                 }
-            randomMessageFromSolution.Link = links;
+            randomMessageFromSolution.Links = links;
             randomMessageFromSolution.Name = message.Name;
+            randomMessageFromSolution.Deadline = message.Deadline;
             randomMessageFromSolution.MaxE2E = maxE2E.ToString();
             randomMessageFromSolution.BW = CalculateMeanBWforCurrentMessage(message, chosenPath);
+            randomMessageFromSolution.Size = Int32.Parse(message.Size);
             return report;
         }
 
@@ -388,7 +399,7 @@ namespace So_CSHARP
         {
             int counter = 0;
             int sum = 0;
-            foreach (Output.Message message in report.Message)
+            foreach (Output.Message message in report.Messages)
             {
                 sum += Int32.Parse(message.MaxE2E);
                 counter++;
@@ -401,7 +412,7 @@ namespace So_CSHARP
             return meane2e;
         }
         
-        public static List<long> EvaluationList(List<Output.Report> population)
+        public static List<long> EvaluationList(List<Output.Report> population, Architecture arch)
         {
             List<long> evaluations = new();
             
@@ -409,14 +420,20 @@ namespace So_CSHARP
             {
                 long meanBW = new();
                 int meanE2E = new();
-                foreach (Output.Message message in report.Message)
+                foreach (Output.Message message in report.Messages)
                 {
                     meanE2E += Int32.Parse(message.MaxE2E);
                     meanBW += message.BW;
                 }
+                if(!deadlineContraint(report)){
+                    meanBW += 500;
+                }
+                if(!linkCapacityContraint(report,arch)){
+                    meanBW += 500;
+                }
 
-                report.Solution.MeanE2E = meanE2E / report.Message.Count;
-                evaluations.Add(meanBW / report.Message.Count);
+                report.Solution.MeanE2E = meanE2E / report.Messages.Count;
+                evaluations.Add(meanBW / report.Messages.Count);
             }
             return evaluations;
         }
@@ -434,18 +451,18 @@ namespace So_CSHARP
         public static List<Output.Report> RecombinedPopulation(List<Output.Report> selectedPopulation)
         {
             List<Output.Report> recombinedPopulation = new List<Output.Report>();
-            int m = selectedPopulation[0].Message.Count/2;
-            int j = (3*selectedPopulation[0].Message.Count)/4;
+            int m = selectedPopulation[0].Messages.Count/2;
+            int j = (3*selectedPopulation[0].Messages.Count)/4;
             Output.Report tempReport = selectedPopulation[0];
 
             for(int i = 0;i < selectedPopulation.Count;i++){
                 Output.Report tmp = new Output.Report();
                 while(m<= j){
                     if(i == selectedPopulation.Count-1){
-                        selectedPopulation[i].Message[m] = tempReport.Message[m];
+                        selectedPopulation[i].Messages[m] = tempReport.Messages[m];
                     }
                     else{
-                        selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
+                        selectedPopulation[i].Messages[m] = selectedPopulation[i+1].Messages[m];
                     }
                     m++;
                 }
@@ -479,8 +496,9 @@ namespace So_CSHARP
             List<int> meanEval = new List<int>();
             while (sw.Elapsed.TotalMinutes < 1)
             {
+                Console.WriteLine(sw.Elapsed.TotalSeconds);
                 // Evaluate population
-                evaluations = EvaluationList(population);
+                evaluations = EvaluationList(population,arch);
                 meanEval.Add((int) evaluations.Average());
                 // Selection using elitism (fitness proportionate and tournament selection)
                 List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
@@ -493,9 +511,76 @@ namespace So_CSHARP
             meanEval.ForEach(x => Console.WriteLine(x));
             Console.WriteLine("Generation:" + meanEval.Count);
             string csv = String.Join(",", meanEval.Select(x => x.ToString()).ToArray());
-            File.WriteAllText("/Users/mo/02229/So_CSHARP2/files/Example/Output/TC7GA10000-2000.csv", csv);
+            File.WriteAllText("..\\So_CSHARP2\\files\\Example\\Output\\TC7GA10000-2000.csv", csv);
             population[evaluations.IndexOf(evaluations.Min())].Solution.MeanBW = evaluations.Min();
             CreateAReport(population[evaluations.IndexOf(evaluations.Min())]);
+        }
+
+         public static bool deadlineContraint(Output.Report report)
+        {
+            foreach (Output.Message message in report.Messages)
+            {
+                if(message.Deadline == null){message.Deadline = "0";}
+
+                if (Int32.Parse(message.MaxE2E) < Int32.Parse(message.Deadline))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public static bool linkCapacityContraint(Output.Report report, Architecture arch)
+        {
+
+         //   Console.WriteLine("--------------------linkCapacityContraint--------------------");
+
+            for (int i = 1; i < (arch.Edges.Count() - 1) * 3; i++)
+            {
+                List<(Output.Link, Output.Message)> links = new();
+                foreach (Output.Message message in report.Messages)
+                {
+                    foreach (Output.Link link in message.Links)
+                    {
+
+                        if (link.LinkCycleTurn == i)
+                        {
+                            links.Add((link, message));
+
+                        }
+                    }
+
+                }
+            //    Console.WriteLine("--------------------message--------------------");
+             //   links.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
+              //  Console.WriteLine("");
+
+                // loops over (links,message) list
+                foreach ((Output.Link, Output.Message) linkandMessage in links)
+                {  
+
+                    var linkandMessages = links.FindAll(link2 => linkandMessage.Item1.Source == link2.Item1.Source && linkandMessage.Item1.Destination == link2.Item1.Destination);
+
+                //    Console.WriteLine("--------------------linkandMessage--------------------");
+                 //   linkandMessages.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
+                    var currentSource = linkandMessages[0].Item1.Source;
+                    var currentDestination = linkandMessages[0].Item1.Destination;
+                    var bw = arch.Edges.FindLast(edge => edge.Source == currentSource && edge.Destination == currentDestination).BW;
+
+                    var currentSize = linkandMessages.Sum(p => p.Item2.Size);
+                  //  Console.WriteLine("--------------------BW--------------------");
+                   // Console.WriteLine(bw);
+                   // Console.WriteLine(currentSize);
+                    if (currentSize > Int32.Parse(bw)) { return false; }
+                }
+
+            }
+
+            return true;
         }
     
         

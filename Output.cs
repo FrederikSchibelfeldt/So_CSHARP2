@@ -16,15 +16,15 @@ namespace So_CSHARP
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml"))
+            if (File.Exists("..\\So_CSHARP2\\files\\Example\\Output\\ReportTest1.xml"))
             {
                 {
-                    File.Delete("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml");
+                    File.Delete("..\\So_CSHARP2\\files\\Example\\Output\\ReportTest1.xml");
                 }
             }
 
             using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml",
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Output\\ReportTest1.xml",
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);
@@ -50,7 +50,9 @@ namespace So_CSHARP
             [XmlAttribute(AttributeName = "Destination")]
             public string Destination { get; set; }
             [XmlAttribute(AttributeName = "Qnumber")]
-            public string Qnumber { get; set; }
+            public int Qnumber { get; set; }
+            public int LinkCycleTurn { get; set; }
+
             
             public object Clone()
             {
@@ -68,19 +70,21 @@ namespace So_CSHARP
         public class Message: ICloneable
         {
             [XmlElement(ElementName = "Link")]
-            public List<Link> Link { get; set; }
+            public List<Link> Links { get; set; }
             [XmlAttribute(AttributeName = "Name")]
             public string Name { get; set; }
             [XmlAttribute(AttributeName = "maxE2E")]
             public string MaxE2E { get; set; }
             [XmlAttribute(AttributeName = "BW")]
             public long BW { get; set; }
+            public string Deadline { get; set; }
+            public long Size { get; set; }
 
             public object Clone()
             {
                 var item = new Message()
                 {
-                    Link = Link.Select(x => x.Clone()).Cast<Link>().ToList(),
+                    Links = Links.Select(x => x.Clone()).Cast<Link>().ToList(),
                     Name = Name,
                     MaxE2E = MaxE2E,
                     BW = BW
@@ -95,13 +99,13 @@ namespace So_CSHARP
             [XmlElement(ElementName = "Solution")]
             public Solution Solution { get; set; }
             [XmlElement(ElementName = "Message")]
-            public List<Message> Message { get; set; }
+            public List<Message> Messages { get; set; }
             public object Clone()
             {
                 var item = new Report()
                 {
                     Solution = Solution,
-                    Message = Message.Select(x => x.Clone()).Cast<Message>().ToList()
+                    Messages = Messages.Select(x => x.Clone()).Cast<Message>().ToList()
                 };
                 return item;
             }
