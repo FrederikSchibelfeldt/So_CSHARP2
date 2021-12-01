@@ -19,7 +19,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps2.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -33,7 +33,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config2.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -165,6 +165,7 @@ namespace So_CSHARP
                     var link = new Output.Link();
                     link.Qnumber = random.Next(1, 4).ToString();
                     link.Source = edge.Source;
+                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Destination = edge.Destination;
                     links.Add(link);
                 }
@@ -211,6 +212,7 @@ namespace So_CSHARP
                     var link = new Output.Link();
                     link.Qnumber = rand.Next(1, 4).ToString();
                     link.Source = edge.Source;
+                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Destination = edge.Destination;
                     links.Add(link);
                 }
@@ -406,10 +408,14 @@ namespace So_CSHARP
             foreach (Output.Report report in population)
             {
                 long meanBW = new();
+                int meanE2E = new();
                 foreach (Output.Message message in report.Message)
                 {
+                    meanE2E += Int32.Parse(message.MaxE2E);
                     meanBW += message.BW;
                 }
+
+                report.Solution.MeanE2E = meanE2E / report.Message.Count;
                 evaluations.Add(meanBW / report.Message.Count);
             }
             return evaluations;
@@ -470,10 +476,12 @@ namespace So_CSHARP
             Stopwatch sw = new Stopwatch();
             sw.Start();
             List<long> evaluations = new List<long>();
+            List<int> meanEval = new List<int>();
             while (sw.Elapsed.TotalMinutes < 1)
             {
                 // Evaluate population
                 evaluations = EvaluationList(population);
+                meanEval.Add((int) evaluations.Average());
                 // Selection using elitism (fitness proportionate and tournament selection)
                 List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
                 // Recombine 
@@ -482,6 +490,10 @@ namespace So_CSHARP
                 population = MutatePopulation(populationSize, recombinedPopulation,apps);
             }
             // Write best solution to XML
+            meanEval.ForEach(x => Console.WriteLine(x));
+            Console.WriteLine("Generation:" + meanEval.Count);
+            string csv = String.Join(",", meanEval.Select(x => x.ToString()).ToArray());
+            File.WriteAllText("/Users/mo/02229/So_CSHARP2/files/Example/Output/TC7GA10000-2000.csv", csv);
             population[evaluations.IndexOf(evaluations.Min())].Solution.MeanBW = evaluations.Min();
             CreateAReport(population[evaluations.IndexOf(evaluations.Min())]);
         }
