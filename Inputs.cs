@@ -395,9 +395,15 @@ namespace So_CSHARP
         public static List<long> EvaluationList(List<Output.Report> population)
         {
             List<long> evaluations = new();
+            
             foreach (Output.Report report in population)
             {
-                evaluations.Add(report.Solution.MeanBW);
+                long meanBW = new();
+                foreach (Output.Message message in report.Message)
+                {
+                    meanBW += message.BW;
+                }
+                evaluations.Add(meanBW / report.Message.Count);
             }
             return evaluations;
         }
