@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace So_CSHARP
@@ -42,7 +43,7 @@ namespace So_CSHARP
         }
 
         [XmlRoot(ElementName = "Link")]
-        public class Link
+        public class Link: ICloneable
         {
             [XmlAttribute(AttributeName = "Source")]
             public string Source { get; set; }
@@ -50,10 +51,21 @@ namespace So_CSHARP
             public string Destination { get; set; }
             [XmlAttribute(AttributeName = "Qnumber")]
             public string Qnumber { get; set; }
+            
+            public object Clone()
+            {
+                var item = new Link()
+                {
+                    Source = Source,
+                    Destination = Destination,
+                    Qnumber = Qnumber
+                };
+                return item;
+            }
         }
 
         [XmlRoot(ElementName = "Message")]
-        public class Message
+        public class Message: ICloneable
         {
             [XmlElement(ElementName = "Link")]
             public List<Link> Link { get; set; }
@@ -63,15 +75,36 @@ namespace So_CSHARP
             public string MaxE2E { get; set; }
             [XmlAttribute(AttributeName = "BW")]
             public long BW { get; set; }
+
+            public object Clone()
+            {
+                var item = new Message()
+                {
+                    Link = Link.Select(x => x.Clone()).Cast<Link>().ToList(),
+                    Name = Name,
+                    MaxE2E = MaxE2E,
+                    BW = BW
+                };
+                return item;
+            }
         }
 
         [XmlRoot(ElementName = "Report")]
-        public class Report
+        public class Report : ICloneable
         {
             [XmlElement(ElementName = "Solution")]
             public Solution Solution { get; set; }
             [XmlElement(ElementName = "Message")]
             public List<Message> Message { get; set; }
+            public object Clone()
+            {
+                var item = new Report()
+                {
+                    Solution = Solution,
+                    Message = Message.Select(x => x.Clone()).Cast<Message>().ToList()
+                };
+                return item;
+            }
         }
     }
 }

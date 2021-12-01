@@ -1,39 +1,39 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Message Name="F1" maxE2E="102">
+  <Solution Runtime="0" MeanE2E="0" MeanBW="900" />
+  <Message Name="F1" maxE2E="0" BW="900">
     <Link Source="ES1" Destination="SW2" Qnumber="2" />
     <Link Source="SW2" Destination="SW1" Qnumber="1" />
-    <Link Source="SW1" Destination="ES2" Qnumber="3" />
+    <Link Source="SW1" Destination="ES2" Qnumber="1" />
   </Message>
-  <Message Name="F2" maxE2E="92">
-    <Link Source="ES1" Destination="SW2" Qnumber="3" />
+  <Message Name="F2" maxE2E="0" BW="1200">
+    <Link Source="ES1" Destination="SW1" Qnumber="1" />
+    <Link Source="SW2" Destination="SW1" Qnumber="3" />
+    <Link Source="SW2" Destination="ES2" Qnumber="2" />
+  </Message>
+  <Message Name="F3" maxE2E="0" BW="1000">
+    <Link Source="ES1" Destination="SW2" Qnumber="2" />
     <Link Source="SW2" Destination="ES2" Qnumber="3" />
   </Message>
-  <Message Name="F3" maxE2E="68">
+  <Message Name="F4" maxE2E="0" BW="600">
+    <Link Source="ES1" Destination="SW1" Qnumber="3" />
+    <Link Source="SW1" Destination="ES2" Qnumber="3" />
+  </Message>
+  <Message Name="F5" maxE2E="0" BW="800">
+    <Link Source="SW1" Destination="ES2" Qnumber="3" />
+    <Link Source="ES1" Destination="SW1" Qnumber="3" />
+  </Message>
+  <Message Name="F6" maxE2E="0" BW="1000">
+    <Link Source="SW1" Destination="ES2" Qnumber="1" />
     <Link Source="ES1" Destination="SW1" Qnumber="1" />
+  </Message>
+  <Message Name="F7" maxE2E="0" BW="900">
     <Link Source="SW1" Destination="ES2" Qnumber="3" />
-  </Message>
-  <Message Name="F4" maxE2E="114">
-    <Link Source="ES1" Destination="SW2" Qnumber="3" />
     <Link Source="SW2" Destination="SW1" Qnumber="1" />
-    <Link Source="SW1" Destination="ES2" Qnumber="3" />
+    <Link Source="ES1" Destination="SW2" Qnumber="2" />
   </Message>
-  <Message Name="F5" maxE2E="90">
-    <Link Source="ES2" Destination="SW1" Qnumber="1" />
-    <Link Source="SW1" Destination="SW2" Qnumber="2" />
-    <Link Source="SW2" Destination="ES1" Qnumber="2" />
-  </Message>
-  <Message Name="F6" maxE2E="66">
-    <Link Source="ES2" Destination="SW2" Qnumber="1" />
-    <Link Source="SW2" Destination="SW1" Qnumber="1" />
-    <Link Source="SW1" Destination="ES1" Qnumber="1" />
-  </Message>
-  <Message Name="F7" maxE2E="68">
-    <Link Source="ES2" Destination="SW1" Qnumber="2" />
-    <Link Source="SW1" Destination="ES1" Qnumber="2" />
-  </Message>
-  <Message Name="F8" maxE2E="68">
-    <Link Source="ES1" Destination="SW2" Qnumber="3" />
-    <Link Source="SW2" Destination="ES2" Qnumber="1" />
+  <Message Name="F8" maxE2E="0" BW="800">
+    <Link Source="ES1" Destination="SW1" Qnumber="2" />
+    <Link Source="SW1" Destination="ES2" Qnumber="2" />
   </Message>
 </Report>

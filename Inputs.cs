@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -65,8 +66,7 @@ namespace So_CSHARP
 
                 if (message.Source == null || message.Destination == null)
                 {
-                    Console.WriteLine("Source or Destination EMPTY message: " + message);
-                    Console.WriteLine("HUH HUH ?? \n");
+                    
                     //Invalid input
                     Environment.Exit(0);
                 }
@@ -91,9 +91,7 @@ namespace So_CSHARP
 
                 if (edge.Source == null || edge.Destination == null)
                 {
-                    Console.WriteLine("Source or Destination EMPTY EDGE: " + edge);
-                    Console.WriteLine("HUH HUH ?? \n");
-                    //invalid input
+                  
                     Environment.Exit(0);
                 }
 
@@ -140,8 +138,7 @@ namespace So_CSHARP
                 //    Console.WriteLine("---------------------- neighbors ---------------------------------------------");
                 //    Console.WriteLine(neighbors);
             }
-            Console.WriteLine(" ----------------------Vertex Neighbors found---------------------------");
-            System.Console.WriteLine();
+         
         }
 
 
@@ -179,22 +176,48 @@ namespace So_CSHARP
                 report.Message.Add(m);
                 i++;
                 // Color console "skrift" for testing purposes
-                Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
-
-                Console.WriteLine("message solved");
-                Console.WriteLine(i);
-                Console.WriteLine("Solving message: " + message.Name);
-                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
-                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
-                Console.WriteLine("------------------------------------------");
+               
             }
             var solution = new Output.Solution();
             solution.MeanBW = sumBWForSolution/report.Message.Count;
             solution.Runtime = 0;
             solution.MeanE2E = 0;
-            Console.WriteLine("---Solution---");
-            Console.WriteLine(solution);
+          
             report.Solution = solution;
+            return report;
+        }
+        
+        public static Output.Report newRandomSolution(Application app, Output.Report currentRandomSolution)
+        {
+            // remember to calculate new sumBWForSolution and to subtract older results (for changed messages solution )
+            // Or just calculate the whole thing/sumBWForSolution again lol. 
+            Random rand = new Random();
+            int maxE2E = 0;
+            int cycleLength = 12;
+            var links = new List<Output.Link>();
+            Output.Report report = (Output.Report) currentRandomSolution.Clone();
+            
+            // Choose a random message name from solution messages
+            var randomMessageFromSolution = report.Message[rand.Next(0,report.Message.Count)]; 
+       
+
+            // Use chosen randomMessageFromSolution name to find a message in APP 
+            // For extraction of values such as edgepath. 
+            var message = app.Messages.Find( message => message.Name == randomMessageFromSolution.Name);
+            
+            List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
+            foreach (Edge edge in chosenPath)
+                {
+                    var link = new Output.Link();
+                    link.Qnumber = rand.Next(1, 4).ToString();
+                    link.Source = edge.Source;
+                    link.Destination = edge.Destination;
+                    links.Add(link);
+                }
+            randomMessageFromSolution.Link = links;
+            randomMessageFromSolution.Name = message.Name;
+            randomMessageFromSolution.MaxE2E = maxE2E.ToString();
+            randomMessageFromSolution.BW = CalculateMeanBWforCurrentMessage(message, chosenPath);
             return report;
         }
 
@@ -233,14 +256,11 @@ namespace So_CSHARP
         private static long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
         {
             int sumBW = 0;
-            Console.WriteLine("CalculateMeanBWforCurrentMessage");
-            Console.WriteLine(message.Name);
+           
 
             foreach (Edge edge in edges)
             {
-                Console.WriteLine("CalculateMeanBWforCurrentMessage LOOP");
                 edge.BWConsumption = Int32.Parse(message.Size); // BW_Consumption is just size of message sent through edge
-                Console.WriteLine(message.Size);
                  sumBW = sumBW + edge.BWConsumption;          // SUM UP for each edge message is going through
             }
 
@@ -286,14 +306,7 @@ namespace So_CSHARP
 
 
                 // Color console "skrift" for testing purposes
-                Console.ForegroundColor = count_test % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
-
-                Console.WriteLine("count_test");
-                Console.WriteLine(count_test);
-                Console.WriteLine("Finding Routes for Message: " + message.Name);
-                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
-                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
-                Console.WriteLine("------------------------------------------");
+                
 
                 // Call recursive utility
                 List<Vertex> isVisited = new();
@@ -304,7 +317,6 @@ namespace So_CSHARP
                 isVisited.Add(message.SourceVertex);
 
                 // Call to find possible 
-                Console.WriteLine("--------------------findAllPossiblePaths--------------------");
                 findAllPossiblePaths(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
 
                 // DEFINE  possible edge paths from possible vertex paths 
@@ -316,10 +328,8 @@ namespace So_CSHARP
 
                 count_test++;
 
-                Console.WriteLine("------------------------------------------");
             }
 
-            Console.ForegroundColor = ConsoleColor.White;
         }
 
 
@@ -335,8 +345,6 @@ namespace So_CSHARP
         {
             if (source.Equals(destination))
             {
-                Console.WriteLine(string.Join("\n PATH:", "\n"));
-                localPathList.ForEach(p => Console.Write(p.Name));
                 message.PossibleVerticesPath.Add(localPathList.ToList());
                 return;
             }
@@ -368,8 +376,7 @@ namespace So_CSHARP
             List<Output.Report> population = new();
             for (int i = 0; i < size; i++) 
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(i);
+               
                 population.Add(GenerateRandomSolution(arch, apps));
             }
 
@@ -433,45 +440,50 @@ namespace So_CSHARP
                     }
                     else{
                         selectedPopulation[i].Message[m] = selectedPopulation[i+1].Message[m];
-                        tmp = selectedPopulation[i];
                     }
                     m++;
                 }
+                tmp = selectedPopulation[i];
                 recombinedPopulation.Add(tmp);
             }
-            Console.WriteLine(selectedPopulation.SequenceEqual(recombinedPopulation));
             return recombinedPopulation;
         }
 
-        public static List<Output.Report> MutatePopulation(int populationSize, List<Output.Report> recombinedPopulation)
+        public static List<Output.Report> MutatePopulation(int populationSize, List<Output.Report> recombinedPopulation, Application apps)
         {
-            List<Output.Report> mutatedPopulation = recombinedPopulation;
+            List<Output.Report> mutatedPopulation = new List<Output.Report>(recombinedPopulation);
             var random = new Random();
             for (int i = 0; i < populationSize - recombinedPopulation.Count; i++)
             {
                 int j = i % recombinedPopulation.Count;
-                Output.Report currentSolution = recombinedPopulation[j];
-                // currentSolution.Message[random.Next(0, currentSolution.Message.Count)] == Abdi skadet funktion;
-                mutatedPopulation.Add(currentSolution);
+                Output.Report currentSolution = (Output.Report) recombinedPopulation[j].Clone();
+                mutatedPopulation.Add(newRandomSolution(apps, currentSolution));
             }
             return mutatedPopulation;
         }
+
         
         public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize, int selectedSize)
         {
             // Initialize population
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
-            // Evaluate population
-            List<long> evaluations = EvaluationList(population);
-            // Return best solution if stopping criteria met
-            
-            // Selection using elitism (fitness proportionate and tournament selection)
-            List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
-            // Recombine 
-            List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
-            // Mutation to create new generation
-            List<Output.Report> mutatedPopulation = MutatePopulation(populationSize, recombinedPopulation);
-            Console.WriteLine("GIRLS WANTS GIRLS");
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            List<long> evaluations = new List<long>();
+            while (sw.Elapsed.TotalMinutes < 1)
+            {
+                // Evaluate population
+                evaluations = EvaluationList(population);
+                // Selection using elitism (fitness proportionate and tournament selection)
+                List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
+                // Recombine 
+                List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
+                // Mutation to create new generation
+                population = MutatePopulation(populationSize, recombinedPopulation,apps);
+            }
+            // Write best solution to XML
+            population[evaluations.IndexOf(evaluations.Min())].Solution.MeanBW = evaluations.Min();
+            CreateAReport(population[evaluations.IndexOf(evaluations.Min())]);
         }
     
         
@@ -480,7 +492,6 @@ namespace So_CSHARP
         // possibly return List<List<Edge>>
         public static List<List<Edge>> MessageVertexPathsToEdgePaths(Message message, Architecture arch)
         {
-            Console.WriteLine(" \n --------------------MessageVertexPathsToEdgePaths--------------------");
 
             List<List<Edge>> possiblePaths = new();
             List<Edge> path;
@@ -492,18 +503,13 @@ namespace So_CSHARP
 
                     if (i < route.Count - 1)
                     {
-                        Console.WriteLine(route.ElementAt(i).Name);
-                        Console.WriteLine(route.ElementAt(i + 1).Name);
+                        
                         path.Add(EdgeFromVerticies(route.ElementAt(i), route.ElementAt(i + 1), arch));
                     }
                 }
-                Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
                 //path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"    ));
-                Console.WriteLine("\n");
-                Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
-                path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"));
+                
                 possiblePaths.Add(path);
-                Console.WriteLine("\n");
             }
 
             //Return and add to possible edge paths for a message. 
