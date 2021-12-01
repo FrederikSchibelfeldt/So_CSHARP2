@@ -15,15 +15,15 @@ namespace So_CSHARP
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml"))
+            if (File.Exists("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml"))
             {
                 {
-                    File.Delete("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml");
+                    File.Delete("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml");
                 }
             }
 
             using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Output/ReportTest.xml",
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml",
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace So_CSHARP
 {
@@ -33,12 +34,11 @@ namespace So_CSHARP
 
         }
 */
-        // lets run SA baby!
         public static void runSimulatedAnnealing(Architecture arch,Application app){
-        //    Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new Stopwatch();
             double T = 1000;
             double coolingRate = 0.003;
-            List<Output.Report> solutionsSpace = new();
+            List<Output.Report> solutionSpace = new();
             Output.Report initialRandomSolution = Inputs.GenerateRandomSolution(arch, app);
             while(T>1){
                 Output.Report RandomSolution = newRandomSolution(arch,app,initialRandomSolution);
@@ -46,12 +46,11 @@ namespace So_CSHARP
                 // TODO: check if RandomSolution is already contained in solution space. (very unlikely) // can be done by comparing BW for now ref: previous sol line 199
 
                 return;
-                int lambda = costFunction(RandomSolution) - costFunction(initialRandomSolution); // TODO: which rækkefølge?
+                int lambda = costFunction(initialRandomSolution) - costFunction(RandomSolution); 
                 if (lambda > 0 || lambda > Math.Exp(-(1 / T) * lambda))
                 {
-                  //  solutionSpace.Add(c);
-              //      c.Laxity = lax(c);
-               //     c.Scheduleable = doesTasksMeetsDeadline(c);
+                    solutionSpace.Add(RandomSolution);
+
                 }
 
 

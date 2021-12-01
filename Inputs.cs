@@ -9,8 +9,6 @@ namespace So_CSHARP
 {
     public class Inputs
     {
-
-        static Dictionary<string, List<string>> dict = new();
         public static Application readApps()
         {
             Application res = new Application();
@@ -18,7 +16,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -32,7 +30,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -96,7 +94,6 @@ namespace So_CSHARP
                     //invalid input
                     Environment.Exit(0);
                 }
-
             }
         }
 
@@ -110,7 +107,6 @@ namespace So_CSHARP
             {
                 List<Vertex> neighbors = new();
                 List<Edge> edgeNeighbors = new();
-
 
                 foreach (Edge edge in arch.Edges)
                 {
@@ -161,14 +157,14 @@ namespace So_CSHARP
 
                 List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
 
-                sumBWForSolution = sumBWForSolution + CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
+                sumBWForSolution += CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
 
                 foreach (Edge edge in chosenPath)
                 {
                     var link = new Output.Link();
                  
                     link.Qnumber = random.Next(1, 4).ToString();
-                    maxE2E = maxE2E + Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);  // TODO: refractor 
+                    maxE2E += Int32.Parse(link.Qnumber) * cycleLength + Int32.Parse(edge.PropDelay);  // TODO: refractor 
                     link.Source = edge.Source;
                     link.Destination = edge.Destination;
                     links.Add(link);
@@ -205,12 +201,6 @@ namespace So_CSHARP
         }
 
 
-
-
-    //Add functionsimilar to NweRandomSOlution in the master branch. 
-
-    // MeanBW is the average of 
-
     public static void costFunction()
         {
             //should go through every elem in the solution, and
@@ -218,10 +208,11 @@ namespace So_CSHARP
             //by the use of the three constraint functions below.
             //if a particular constraint is not fulfilled -> miss penalty.
 
-            //Hvis alle edges har Quenumber 1 bliver der ofte sendt for meget over et link medium
-            //på en gang (bandwidth constraint).
-            //Derfor skal vi sørge for at minimere meanE2E, mens vi samtidig sikre os at der ikke bliver overført for meget
-            //på et link medium i løbetr af en cycle.
+            //Hvis alle edges har Quenumber 1 bliver der ofte sendt for meget
+            //over et link medium på en gang (bandwidth constraint).
+            //Derfor skal vi sørge for at minimere meanE2E, mens vi samtidig
+            //sikre os at der ikke bliver overført for meget på et link medium
+            //i løbet af en cycle.
 
         }
 
@@ -242,7 +233,7 @@ namespace So_CSHARP
                 Console.WriteLine("CalculateMeanBWforCurrentMessage LOOP");
                 edge.BWConsumption = Int32.Parse(message.Size); // BW_Consumption is just size of message sent through edge
                 Console.WriteLine(message.Size);
-                 sumBW = sumBW + edge.BWConsumption;          // SUM UP for each edge message is going through
+                sumBW += edge.BWConsumption;          // SUM UP for each edge message is going through
             }
             return sumBW;
         }
