@@ -433,6 +433,7 @@ namespace So_CSHARP
                 }
 
                 report.Solution.MeanE2E = meanE2E / report.Messages.Count;
+                report.Solution.MeanBW = meanBW / report.Messages.Count;
                 evaluations.Add(meanBW / report.Messages.Count);
             }
             return evaluations;
@@ -511,8 +512,7 @@ namespace So_CSHARP
             meanEval.ForEach(x => Console.WriteLine(x));
             Console.WriteLine("Generation:" + meanEval.Count);
             string csv = String.Join(",", meanEval.Select(x => x.ToString()).ToArray());
-            File.WriteAllText("..\\So_CSHARP2\\files\\Example\\Output\\TC7GA10000-2000.csv", csv);
-            population[evaluations.IndexOf(evaluations.Min())].Solution.MeanBW = evaluations.Min();
+            File.WriteAllText("/Users/mo/02229/So_CSHARP2/files/Example/Output/TC7GA10000-2000.csv", csv);
             CreateAReport(population[evaluations.IndexOf(evaluations.Min())]);
         }
 
