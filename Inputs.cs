@@ -19,7 +19,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Apps2.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps2.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -33,7 +33,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Config2.xml", FileMode.Open))
+                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config2.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -495,7 +495,7 @@ namespace So_CSHARP
             sw.Start();
             List<long> evaluations = new List<long>();
             List<int> meanEval = new List<int>();
-            while (sw.Elapsed.TotalMinutes < 1)
+            while (sw.Elapsed.TotalMinutes < 2)
             {
                 Console.WriteLine(sw.Elapsed.TotalSeconds);
                 // Evaluate population
@@ -521,17 +521,12 @@ namespace So_CSHARP
             foreach (Output.Message message in report.Messages)
             {
                 if(message.Deadline == null){message.Deadline = "0";}
-
-                if (Int32.Parse(message.MaxE2E) < Int32.Parse(message.Deadline))
-                {
-                    return true;
-                }
-                else
+                if (!(Int32.Parse(message.MaxE2E) < Int32.Parse(message.Deadline)))
                 {
                     return false;
                 }
             }
-            return false;
+            return true;
         }
 
         public static bool linkCapacityContraint(Output.Report report, Architecture arch)
