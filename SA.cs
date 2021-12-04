@@ -22,7 +22,7 @@ namespace So_CSHARP
         public static Output.Report runSimulatedAnnealing(Architecture arch, Application app)
         {
             Stopwatch stopwatch = new Stopwatch();
-            double T = 1000;
+            double T = 200000;
             double coolingRate = 0.003;
             List<Output.Report> solutionSpace = new();
             Output.Report initialRandomSolution = Inputs.GenerateRandomSolution(arch, app);
@@ -34,6 +34,8 @@ namespace So_CSHARP
 
                 // TODO: check if RandomSolution is already contained in solution space. (very unlikely) // can be done by comparing BW for now ref: previous sol line 199  
                 long lambda = Inputs.costFunction(initialRandomSolution, arch) - Inputs.costFunction(RandomSolution, arch);
+                long a = Inputs.costFunction(initialRandomSolution, arch);
+                long b = Inputs.costFunction(RandomSolution, arch);
                 Console.WriteLine("-------------------------------------------------lambda");
                 Console.WriteLine(lambda);
                 if (lambda > 0 || lambda > Math.Exp(-(1 / T) * lambda))

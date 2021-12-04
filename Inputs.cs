@@ -165,8 +165,6 @@ namespace So_CSHARP
                 var links = new List<Output.Link>();
 
                 List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)];
-
-                sumBWForSolution += CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
                 var tempCycleTurn = 0;
                 foreach (Edge edge in chosenPath)
                 {
@@ -179,9 +177,11 @@ namespace So_CSHARP
                     link.LinkCycleTurn = tempCycleTurn;
                     links.Add(link);
                 }
-                sumMaxE2E = sumMaxE2E + maxE2E;
+                sumMaxE2E += maxE2E;
                 var m = new Output.Message();
                 m.Links = links;
+                m.BW = CalculateMeanBWforCurrentMessage(message, chosenPath);
+                sumBWForSolution += m.BW;
                 m.Name = message.Name;
                 m.Deadline = message.Deadline;
                 m.MaxE2E =  maxE2E.ToString();
