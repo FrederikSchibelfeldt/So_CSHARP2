@@ -57,16 +57,12 @@ namespace So_CSHARP
         public static Output.Report newRandomSolution(Application app, Output.Report currentRandomSolution)
         {
 
-            // remember to calculate new sumBWForSolution and to subtract older results (for changed messages solution )
-            // Or just calculate the whole thing/sumBWForSolution again lol. 
             Random rand = new Random();
             int maxE2E = 0;
             int cycleLength = 12;
             var links = new List<Output.Link>();
             Output.Report report = (Output.Report)currentRandomSolution.Clone();
-            long sumBWForSolution = 0;
-            int sumMaxE2E = 0;
-
+   
             // ensure messages are sorted by name
             report.Messages.Sort((x, y) => x.Name.CompareTo(y.Name));
 
@@ -79,8 +75,8 @@ namespace So_CSHARP
             // For extraction of values such as edgepath. 
             var message = app.Messages.Find(message => message.Name == randomMessageFromSolution.Name);
 
-            List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0, message.PossibleEdgePaths.Count)]; // just take first path for now 
-            sumBWForSolution += Inputs.CalculateMeanBWforCurrentMessage(message, chosenPath);
+            List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0, message.PossibleEdgePaths.Count)];
+            long BWForRandomMessage = Inputs.CalculateMeanBWforCurrentMessage(message, chosenPath);
                foreach (Edge edge in chosenPath)
                 {
                     //  add cycleTurn for links
@@ -91,17 +87,30 @@ namespace So_CSHARP
                     link.Destination = edge.Destination;
                     links.Add(link);
                 }
-            sumMaxE2E += maxE2E;
+
             randomMessageFromSolution.Links = links;
             randomMessageFromSolution.Name = message.Name;
+            randomMessageFromSolution.BW = BWForRandomMessage;
             randomMessageFromSolution.MaxE2E = maxE2E.ToString();
+        
+            return CalculateNewReportSolution(report);
+        }
 
-            report.Solution.MeanE2E = sumMaxE2E / report.Messages.Count;
-            report.Solution.MeanBW = sumBWForSolution / report.Messages.Count;
-
-            //Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
+        public static Output.Report CalculateNewReportSolution(Output.Report report)
+        {
+                long meanBW = 0;
+                int meanE2E = 0;
+            
+            foreach (Output.Message message in report.Messages)
+            {
+                meanBW += message.BW;
+                meanE2E += Int32.Parse(message.MaxE2E);
+        
+            }
+                report.Solution.MeanE2E = meanE2E / report.Messages.Count;
+                report.Solution.MeanBW = meanBW / report.Messages.Count;
+                
             return report;
-
         }
 
         // Transform to a cycle system from a time-based system
