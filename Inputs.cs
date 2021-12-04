@@ -19,7 +19,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Apps2.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\AppsRealistic.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -33,7 +33,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("/Users/mo/02229/So_CSHARP2/files/Example/Input/Config2.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\ConfigRealistic.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -412,7 +412,7 @@ namespace So_CSHARP
             return meane2e;
         }
         
-        public static List<long> EvaluationList(List<Output.Report> population, Architecture arch)
+        public static List<long> EvaluationList(List<Output.Report> population, Architecture arch, Application apps)
         {
             List<long> evaluations = new();
             
@@ -425,7 +425,7 @@ namespace So_CSHARP
                     meanE2E += Int32.Parse(message.MaxE2E);
                     meanBW += message.BW;
                 }
-                if(!deadlineContraint(report)){
+                if(!deadlineContraint(report, apps)){
                     meanBW += 500;
                 }
                 if(!linkCapacityContraint(report,arch)){
@@ -499,7 +499,7 @@ namespace So_CSHARP
             {
                 Console.WriteLine(sw.Elapsed.TotalSeconds);
                 // Evaluate population
-                evaluations = EvaluationList(population,arch);
+                evaluations = EvaluationList(population,arch, apps);
                 meanEval.Add((int) evaluations.Average());
                 // Selection using elitism (fitness proportionate and tournament selection)
                 List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
@@ -512,21 +512,27 @@ namespace So_CSHARP
             meanEval.ForEach(x => Console.WriteLine(x));
             Console.WriteLine("Generation:" + meanEval.Count);
             string csv = String.Join(",", meanEval.Select(x => x.ToString()).ToArray());
-            File.WriteAllText("/Users/mo/02229/So_CSHARP2/files/Example/Output/TC7GA10000-2000.csv", csv);
+            File.WriteAllText("..\\So_CSHARP2\\files\\Example\\Output\\TC9GA10000-2000.csv", csv);
             CreateAReport(population[evaluations.IndexOf(evaluations.Min())]);
         }
 
-         public static bool deadlineContraint(Output.Report report)
+         public static bool deadlineContraint(Output.Report report, Application apps)
         {
             foreach (Output.Message message in report.Messages)
             {
-                if(message.Deadline == null){message.Deadline = "0";}
+                if(message.Deadline == null){findDeadline(message,apps);}
+                if(message.Deadline == null){Console.WriteLine($"Null deadline for message {message.Name}");}
                 if (!(Int32.Parse(message.MaxE2E) < Int32.Parse(message.Deadline)))
                 {
                     return false;
                 }
             }
             return true;
+        }
+
+        public static void findDeadline(Output.Message message, Application apps){
+        var s =  apps.Messages.Find(x => x.Name == message.Name);
+        message.Deadline = s.Deadline;
         }
 
         public static bool linkCapacityContraint(Output.Report report, Architecture arch)
