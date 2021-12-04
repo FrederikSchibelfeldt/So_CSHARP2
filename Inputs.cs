@@ -17,12 +17,12 @@ namespace So_CSHARP
         {
             Application res = new Application();
             string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
-            string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml";
+            string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml";
 
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                    new FileStream(sFilePath, FileMode.Open))
+                    new FileStream(sFilePathMartin, FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -37,7 +37,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                    new FileStream(sFilePath, FileMode.Open))
+                    new FileStream(sFilePathMartin, FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;

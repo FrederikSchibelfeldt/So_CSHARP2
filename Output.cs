@@ -19,15 +19,15 @@ namespace So_CSHARP
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists(sFilePath))
+            if (File.Exists(sFilePathMartin))
             {
                 {
-                    File.Delete(sFilePath);
+                    File.Delete(sFilePathMartin);
                 }
             }
 
             using (FileStream fileStream =
-                new FileStream(sFilePath,
+                new FileStream(sFilePathMartin,
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);
@@ -119,7 +119,7 @@ namespace So_CSHARP
             {
                 var item = new Report()
                 {
-                    Solution = Solution,
+                    Solution = (Solution) Solution.Clone(),
                     Messages = Messages.Select(x => x.Clone()).Cast<Message>().ToList()
                 };
                 return item;

@@ -96,7 +96,7 @@ namespace So_CSHARP
             randomMessageFromSolution.Name = message.Name;
             randomMessageFromSolution.MaxE2E = maxE2E.ToString();
 
-            report.Solution.MeanE2E = maxE2E / report.Messages.Count;
+            report.Solution.MeanE2E = sumMaxE2E / report.Messages.Count;
             report.Solution.MeanBW = sumBWForSolution / report.Messages.Count;
 
             //Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
