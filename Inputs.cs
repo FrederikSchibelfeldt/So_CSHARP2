@@ -16,11 +16,13 @@ namespace So_CSHARP
         public static Application readApps()
         {
             Application res = new Application();
-string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
+            string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
+            string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml";
+
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                    new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
+                    new FileStream(sFilePath, FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -30,11 +32,12 @@ string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
         public static Architecture readConfig()
         {
             Architecture res = new Architecture();
-string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
+            string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
+            string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml";
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                    new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
+                    new FileStream(sFilePath, FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
