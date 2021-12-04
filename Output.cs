@@ -13,7 +13,7 @@ namespace So_CSHARP
 
         public void GiveOutput(Report rep)
         {
-            string sFilePath = Path.GetFullPath(inputPath + "\\Output\\ReportTest1.xml");
+            string sFilePath = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest1.xml";
             var xs2 = new XmlSerializer(typeof(Report));
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
@@ -35,7 +35,7 @@ namespace So_CSHARP
 
         [XmlRoot(ElementName = "Solution")]
         [Serializable]
-        public class Solution
+        public class Solution : ICloneable
         {
             [XmlAttribute(AttributeName = "Runtime")]
             public long Runtime { get; set; }
@@ -43,9 +43,19 @@ namespace So_CSHARP
             public int MeanE2E { get; set; }
             [XmlAttribute(AttributeName = "MeanBW")]
             public long MeanBW { get; set; }
-        }
+            public object Clone()
+            {
+                var item = new Solution()
+                {
+                    Runtime = Runtime,
+                    MeanE2E = MeanE2E,
+                    MeanBW = MeanBW
+                };
+                return item;
+            }
+    }
 
-        [XmlRoot(ElementName = "Link")]
+    [XmlRoot(ElementName = "Link")]
         public class Link : ICloneable
         {
             [XmlAttribute(AttributeName = "Source")]
@@ -88,7 +98,9 @@ namespace So_CSHARP
                     Links = Links.Select(x => x.Clone()).Cast<Link>().ToList(),
                     Name = Name,
                     MaxE2E = MaxE2E,
-                    BW = BW
+                    Deadline = Deadline,
+                    BW = BW,
+                    Size = Size
                 };
                 return item;
             }
@@ -112,7 +124,5 @@ namespace So_CSHARP
                 return item;
             }
         }
-
-
     }
 }

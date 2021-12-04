@@ -19,22 +19,6 @@ namespace So_CSHARP
         private static Architecture arch;
         private Inputs Input;
  
-
-        /*
-        public SimulatedAnnealing(Architecture arch, Application app, int iterationBuffer, Cycle cycle)
-        {
-            var random = new Random();
-            var solution = new Output.Report();
-            var finalsolution = new Output.Report();
-            var output = new Output();
-            var SolutionSpace = new List<Output.Report>();
-
-            this.IterationBuffer = iterationBuffer;
-            this.Cycle = cycle;
-            this.startTime = DateTime.Now;
-
-        }
-*/
         public static Output.Report runSimulatedAnnealing(Architecture arch,Application app){
             Stopwatch stopwatch = new Stopwatch();
             double T = 1000;
@@ -59,23 +43,27 @@ namespace So_CSHARP
                 {
                     initialRandomSolution = RandomSolution;
                 }
-
-               
-                T = T *( 1 - coolingRate);
+                T *= (1 - coolingRate);
             }
-                return solutionSpace.Last();
-        } 
+            var l = solutionSpace.ToList();
+            Console.WriteLine("********SolutionsSpace Output*******");
+            Console.WriteLine(l);
+            Inputs.CreateAReport(solutionSpace.Last());
+            return solutionSpace.Last();
+        }
+
         public static Output.Report newRandomSolution(Application app, Output.Report currentRandomSolution){
             
-// remember to calculate new sumBWForSolution and to subtract older results (for changed messages solution )
-// Or just calculate the whole thing/sumBWForSolution again lol. 
+            // remember to calculate new sumBWForSolution and to subtract older results (for changed messages solution )
+            // Or just calculate the whole thing/sumBWForSolution again lol. 
             Random rand = new Random();
             int maxE2E = 0;
             int cycleLength = 12;
             var links = new List<Output.Link>();
             Output.Report report = (Output.Report) currentRandomSolution.Clone();
-            long sumBWForSolution = 0;  
-            
+            long sumBWForSolution = 0;
+            int sumMaxE2E = 0;
+
             // ensure messages are sorted by name
             report.Messages.Sort((x, y) => x.Name.CompareTo(y.Name));
 
@@ -100,11 +88,16 @@ namespace So_CSHARP
                     link.Destination = edge.Destination;
                     links.Add(link);
                 }
+            sumMaxE2E += maxE2E;
             randomMessageFromSolution.Links = links;
             randomMessageFromSolution.Name = message.Name;
             randomMessageFromSolution.MaxE2E = maxE2E.ToString();
+            var solution = new Output.Solution();
+            solution.MeanBW = sumBWForSolution / report.Messages.Count;
+            solution.Runtime = 7;
+            solution.MeanE2E = sumMaxE2E / report.Messages.Count;
 
-            Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
+            //Inputs.CreateAReport(report);   // uncomment if you want to see current solution as XML format
             return report;
 
         }

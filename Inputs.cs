@@ -20,7 +20,7 @@ string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream(sFilePath, FileMode.Open))
+                    new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Apps.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -34,7 +34,7 @@ string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream(sFilePath, FileMode.Open))
+                    new FileStream("/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -153,7 +153,7 @@ string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
             int i = 0;
 
             long sumBWForSolution = 0;
-             int sumMaxE2E = 0;
+            int sumMaxE2E = 0;
             foreach (Message message in app.Messages)
             {
                
@@ -161,7 +161,7 @@ string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
                 int cycleLength = 12;
                 var links = new List<Output.Link>();
 
-                List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)]; // just take first path for now 
+                List<Edge> chosenPath = message.PossibleEdgePaths[random.Next(0,message.PossibleEdgePaths.Count)];
 
                 sumBWForSolution += CalculateMeanBWforCurrentMessage(message, chosenPath); // ineffienct looping 
                 var tempCycleTurn = 0;
@@ -219,10 +219,12 @@ string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
 
             if(!linkCapacityContraint(report, arch)){
 
-                cost = cost + 1000; 
+                cost += 1000; 
             }
-
-
+            if (!deadlineContraint(report))
+            {
+                cost += 1000;
+            }
                 Console.WriteLine("-------------------------------------------------cost");
                 Console.WriteLine(cost);
         return cost; 
