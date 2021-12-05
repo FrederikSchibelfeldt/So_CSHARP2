@@ -19,7 +19,7 @@ namespace So_CSHARP
             stopwatch.Start();
 
             double T = 20;
-            Random rand = new Random();
+            Random rand = new();
             double coolingRate = 0.003;
             List<Output.Report> solutionSpace = new();
             Output.Report initialRandomSolution = Inputs.GenerateRandomSolution(arch, app);
@@ -28,7 +28,7 @@ namespace So_CSHARP
                 double r = rand.NextDouble();
                 Output.Report RandomSolution = NewRandomSolution(app, initialRandomSolution);
                 long lambda = Inputs.CostFunction(initialRandomSolution, arch) - Inputs.CostFunction(RandomSolution, arch);
-                if (lambda > 0|| r < 0.15)
+                if (lambda > 0|| r < 0.03*lambda)
                 {
                     solutionSpace = (List<Output.Report>) solutionSpace.Prepend(RandomSolution).ToList();
                 }
@@ -39,12 +39,11 @@ namespace So_CSHARP
 
                 T *= (1 - coolingRate);
             }
-            solutionSpace.ForEach(p => Console.Write(p.Solution.Cost + ","));
             var sortedSolutionSpace = solutionSpace.OrderByDescending(report => report.Solution.Cost).ToList();
 
-            Output.Report OptimaSolution = sortedSolutionSpace.Last(); 
-            OptimaSolution.Solution.Runtime = stopwatch.Elapsed.TotalSeconds; // Add runTime to soltion
-            Inputs.CreateAReport(OptimaSolution);
+            Output.Report GlobalMaximaEstimate = sortedSolutionSpace.Last(); 
+            GlobalMaximaEstimate.Solution.Runtime = stopwatch.Elapsed.TotalSeconds; // Add runTime to soltion
+            Inputs.CreateAReport(GlobalMaximaEstimate);
             return sortedSolutionSpace.First();
         }
 

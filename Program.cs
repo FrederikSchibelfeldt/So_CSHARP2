@@ -8,7 +8,6 @@ using System.Xml.Serialization;
 using static So_CSHARP.Inputs;
 using static So_CSHARP.Output;
 using static So_CSHARP.SimulatedAnnealing;
-using Google.OrTools;
 
 namespace So_CSHARP
 {

@@ -9,7 +9,7 @@ namespace So_CSHARP
 {
     public class Output
     {
-        static readonly string inputPath = "..\\So_CSHARP2\\files\\Example";
+        static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
         public static void GiveOutput(Report rep)
         {

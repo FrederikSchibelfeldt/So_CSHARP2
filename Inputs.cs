@@ -364,6 +364,7 @@ namespace So_CSHARP
             }
             return sum / counter;
         }
+
         public static double ObjectiveFunction(Output.Report report)
         {
             int meane2e = meanE2E(report);
