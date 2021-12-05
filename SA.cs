@@ -24,13 +24,15 @@ namespace So_CSHARP
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            double T = 2000000;
+            double T = 2;
             Random rand = new Random();
             double coolingRate = 0.003;
             List<Output.Report> solutionSpace = new();
             Output.Report initialRandomSolution = Inputs.GenerateRandomSolution(arch, app);
             //solutionSpace.Add(initialRandomSolution);
             ///var counter = 0;
+                Console.WriteLine("-------------------------------------------------lambda");
+            //solutionSpace.Add(initialRandomSolution);
             while (T > 1)
             {
                 double r = rand.NextDouble();
@@ -40,25 +42,29 @@ namespace So_CSHARP
                 long lambda = Inputs.costFunction(initialRandomSolution, arch) - Inputs.costFunction(RandomSolution, arch);
                 long a = Inputs.costFunction(initialRandomSolution, arch);
                 long b = Inputs.costFunction(RandomSolution, arch);
-                Console.WriteLine("-------------------------------------------------lambda");
-                Console.WriteLine(lambda);
+               
                 //lambda > Math.Exp(-(1 / T) * lambda
                 if (lambda > 0|| r < 0.15)
                 {
-
-                    solutionSpace.Add(RandomSolution);
+             //   Console.WriteLine(lambda);
+                    solutionSpace = (List<Output.Report>) solutionSpace.Prepend(RandomSolution).ToList();
                 }
                 else
                 {
+    
                     initialRandomSolution = RandomSolution; 
                 }
+
                 T *= (1 - coolingRate);
             }
-            var sortedSolutionSpace = solutionSpace.OrderBy(report => report.Solution.Cost).ToList();
+            solutionSpace.ForEach(p => Console.Write(p.Solution.Cost + ","));
+            var sortedSolutionSpace = solutionSpace.OrderByDescending(report => report.Solution.Cost).ToList();
     
             Console.WriteLine("********SolutionsSpace Output*******");
             Console.WriteLine(sortedSolutionSpace.Count);
-            Output.Report OptimaSolution = sortedSolutionSpace.First(); 
+          //  sortedSolutionSpace.ForEach(p => Console.Write(p.Solution.Cost + ","));
+
+            Output.Report OptimaSolution = sortedSolutionSpace.Last(); 
             OptimaSolution.Solution.Runtime = stopwatch.Elapsed.TotalSeconds; // Add runTime to soltion
             Inputs.CreateAReport(OptimaSolution);
             return sortedSolutionSpace.First();
@@ -78,8 +84,8 @@ namespace So_CSHARP
 
             // Choose a random message name from solution messages
             var randomMessageFromSolution = report.Messages[rand.Next(0, report.Messages.Count)];
-            Console.WriteLine("Chosen random message");
-            Console.WriteLine(randomMessageFromSolution.Name);
+         //   Console.WriteLine("Chosen random message");
+          //  Console.WriteLine(randomMessageFromSolution.Name);
 
             // Use chosen randomMessageFromSolution name to find a message in APP 
             // For extraction of values such as edgepath. 

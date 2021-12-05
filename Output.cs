@@ -44,7 +44,7 @@ namespace So_CSHARP
             public int MeanE2E { get; set; }
             [XmlAttribute(AttributeName = "MeanBW")]
             public long MeanBW { get; set; }
-                       [XmlElement(ElementName = "Cost")]
+            [XmlIgnore]
             public long Cost { get; set; }
             public object Clone()
             {
@@ -67,6 +67,7 @@ namespace So_CSHARP
             public string Destination { get; set; }
             [XmlAttribute(AttributeName = "Qnumber")]
             public int Qnumber { get; set; }
+            [XmlIgnore]
             public int LinkCycleTurn { get; set; }
 
             public object Clone()
@@ -90,10 +91,14 @@ namespace So_CSHARP
             [XmlAttribute(AttributeName = "Name")]
             public string Name { get; set; }
             [XmlAttribute(AttributeName = "maxE2E")]
+            
             public string MaxE2E { get; set; }
+            [XmlIgnore]
+            
             public string Deadline { get; set; }
+            [XmlIgnore]
             public long Size { get; set; }
-                        [XmlAttribute(AttributeName = "BW")]
+            [XmlIgnore]
             public long BW { get; set; }
             public object Clone()
             {

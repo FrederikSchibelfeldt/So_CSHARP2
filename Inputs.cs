@@ -143,8 +143,6 @@ namespace So_CSHARP
                 //    Console.WriteLine("---------------------- neighbors ---------------------------------------------");
                 //    Console.WriteLine(neighbors);
             }
-            Console.WriteLine(" ----------------------Vertex Neighbors found---------------------------");
-            System.Console.WriteLine();
         }
 
 
@@ -189,22 +187,12 @@ namespace So_CSHARP
                 report.Messages.Add(m);
                 i++;
                 // Color console "skrift" for testing purposes
-                Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
-
-                Console.WriteLine("message solved");
-                Console.WriteLine(i);
-                Console.WriteLine("Solving message: " + message.Name);
-                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
-                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
-                Console.WriteLine("------------------------------------------");
             }
             var solution = new Output.Solution();
             solution.MeanBW = (sumBWForSolution / report.Messages.Count);
             solution.Runtime = 0;
             solution.MeanE2E = sumMaxE2E/ report.Messages.Count;
-            Console.WriteLine("---Solution- --");
 
-            Console.WriteLine(solution);
             report.Solution = solution;
             return report;
         }
@@ -221,14 +209,14 @@ namespace So_CSHARP
 
             if(!linkCapacityContraint(report, arch)){
 
-                cost += 10000;
+                cost += 200;
             }
             if (!deadlineContraint(report))
             {
-                cost += 10000;
+                cost += 200;
             }
-                Console.WriteLine("-------------------------------------------------cost");
-                Console.WriteLine(cost);
+          //      Console.WriteLine("-------------------------------------------------cost");
+        //        Console.WriteLine(cost);
             report.Solution.Cost = cost;
         return cost; 
         }
@@ -242,14 +230,10 @@ namespace So_CSHARP
         public static long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
         {
             int sumBW = 0;
-            Console.WriteLine("CalculateMeanBWforCurrentMessage");
-            Console.WriteLine(message.Name);
 
             foreach (Edge edge in edges)
             {
-                Console.WriteLine("CalculateMeanBWforCurrentMessage LOOP");
                 edge.BWConsumption = Int32.Parse(message.Size); // BW_Consumption is just size of message sent through edge
-                Console.WriteLine(message.Size);
                 sumBW += edge.BWConsumption;          // SUM UP for each edge message is going through
             }
             return sumBW;
@@ -288,7 +272,6 @@ namespace So_CSHARP
         public static bool linkCapacityContraint(Output.Report report, Architecture arch)
         {
 
-            Console.WriteLine("--------------------linkCapacityContraint--------------------");
 
             for (int i = 1; i < (arch.Edges.Count() - 1) * 3; i++)
             {
@@ -347,15 +330,16 @@ namespace So_CSHARP
 
 
                 // Color console "skrift" for testing purposes
+               
                 Console.ForegroundColor = count_test % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
-
+/*
                 Console.WriteLine("count_test");
                 Console.WriteLine(count_test);
                 Console.WriteLine("Finding Routes for Message: " + message.Name);
                 //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
                 Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
                 Console.WriteLine("------------------------------------------");
-
+*/
                 // Call recursive utility
                 List<Vertex> isVisited = new();
                 List<Vertex> pathList = new();
@@ -365,7 +349,6 @@ namespace So_CSHARP
                 isVisited.Add(message.SourceVertex);
 
                 // Call to find possible 
-                Console.WriteLine("--------------------findAllPossiblePaths--------------------");
                 findAllPossiblePaths(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
 
                 // DEFINE  possible edge paths from possible vertex paths 
@@ -377,7 +360,6 @@ namespace So_CSHARP
 
                 count_test++;
 
-                Console.WriteLine("------------------------------------------");
             }
 
             Console.ForegroundColor = ConsoleColor.White;
@@ -535,8 +517,7 @@ namespace So_CSHARP
         // possibly return List<List<Edge>>
         public static List<List<Edge>> MessageVertexPathsToEdgePaths(Message message, Architecture arch)
         {
-            Console.WriteLine(" \n --------------------MessageVertexPathsToEdgePaths--------------------");
-
+         
             List<List<Edge>> possiblePaths = new();
             List<Edge> path;
             foreach (List<Vertex> route in message.PossibleVerticesPath)
@@ -547,16 +528,14 @@ namespace So_CSHARP
 
                     if (i < route.Count - 1)
                     {
-                        Console.WriteLine(route.ElementAt(i).Name);
-                        Console.WriteLine(route.ElementAt(i + 1).Name);
                         path.Add(EdgeFromVerticies(route.ElementAt(i), route.ElementAt(i + 1), arch));
                     }
                 }
-                Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
+        //        Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
                 //path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"    ));
-                Console.WriteLine("\n");
-                Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
-                path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"));
+      //          Console.WriteLine("\n");
+  //              Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
+    //            path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"));
                 possiblePaths.Add(path);
                 Console.WriteLine("\n");
             }
