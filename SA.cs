@@ -50,11 +50,13 @@ namespace So_CSHARP
                 }
                 T *= (1 - coolingRate);
             }
-            var l = solutionSpace.ToList();
+            var sortedSolutionSpace = solutionSpace.OrderBy(report => report.Solution.Cost).ToList();
+    
             Console.WriteLine("********SolutionsSpace Output*******");
-            Console.WriteLine(l.Count);
-            Inputs.CreateAReport(solutionSpace.Last());
-            return solutionSpace.Last();
+            Console.WriteLine(sortedSolutionSpace.Count);
+    
+            Inputs.CreateAReport(sortedSolutionSpace.First());
+            return sortedSolutionSpace.First();
         }
 
         public static Output.Report newRandomSolution(Application app, Output.Report currentRandomSolution)
