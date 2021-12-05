@@ -44,6 +44,8 @@ namespace So_CSHARP
             public int MeanE2E { get; set; }
             [XmlAttribute(AttributeName = "MeanBW")]
             public long MeanBW { get; set; }
+                       [XmlElement(ElementName = "Cost")]
+            public long Cost { get; set; }
             public object Clone()
             {
                 var item = new Solution()
