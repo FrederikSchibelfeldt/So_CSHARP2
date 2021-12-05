@@ -221,14 +221,15 @@ namespace So_CSHARP
 
             if(!linkCapacityContraint(report, arch)){
 
-                cost += 1000; 
+                cost += 10000;
             }
             if (!deadlineContraint(report))
             {
-                cost += 1000;
+                cost += 10000;
             }
                 Console.WriteLine("-------------------------------------------------cost");
                 Console.WriteLine(cost);
+            report.Solution.Cost = cost;
         return cost; 
         }
 

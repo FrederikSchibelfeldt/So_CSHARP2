@@ -38,7 +38,8 @@ namespace So_CSHARP
                 long b = Inputs.costFunction(RandomSolution, arch);
                 Console.WriteLine("-------------------------------------------------lambda");
                 Console.WriteLine(lambda);
-                if (lambda > 0 || lambda > Math.Exp(-(1 / T) * lambda))
+                //lambda > Math.Exp(-(1 / T) * lambda
+                if (lambda > 0)
                 {
 
                     solutionSpace.Add(RandomSolution);
@@ -79,6 +80,7 @@ namespace So_CSHARP
 
             List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0, message.PossibleEdgePaths.Count)];
             long BWForRandomMessage = Inputs.CalculateMeanBWforCurrentMessage(message, chosenPath);
+            int tempCycleTurn = 0;
                foreach (Edge edge in chosenPath)
                 {
                     //  add cycleTurn for links
@@ -87,8 +89,10 @@ namespace So_CSHARP
                     maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Source = edge.Source;
                     link.Destination = edge.Destination;
+                    tempCycleTurn += link.Qnumber;
+                    link.LinkCycleTurn = tempCycleTurn;
                     links.Add(link);
-                }
+            }
 
             randomMessageFromSolution.Links = links;
             randomMessageFromSolution.Name = message.Name;

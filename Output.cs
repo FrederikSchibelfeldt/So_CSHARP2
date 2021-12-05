@@ -14,7 +14,7 @@ namespace So_CSHARP
         public void GiveOutput(Report rep)
         {
             string sFilePath =  Path.GetFullPath(inputPath + "\\Output\\ReportTest_SA1.xml");
-            string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest1.xml";
+            string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml";
             var xs2 = new XmlSerializer(typeof(Report));
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
