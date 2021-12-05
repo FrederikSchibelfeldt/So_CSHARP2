@@ -39,7 +39,7 @@ namespace So_CSHARP
         public class Solution : ICloneable
         {
             [XmlAttribute(AttributeName = "Runtime")]
-            public long Runtime { get; set; }
+            public double Runtime { get; set; }
             [XmlAttribute(AttributeName = "MeanE2E")]
             public int MeanE2E { get; set; }
             [XmlAttribute(AttributeName = "MeanBW")]
@@ -93,6 +93,7 @@ namespace So_CSHARP
             public string MaxE2E { get; set; }
             public string Deadline { get; set; }
             public long Size { get; set; }
+                        [XmlAttribute(AttributeName = "BW")]
             public long BW { get; set; }
             public object Clone()
             {
@@ -117,6 +118,7 @@ namespace So_CSHARP
             public Solution Solution { get; set; }
             [XmlElement(ElementName = "Message")]
             public List<Message> Messages { get; set; }
+            
             public object Clone()
             {
                 var item = new Report()
