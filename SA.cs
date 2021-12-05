@@ -28,7 +28,7 @@ namespace So_CSHARP
                 double r = rand.NextDouble();
                 Output.Report RandomSolution = NewRandomSolution(app, initialRandomSolution);
                 long lambda = Inputs.CostFunction(initialRandomSolution, arch) - Inputs.CostFunction(RandomSolution, arch);
-                if (lambda > 0|| r < 0.03*lambda)
+                if (lambda > 0|| r < 0.05*T)
                 {
                     solutionSpace = (List<Output.Report>) solutionSpace.Prepend(RandomSolution).ToList();
                 }
