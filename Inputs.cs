@@ -181,7 +181,7 @@ namespace So_CSHARP
                 var m = new Output.Message();
                 m.Links = links;
                 m.BW = CalculateMeanBWforCurrentMessage(message, chosenPath);
-                sumBWForSolution += m.BW;
+                sumBWForSolution = sumBWForSolution+  m.BW;
                 m.Name = message.Name;
                 m.Deadline = message.Deadline;
                 m.MaxE2E =  maxE2E.ToString();
@@ -206,7 +206,6 @@ namespace So_CSHARP
 
             Console.WriteLine(solution);
             report.Solution = solution;
-            linkCapacityContraint(report,arch);
             return report;
         }
 
