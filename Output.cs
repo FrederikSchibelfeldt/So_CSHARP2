@@ -9,15 +9,13 @@ namespace So_CSHARP
 {
     public class Output
     {
-        static string inputPath = "..\\So_CSHARP2\\files\\Example";
+        static readonly string inputPath = "..\\So_CSHARP2\\files\\Example";
 
-        public void GiveOutput(Report rep)
+        public static void GiveOutput(Report rep)
         {
             string sFilePath =  Path.GetFullPath(inputPath + "\\Output\\ReportTest_SA1.xml");
             string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml";
             var xs2 = new XmlSerializer(typeof(Report));
-
-            //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
             if (File.Exists(sFilePathMartin))
             {
@@ -25,13 +23,10 @@ namespace So_CSHARP
                     File.Delete(sFilePathMartin);
                 }
             }
-
-            using (FileStream fileStream =
-                new FileStream(sFilePathMartin,
-                    FileMode.Create))
-            {
-                xs2.Serialize(fileStream, rep);
-            }
+            using FileStream fileStream =
+                new(sFilePathMartin,
+                    FileMode.Create);
+            xs2.Serialize(fileStream, rep);
         }
 
         [XmlRoot(ElementName = "Solution")]

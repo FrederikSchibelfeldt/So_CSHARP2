@@ -1,115 +1,39 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Solution Runtime="0" MeanE2E="129" MeanBW="1112">
-    <Cost>11241</Cost>
-  </Solution>
-  <Message Name="F1" maxE2E="138">
-    <Link Source="ES1" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>6</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>9</LinkCycleTurn>
-    </Link>
-    <Deadline>2000</Deadline>
-    <Size>300</Size>
-    <BW>900</BW>
+  <Solution Runtime="0.0901037" MeanE2E="86" MeanBW="912" />
+  <Message Name="F1" maxE2E="114">
+    <Link Source="ES1" Destination="SW1" Qnumber="2" />
+    <Link Source="SW2" Destination="SW1" Qnumber="3" />
+    <Link Source="SW2" Destination="ES2" Qnumber="2" />
   </Message>
-  <Message Name="F2" maxE2E="138">
-    <Link Source="ES1" Destination="SW2" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>6</LinkCycleTurn>
-    </Link>
-    <Link Source="SW1" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>9</LinkCycleTurn>
-    </Link>
-    <Deadline>2000</Deadline>
-    <Size>400</Size>
-    <BW>1200</BW>
+  <Message Name="F2" maxE2E="80">
+    <Link Source="ES1" Destination="SW1" Qnumber="2" />
+    <Link Source="SW1" Destination="ES2" Qnumber="3" />
   </Message>
-  <Message Name="F3" maxE2E="138">
-    <Link Source="ES1" Destination="SW2" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>6</LinkCycleTurn>
-    </Link>
-    <Link Source="SW1" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>9</LinkCycleTurn>
-    </Link>
-    <Deadline>4000</Deadline>
-    <Size>500</Size>
-    <BW>1500</BW>
+  <Message Name="F3" maxE2E="126">
+    <Link Source="ES1" Destination="SW1" Qnumber="3" />
+    <Link Source="SW2" Destination="SW1" Qnumber="3" />
+    <Link Source="SW2" Destination="ES2" Qnumber="2" />
   </Message>
-  <Message Name="F4" maxE2E="138">
-    <Link Source="ES1" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>6</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>9</LinkCycleTurn>
-    </Link>
-    <Deadline>4000</Deadline>
-    <Size>300</Size>
-    <BW>900</BW>
+  <Message Name="F4" maxE2E="102">
+    <Link Source="ES1" Destination="SW2" Qnumber="2" />
+    <Link Source="SW2" Destination="SW1" Qnumber="3" />
+    <Link Source="SW1" Destination="ES2" Qnumber="1" />
   </Message>
-  <Message Name="F5" maxE2E="68">
-    <Link Source="SW2" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="ES1" Destination="SW2" Qnumber="1">
-      <LinkCycleTurn>4</LinkCycleTurn>
-    </Link>
-    <Deadline>2000</Deadline>
-    <Size>400</Size>
-    <BW>800</BW>
+  <Message Name="F5" maxE2E="80">
+    <Link Source="SW2" Destination="ES2" Qnumber="3" />
+    <Link Source="ES1" Destination="SW2" Qnumber="2" />
   </Message>
-  <Message Name="F6" maxE2E="138">
-    <Link Source="SW1" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>6</LinkCycleTurn>
-    </Link>
-    <Link Source="ES1" Destination="SW2" Qnumber="3">
-      <LinkCycleTurn>9</LinkCycleTurn>
-    </Link>
-    <Deadline>2000</Deadline>
-    <Size>500</Size>
-    <BW>1500</BW>
+  <Message Name="F6" maxE2E="68">
+    <Link Source="SW1" Destination="ES2" Qnumber="2" />
+    <Link Source="ES1" Destination="SW1" Qnumber="2" />
   </Message>
-  <Message Name="F7" maxE2E="138">
-    <Link Source="SW1" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>6</LinkCycleTurn>
-    </Link>
-    <Link Source="ES1" Destination="SW2" Qnumber="3">
-      <LinkCycleTurn>9</LinkCycleTurn>
-    </Link>
-    <Deadline>4000</Deadline>
-    <Size>300</Size>
-    <BW>900</BW>
+  <Message Name="F7" maxE2E="56">
+    <Link Source="SW1" Destination="ES2" Qnumber="2" />
+    <Link Source="ES1" Destination="SW1" Qnumber="1" />
   </Message>
-  <Message Name="F8" maxE2E="138">
-    <Link Source="ES1" Destination="SW2" Qnumber="3">
-      <LinkCycleTurn>3</LinkCycleTurn>
-    </Link>
-    <Link Source="SW2" Destination="SW1" Qnumber="3">
-      <LinkCycleTurn>6</LinkCycleTurn>
-    </Link>
-    <Link Source="SW1" Destination="ES2" Qnumber="3">
-      <LinkCycleTurn>9</LinkCycleTurn>
-    </Link>
-    <Deadline>4000</Deadline>
-    <Size>400</Size>
-    <BW>1200</BW>
+  <Message Name="F8" maxE2E="68">
+    <Link Source="ES1" Destination="SW1" Qnumber="1" />
+    <Link Source="SW1" Destination="ES2" Qnumber="3" />
   </Message>
 </Report>

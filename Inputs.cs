@@ -9,11 +9,9 @@ namespace So_CSHARP
 {
     public class Inputs
     {
-
         static Dictionary<string, List<string>> dict = new();
-
-            static string inputPath = "..\\So_CSHARP2\\files\\Example";
-        public static Application readApps()
+        static string inputPath = "..\\So_CSHARP2\\files\\Example";
+        public static Application ReadApps()
         {
             Application res = new Application();
             string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Apps.xml");
@@ -21,24 +19,24 @@ namespace So_CSHARP
 
             var xs = new XmlSerializer(typeof(Application));
             {
-                using (FileStream fileStream =
-                    new FileStream(sFilePathMartin, FileMode.Open))
-                    res = (Application)xs.Deserialize(fileStream);
+                using FileStream fileStream =
+                    new(sFilePathMartin, FileMode.Open);
+                res = (Application)xs.Deserialize(fileStream);
             }
 
             return res;
         }
 
-        public static Architecture readConfig()
+        public static Architecture ReadConfig()
         {
             Architecture res = new Architecture();
             string sFilePath = Path.GetFullPath(inputPath + "\\Input\\Config.xml");
             string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Input/Config.xml";
             var xs = new XmlSerializer(typeof(Architecture));
             {
-                using (FileStream fileStream =
-                    new FileStream(sFilePathMartin, FileMode.Open))
-                    res = (Architecture)xs.Deserialize(fileStream);
+                using FileStream fileStream =
+                    new(sFilePathMartin, FileMode.Open);
+                res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
         }
@@ -54,50 +52,41 @@ namespace So_CSHARP
 
             foreach (Message message in apps.Messages)
             {
-                // Populate message with source and dist Vertex objects
                 foreach (Vertex vertex in arch.Vertices)
                 {
                     if (vertex.Name == message.Source)
                     {
                         message.SourceVertex = vertex;
                     }
-
                     if (vertex.Name == message.Destination)
                     {
                         message.DestinationVertex = vertex;
                     }
                 }
-
                 if (message.Source == null || message.Destination == null)
                 {
                     Console.WriteLine("Source or Destination EMPTY message: " + message);
-                    Console.WriteLine("HUH HUH ?? \n");
                     //Invalid input
                     Environment.Exit(0);
                 }
-
             }
 
             foreach (Edge edge in arch.Edges)
             {
-                // Populate message with source and dist Vertex objects
                 foreach (Vertex vertex in arch.Vertices)
                 {
                     if (vertex.Name == edge.Source)
                     {
                         edge.SourceVertex = vertex;
                     }
-
                     if (vertex.Name == edge.Destination)
                     {
                         edge.DestinationVertex = vertex;
                     }
                 }
-
                 if (edge.Source == null || edge.Destination == null)
                 {
                     Console.WriteLine("Source or Destination EMPTY EDGE: " + edge);
-                    Console.WriteLine("HUH HUH ?? \n");
                     //invalid input
                     Environment.Exit(0);
                 }
@@ -108,7 +97,7 @@ namespace So_CSHARP
         /// Adds property vertexneighbors to all vertex objects. 
         /// </summary>
         /// <param name="arch"></param>
-        public static void mapVertexNeighbors(Architecture arch)
+        public static void MapVertexNeighbors(Architecture arch)
         {
             foreach (var vertex in arch.Vertices)
             {
@@ -137,11 +126,6 @@ namespace So_CSHARP
                 }
 
                 vertex.vertexNeighbors = neighbors.ToList();
-
-                // Console.WriteLine("---------------------- vertex ---------------------------------------------");
-                //     Console.WriteLine(vertex);  
-                //    Console.WriteLine("---------------------- neighbors ---------------------------------------------");
-                //    Console.WriteLine(neighbors);
             }
         }
 
@@ -149,8 +133,10 @@ namespace So_CSHARP
         public static Output.Report GenerateRandomSolution(Architecture arch, Application app)
         {
             var random = new Random();
-            var report = new Output.Report();
-            report.Messages = new List<Output.Message>();
+            var report = new Output.Report
+            {
+                Messages = new List<Output.Message>()
+            };
             int i = 0;
 
             long sumBWForSolution = 0;
@@ -168,7 +154,7 @@ namespace So_CSHARP
                 {
                     var link = new Output.Link();
                     link.Qnumber = random.Next(1, 4);
-                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);  // TODO: refractor 
+                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Source = edge.Source;
                     link.Destination = edge.Destination;
                     tempCycleTurn += link.Qnumber;  
@@ -176,10 +162,12 @@ namespace So_CSHARP
                     links.Add(link);
                 }
                 sumMaxE2E += maxE2E;
-                var m = new Output.Message();
-                m.Links = links;
-                m.BW = CalculateMeanBWforCurrentMessage(message, chosenPath);
-                sumBWForSolution = sumBWForSolution+  m.BW;
+                var m = new Output.Message
+                {
+                    Links = links,
+                    BW = ComputeMeanBWforMessage(message, chosenPath)
+                };
+                sumBWForSolution += m.BW;
                 m.Name = message.Name;
                 m.Deadline = message.Deadline;
                 m.MaxE2E =  maxE2E.ToString();
@@ -188,10 +176,12 @@ namespace So_CSHARP
                 i++;
                 // Color console "skrift" for testing purposes
             }
-            var solution = new Output.Solution();
-            solution.MeanBW = (sumBWForSolution / report.Messages.Count);
-            solution.Runtime = 0;
-            solution.MeanE2E = sumMaxE2E/ report.Messages.Count;
+            var solution = new Output.Solution
+            {
+                MeanBW = (sumBWForSolution / report.Messages.Count),
+                Runtime = 0,
+                MeanE2E = sumMaxE2E / report.Messages.Count
+            };
 
             report.Solution = solution;
             return report;
@@ -199,47 +189,38 @@ namespace So_CSHARP
 
         public static void CreateAReport(Output.Report report){
             var output = new Output();
-            output.GiveOutput(report);
+            Output.GiveOutput(report);
         }
 
 
-    public static long costFunction(Output.Report report, Architecture arch)
+        public static long CostFunction(Output.Report report, Architecture arch)
         {  
             long cost = report.Solution.MeanBW + report.Solution.MeanE2E;
 
-            if(!linkCapacityContraint(report, arch)){
+            if(!LinkCapacityContraint(report, arch)){
 
                 cost += 200;
             }
-            if (!deadlineContraint(report))
+            if (!DeadlineContraint(report))
             {
                 cost += 200;
             }
-          //      Console.WriteLine("-------------------------------------------------cost");
-        //        Console.WriteLine(cost);
             report.Solution.Cost = cost;
         return cost; 
         }
 
-
-
-
-        // INFO: THIS FUNCTION SHOULD BE INCLUDED AS PART OF message loop (the intention is for an outer variable to keep track) 
-        // PARAM: "message": the message being sent 
-        // PARAM: "edges": the edges the message is going through 
-        public static long CalculateMeanBWforCurrentMessage(Message message, List<Edge> edges)
+        public static long ComputeMeanBWforMessage(Message message, List<Edge> edges)
         {
             int sumBW = 0;
-
             foreach (Edge edge in edges)
             {
-                edge.BWConsumption = Int32.Parse(message.Size); // BW_Consumption is just size of message sent through edge
-                sumBW += edge.BWConsumption;          // SUM UP for each edge message is going through
+                edge.BWConsumption = Int32.Parse(message.Size);
+                sumBW += edge.BWConsumption;
             }
             return sumBW;
         }
 
-        public static int meanE2E(Application apps, Architecture arch)
+        public static int MeanE2E(Application apps, Architecture arch)
         {
             int counter = 0;
             int sum = 0;
@@ -251,12 +232,10 @@ namespace So_CSHARP
             return sum / counter;  
         }
 
-
-        public static bool deadlineContraint(Output.Report report)
+        public static bool DeadlineContraint(Output.Report report)
         {
             foreach (Output.Message message in report.Messages)
             {
-
                 if (Int32.Parse(message.MaxE2E) < Int32.Parse(message.Deadline))
                 {
                     return true;
@@ -269,11 +248,9 @@ namespace So_CSHARP
             return false;
         }
 
-        public static bool linkCapacityContraint(Output.Report report, Architecture arch)
+        public static bool LinkCapacityContraint(Output.Report report, Architecture arch)
         {
-
-
-            for (int i = 1; i < (arch.Edges.Count() - 1) * 3; i++)
+            for (int i = 1; i < (arch.Edges.Count - 1) * 3; i++)
             {
                 List<(Output.Link, Output.Message)> links = new();
                 foreach (Output.Message message in report.Messages)
@@ -289,82 +266,41 @@ namespace So_CSHARP
                     }
 
                 }
-            //    Console.WriteLine("--------------------message--------------------");
-             //   links.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
-              //  Console.WriteLine("");
-
-                // loops over (links,message) list
-                foreach ((Output.Link, Output.Message) linkandMessage in links)
+                foreach ((Output.Link, Output.Message) linkAndMessage in links)
                 {  
-
-                    var linkandMessages = links.FindAll(link2 => linkandMessage.Item1.Source == link2.Item1.Source && linkandMessage.Item1.Destination == link2.Item1.Destination);
-
-                //    Console.WriteLine("--------------------linkandMessage--------------------");
-                //    linkandMessages.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
-                    var currentSource = linkandMessages[0].Item1.Source;
-                    var currentDestination = linkandMessages[0].Item1.Destination;
-                    var bw = arch.Edges.FindLast(edge => edge.Source == currentSource && edge.Destination == currentDestination).BW;
-
-                    var currentSize = linkandMessages.Sum(p => p.Item2.Size);
-                  //  Console.WriteLine("--------------------BW--------------------");
-                   // Console.WriteLine(bw);
-                   // Console.WriteLine(currentSize);
-                    if (currentSize > Int32.Parse(bw)) { return false; }
+                    var linkAndMessages = links.FindAll(link2 => linkAndMessage.Item1.Source == link2.Item1.Source && linkAndMessage.Item1.Destination == link2.Item1.Destination);
+                    var currentSource = linkAndMessages[0].Item1.Source;
+                    var currentDestination = linkAndMessages[0].Item1.Destination;
+                    var BW = arch.Edges.FindLast(edge => edge.Source == currentSource && edge.Destination == currentDestination).BW;
+                    var currentSize = linkAndMessages.Sum(p => p.Item2.Size);
+                    if (currentSize > Int32.Parse(BW)) {
+                        return false;
+                    }
                 }
-
             }
-
             return true;
         }
 
         public static void FindMessageRoutes(Application apps, Architecture arch)
         {
             int count_test = 0;
-
             List<string> visited;
-
             foreach (Message message in apps.Messages)
             {
                 visited = new();
                 visited.Add(message.Source);
-
-
-                // Color console "skrift" for testing purposes
-               
-                Console.ForegroundColor = count_test % 2 == 0 ? ConsoleColor.Cyan : ConsoleColor.Green;
-/*
-                Console.WriteLine("count_test");
-                Console.WriteLine(count_test);
-                Console.WriteLine("Finding Routes for Message: " + message.Name);
-                //       Console.WriteLine("Message source to destination: " + message.Source. + " -> " + message.Destination);
-                Console.WriteLine("Message source to destination: " + message.SourceVertex.Name + " -> " + message.DestinationVertex.Name);
-                Console.WriteLine("------------------------------------------");
-*/
-                // Call recursive utility
                 List<Vertex> isVisited = new();
                 List<Vertex> pathList = new();
-
                 // add source to path
                 pathList.Add(message.SourceVertex);
                 isVisited.Add(message.SourceVertex);
-
                 // Call to find possible 
-                findAllPossiblePaths(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
-
-                // DEFINE  possible edge paths from possible vertex paths 
-                // then add to message 
+                FindAllPossiblePaths(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
                 message.PossibleEdgePaths = MessageVertexPathsToEdgePaths(message, arch);
-
-
                 //message.PrintPossiblePaths();
-
                 count_test++;
-
             }
-
-            Console.ForegroundColor = ConsoleColor.White;
         }
-
 
         /// <summary>
         /// Finds all possible paths a message can take. 
@@ -374,7 +310,7 @@ namespace So_CSHARP
         /// <param name="message"></param>
         /// <param name="isVisited"></param>
         /// <param name="localPathList"></param>
-        private static void findAllPossiblePaths(Vertex source, Vertex destination, Message message, List<Vertex> isVisited, List<Vertex> localPathList)
+        private static void FindAllPossiblePaths(Vertex source, Vertex destination, Message message, List<Vertex> isVisited, List<Vertex> localPathList)
         {
             if (source.Equals(destination))
             {
@@ -396,9 +332,8 @@ namespace So_CSHARP
                     // in path[]
                     localPathList.Add(vertex);
 
-                    findAllPossiblePaths(vertex, destination, message, isVisited,
+                    FindAllPossiblePaths(vertex, destination, message, isVisited,
                                     localPathList);
-
                     // remove current node in path
                     localPathList.Remove(vertex);
                 }
