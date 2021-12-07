@@ -19,7 +19,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Application));
             {
                 using (FileStream fileStream =
-                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\AppsRealistic.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Apps.xml", FileMode.Open))
                     res = (Application)xs.Deserialize(fileStream);
             }
 
@@ -33,7 +33,7 @@ namespace So_CSHARP
             var xs = new XmlSerializer(typeof(Architecture));
             {
                 using (FileStream fileStream =
-                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\ConfigRealistic.xml", FileMode.Open))
+                new FileStream("..\\So_CSHARP2\\files\\Example\\Input\\Config.xml", FileMode.Open))
                     res = (Architecture)xs.Deserialize(fileStream);
             }
             return res;
@@ -234,9 +234,9 @@ namespace So_CSHARP
             return report;
         }
 
-        public static void CreateAReport(Output.Report report){
+        public static void CreateAReport(Output.Report report,int i){
             var output = new Output();
-            output.GiveOutput(report);
+            output.GiveOutput(report,i);
         }
 
 
@@ -490,6 +490,7 @@ namespace So_CSHARP
         public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize, int selectedSize)
         {
             // Initialize population
+            string filename = $"..\\So_CSHARP2\\files\\Example\\Output\\APPSGA{populationSize}-{selectedSize}.csv";
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -507,13 +508,20 @@ namespace So_CSHARP
                 List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
                 // Mutation to create new generation
                 population = MutatePopulation(populationSize, recombinedPopulation,apps);
+
+
+                if(meanEval.Count > 5){
+
+                if(meanEval.TakeLast(5).ToList().Sum()/5 - meanEval.TakeLast(1).Sum() < 1){
+                    break;
+                }}
             }
             // Write best solution to XML
             meanEval.ForEach(x => Console.WriteLine(x));
             Console.WriteLine("Generation:" + meanEval.Count);
             string csv = String.Join(",", meanEval.Select(x => x.ToString()).ToArray());
-            File.WriteAllText("..\\So_CSHARP2\\files\\Example\\Output\\TC9GA10000-2000.csv", csv);
-            CreateAReport(population[evaluations.IndexOf(evaluations.Min())]);
+            File.WriteAllText(filename, csv);
+            CreateAReport(population[evaluations.IndexOf(evaluations.Min())],selectedSize);
         }
 
          public static bool deadlineContraint(Output.Report report, Application apps)

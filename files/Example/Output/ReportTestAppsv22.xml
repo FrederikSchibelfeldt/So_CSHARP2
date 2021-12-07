@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Solution Runtime="0" MeanE2E="74" MeanBW="775" />
+  <Message Name="F1" maxE2E="80" BW="600">
+    <Link Source="ES1" Destination="SW1" Qnumber="3" />
+    <Link Source="SW1" Destination="ES2" Qnumber="2" />
+  </Message>
+  <Message Name="F2" maxE2E="80" BW="800">
+    <Link Source="ES1" Destination="SW1" Qnumber="3" />
+    <Link Source="SW1" Destination="ES2" Qnumber="2" />
+  </Message>
+  <Message Name="F3" maxE2E="68" BW="1000">
+    <Link Source="ES1" Destination="SW2" Qnumber="2" />
+    <Link Source="SW2" Destination="ES2" Qnumber="2" />
+  </Message>
+  <Message Name="F4" maxE2E="44" BW="600">
+    <Link Source="ES1" Destination="SW2" Qnumber="1" />
+    <Link Source="SW2" Destination="ES2" Qnumber="1" />
+  </Message>
+  <Message Name="F5" maxE2E="68" BW="800">
+    <Link Source="SW1" Destination="ES2" Qnumber="3" />
+    <Link Source="ES1" Destination="SW1" Qnumber="1" />
+  </Message>
+  <Message Name="F6" maxE2E="92" BW="1000">
+    <Link Source="SW2" Destination="ES2" Qnumber="3" />
+    <Link Source="ES1" Destination="SW2" Qnumber="3" />
+  </Message>
+  <Message Name="F7" maxE2E="68" BW="600">
+    <Link Source="SW1" Destination="ES2" Qnumber="2" />
+    <Link Source="ES1" Destination="SW1" Qnumber="2" />
+  </Message>
+  <Message Name="F8" maxE2E="92" BW="800">
+    <Link Source="ES1" Destination="SW2" Qnumber="3" />
+    <Link Source="SW2" Destination="ES2" Qnumber="3" />
+  </Message>
+</Report>

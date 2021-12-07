@@ -9,22 +9,22 @@ namespace So_CSHARP
     public class Output
     {
 
-        public void GiveOutput(Report rep)
+        public void GiveOutput(Report rep,int i)
         {
 
             var xs2 = new XmlSerializer(typeof(Report));
 
             //Dont know how to overwrite files in xml so delete and then create :)))))))))))))
 
-            if (File.Exists("..\\So_CSHARP2\\files\\Example\\Output\\ReportTest1.xml"))
+            if (File.Exists($"..\\So_CSHARP2\\files\\Example\\Output\\ReportTestAppsv2{i}.xml"))
             {
                 {
-                    File.Delete("..\\So_CSHARP2\\files\\Example\\Output\\ReportTest1.xml");
+                    File.Delete($"..\\So_CSHARP2\\files\\Example\\Output\\ReportTestAppsv2{i}.xml");
                 }
             }
 
             using (FileStream fileStream =
-                new FileStream("..\\So_CSHARP2\\files\\Example\\Output\\ReportTest1.xml",
+                new FileStream($"..\\So_CSHARP2\\files\\Example\\Output\\ReportTestAppsv2{i}.xml",
                     FileMode.Create))
             {
                 xs2.Serialize(fileStream, rep);
