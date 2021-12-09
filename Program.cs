@@ -21,7 +21,7 @@ namespace So_CSHARP
                 Environment.Exit(0);
                 Console.WriteLine("Please choose an option: SA or GA");
                 Console.WriteLine("Example: dotnet run SA");
-                
+
             }
             else if (args.Length == 1)
             {
@@ -38,14 +38,15 @@ namespace So_CSHARP
                 if (args[0] == "GA")
                 {
 
-                    // ADD GA RUN 
+                    GeneticAlgorithms(arch, application, 100, 20);
+                    GeneticAlgorithms(arch, application, 1000, 200);
                 }
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("\n Algorithm run succesfully please refer to ReportTest.xml");
-                                Console.ResetColor();
-                                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n Algorithm run succesfully please refer to ReportTest.xml");
+                Console.ResetColor();
+                Console.WriteLine("");
             }
-            else if(args.Length == 3)
+            else if (args.Length == 3)
             {
                 string app_path = args[1];
                 string arch_path = args[2];
@@ -61,15 +62,15 @@ namespace So_CSHARP
 
                 if (args[0] == "GA")
                 {
-
-                    // ADD GA RUN 
+                    GeneticAlgorithms(arch2, application2, 100, 20);
+                    GeneticAlgorithms(arch2, application2, 1000, 200);
                 }
-                                       Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("\n Algorithm run succesfully please refer to ReportTest.xml");
-                                Console.ResetColor();
-                                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n Algorithm run succesfully please refer to ReportTest.xml");
+                Console.ResetColor();
+                Console.WriteLine("");
 
-          
+
             }
 
             else if (args.Length == 4)
@@ -77,7 +78,7 @@ namespace So_CSHARP
                 string app_path = args[1];
                 string arch_path = args[2];
                 string outputfile = args[3];
-                
+
                 SetOutput(outputfile);
                 var application2 = ReadApps(app_path);
                 var arch2 = ReadConfig(arch_path);
@@ -89,24 +90,26 @@ namespace So_CSHARP
                     FindMessageRoutes(application2, arch2);
                     RunSimulatedAnnealing(arch2, application2);
                 }
-                
+
                 if (args[0] == "GA")
                 {
 
-                    // ADD GA RUN 
+                    GeneticAlgorithms(arch2, application2, 100, 20);
+                    GeneticAlgorithms(arch2, application2, 1000, 200);
                 }
-                                       Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"\n Algorithm run succesfully please refer to {outputfile}");
-                                Console.ResetColor();
-                                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"\n Algorithm run succesfully please refer to {outputfile}");
+                Console.ResetColor();
+                Console.WriteLine("");
 
             }
-            else{
-                                                       Console.ForegroundColor = ConsoleColor.Red;
-            System.Console.WriteLine("Please include both input files or NONE!");
-            System.Console.WriteLine("Algorithm then Application file followed by arch file followed by output [OPTIONAL] ");
-            System.Console.WriteLine("Example for SA with 2 input files and output [optional]: > dotnet run SA Apps.xml Config.xml ouput.xml");
-                                Console.ResetColor();
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                System.Console.WriteLine("Please include both input files or NONE!");
+                System.Console.WriteLine("Algorithm then Application file followed by arch file followed by output [OPTIONAL] ");
+                System.Console.WriteLine("Example for SA with 2 input files and output [optional]: > dotnet run SA Apps.xml Config.xml ouput.xml");
+                Console.ResetColor();
 
 
             }
