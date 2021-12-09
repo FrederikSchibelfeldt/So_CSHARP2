@@ -11,20 +11,26 @@ namespace So_CSHARP
     {
         static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
+        static string outputfile = "ReportTest.xml";
+
+        public static void SetOutput(string s){
+            outputfile = s;
+        }
         public static void GiveOutput(Report rep)
         {
-            string sFilePath =  Path.GetFullPath(inputPath + "\\Output\\ReportTest_SA1.xml");
+            
+            string sFilePath =  Path.GetFullPath(inputPath + "\\Output\\" + outputfile);
             string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml";
             var xs2 = new XmlSerializer(typeof(Report));
 
-            if (File.Exists(sFilePathMartin))
+            if (File.Exists(sFilePath))
             {
                 {
-                    File.Delete(sFilePathMartin);
+                    File.Delete(sFilePath);
                 }
             }
             using FileStream fileStream =
-                new(sFilePathMartin,
+                new(sFilePath,
                     FileMode.Create);
             xs2.Serialize(fileStream, rep);
         }
