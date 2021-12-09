@@ -37,7 +37,9 @@ namespace So_CSHARP
 
                 if (args[0] == "GA")
                 {
-
+                     PopulateFields(application, arch);
+                    MapVertexNeighbors(arch);
+                    FindMessageRoutes(application, arch);
                     GeneticAlgorithms(arch, application, 100, 20);
                     GeneticAlgorithms(arch, application, 1000, 200);
                 }
