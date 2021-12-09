@@ -27,19 +27,17 @@ namespace So_CSHARP
             {
                 var application = ReadApps();
                 var arch = ReadConfig();
+                PopulateFields(application, arch);
+                MapVertexNeighbors(arch);
+                FindMessageRoutes(application, arch);
                 if (args[0] == "SA")
                 {
-                    PopulateFields(application, arch);
-                    MapVertexNeighbors(arch);
-                    FindMessageRoutes(application, arch);
                     RunSimulatedAnnealing(arch, application);
                 }
 
                 if (args[0] == "GA")
                 {
-                     PopulateFields(application, arch);
-                    MapVertexNeighbors(arch);
-                    FindMessageRoutes(application, arch);
+
                     GeneticAlgorithms(arch, application, 100, 20);
                     GeneticAlgorithms(arch, application, 1000, 200);
                 }
@@ -54,11 +52,11 @@ namespace So_CSHARP
                 string arch_path = args[2];
                 var application2 = ReadApps(app_path);
                 var arch2 = ReadConfig(arch_path);
+                PopulateFields(application2, arch2);
+                MapVertexNeighbors(arch2);
+                FindMessageRoutes(application2, arch2);
                 if (args[0] == "SA")
                 {
-                    PopulateFields(application2, arch2);
-                    MapVertexNeighbors(arch2);
-                    FindMessageRoutes(application2, arch2);
                     RunSimulatedAnnealing(arch2, application2);
                 }
 
@@ -84,12 +82,12 @@ namespace So_CSHARP
                 SetOutput(outputfile);
                 var application2 = ReadApps(app_path);
                 var arch2 = ReadConfig(arch_path);
+                PopulateFields(application2, arch2);
+                MapVertexNeighbors(arch2);
+                FindMessageRoutes(application2, arch2);
 
                 if (args[0] == "SA")
                 {
-                    PopulateFields(application2, arch2);
-                    MapVertexNeighbors(arch2);
-                    FindMessageRoutes(application2, arch2);
                     RunSimulatedAnnealing(arch2, application2);
                 }
 
