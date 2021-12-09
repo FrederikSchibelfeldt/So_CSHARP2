@@ -19,16 +19,11 @@ namespace So_CSHARP
             stopwatch.Start();
 
             double T = 20000;
-            Random rand = new();
             double coolingRate = 0.003;
             List<Output.Report> solutionSpace = new();
             Output.Report initialRandomSolution = Inputs.GenerateRandomSolution(arch, app);
-            int i = 0;
-            int ii=0;
             while (T > 1)
             {
-                i++;
-                double r = rand.NextDouble();
                 Output.Report RandomSolution = NewRandomSolution(app, initialRandomSolution);
                 long lambda = Inputs.CostFunction(initialRandomSolution, arch) - Inputs.CostFunction(RandomSolution, arch);
                 if (lambda > 0 || lambda > Math.Exp(-(1 / T) * lambda))
@@ -43,13 +38,7 @@ namespace So_CSHARP
                 T *= (1 - coolingRate);
             }
             var sortedSolutionSpace = solutionSpace.OrderByDescending(report => report.Solution.Cost).ToList();
-            solutionSpace.ForEach(p => Console.Write(p.Solution.Cost + ","));
     
-            Console.WriteLine(" \n ********SolutionsSpace Output*******");
-            Console.WriteLine(sortedSolutionSpace.Count);
-            Console.WriteLine(" \n ********i Output*******");
-            Console.WriteLine(i);
-            Console.WriteLine(ii);
             Output.Report GlobalMaximaEstimate = sortedSolutionSpace.Last(); 
             GlobalMaximaEstimate.Solution.Runtime = stopwatch.Elapsed.TotalSeconds; // Add runTime to soltion
             Inputs.CreateAReport(GlobalMaximaEstimate);
