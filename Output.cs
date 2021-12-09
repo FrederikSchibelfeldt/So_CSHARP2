@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using System.Linq;
 
@@ -11,16 +12,16 @@ namespace So_CSHARP
     {
         static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
-        static string outputfile = "ReportTest.xml";
+        static string outputfile = $"ReportTest{0}.xml";
 
         public static void SetOutput(string s){
             outputfile = s;
         }
-        public static void GiveOutput(Report rep)
+        public static void GiveOutput(Report rep, int i=0)
         {
             
             string sFilePath =  Path.GetFullPath(inputPath + "\\Output\\" + outputfile);
-            string sFilePathMartin = "/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest.xml";
+            string sFilePathMartin = $"/Users/martindanielnielsen/Projects/ExamProject/So_CSHARP2/files/Example/Output/ReportTest{i}.xml";
             var xs2 = new XmlSerializer(typeof(Report));
 
             if (File.Exists(sFilePath))

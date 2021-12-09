@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -157,6 +158,7 @@ namespace So_CSHARP
                     link.Qnumber = random.Next(1, 4);
                     maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Source = edge.Source;
+                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
                     link.Destination = edge.Destination;
                     tempCycleTurn += link.Qnumber;  
                     link.LinkCycleTurn = tempCycleTurn;
@@ -187,9 +189,48 @@ namespace So_CSHARP
             report.Solution = solution;
             return report;
         }
+        
+        public static Output.Report newRandomSolution(Application app, Output.Report currentRandomSolution)
+        {
+            // remember to calculate new sumBWForSolution and to subtract older results (for changed messages solution )
+            // Or just calculate the whole thing/sumBWForSolution again lol. 
+            Random rand = new Random();
+            int maxE2E = 0;
+            int cycleLength = 12;
+            var links = new List<Output.Link>();
+            Output.Report report = (Output.Report) currentRandomSolution.Clone();
+            
+            // Choose a random message name from solution messages
+            var randomMessageFromSolution = report.Messages[rand.Next(0,report.Messages.Count)]; 
+       
 
-        public static void CreateAReport(Output.Report report){
-            var output = new Output();
+            // Use chosen randomMessageFromSolution name to find a message in APP 
+            // For extraction of values such as edgepath. 
+            var message = app.Messages.Find( message => message.Name == randomMessageFromSolution.Name);
+            
+            List<Edge> chosenPath = message.PossibleEdgePaths[rand.Next(0,message.PossibleEdgePaths.Count)];
+            var tempCycleTurn = 0; // just take first path for now 
+            foreach (Edge edge in chosenPath)
+                {
+                    var link = new Output.Link();
+                    link.Qnumber = rand.Next(1, 4);
+                    link.Source = edge.Source;
+                    maxE2E += link.Qnumber * cycleLength + Int32.Parse(edge.PropDelay);
+                    link.Destination = edge.Destination;
+                    tempCycleTurn += link.Qnumber;  
+                    link.LinkCycleTurn = tempCycleTurn;
+                    links.Add(link);
+                }
+            randomMessageFromSolution.Links = links;
+            randomMessageFromSolution.Name = message.Name;
+            randomMessageFromSolution.Deadline = message.Deadline;
+            randomMessageFromSolution.MaxE2E = maxE2E.ToString();
+            randomMessageFromSolution.BW = ComputeMeanBWforMessage(message, chosenPath);
+            randomMessageFromSolution.Size = Int32.Parse(message.Size);
+            return report;
+        }
+
+        public static void CreateAReport(Output.Report report,int i=0){
             Output.GiveOutput(report);
         }
 
@@ -290,6 +331,12 @@ namespace So_CSHARP
             {
                 visited = new();
                 visited.Add(message.Source);
+
+
+                // Color console "skrift" for testing purposes
+                
+
+                // Call recursive utility
                 List<Vertex> isVisited = new();
                 List<Vertex> pathList = new();
                 // add source to path
@@ -297,10 +344,15 @@ namespace So_CSHARP
                 isVisited.Add(message.SourceVertex);
                 // Call to find possible 
                 FindAllPossiblePaths(message.SourceVertex, message.DestinationVertex, message, isVisited, pathList);
+
+                // DEFINE  possible edge paths from possible vertex paths 
+                // then add to message 
                 message.PossibleEdgePaths = MessageVertexPathsToEdgePaths(message, arch);
                 //message.PrintPossiblePaths();
                 count_test++;
+
             }
+
         }
 
         /// <summary>
@@ -315,8 +367,6 @@ namespace So_CSHARP
         {
             if (source.Equals(destination))
             {
-                Console.WriteLine(string.Join("\n PATH:", "\n"));
-                localPathList.ForEach(p => Console.Write(p.Name));
                 message.PossibleVerticesPath.Add(localPathList.ToList());
                 return;
             }
@@ -347,8 +397,7 @@ namespace So_CSHARP
             List<Output.Report> population = new();
             for (int i = 0; i < size; i++) 
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(i);
+               
                 population.Add(GenerateRandomSolution(arch, apps));
             }
 
@@ -372,17 +421,34 @@ namespace So_CSHARP
             return meane2e;
         }
         
-        public static List<double> EvaluationList(List<Output.Report> population)
+        public static List<long> EvaluationList(List<Output.Report> population, Architecture arch, Application apps)
         {
-            List<double> evaluations = new();
+            List<long> evaluations = new();
+            
             foreach (Output.Report report in population)
             {
-                evaluations.Add(ObjectiveFunction(report));
+                long meanBW = new();
+                int meanE2E = new();
+                foreach (Output.Message message in report.Messages)
+                {
+                    meanE2E += Int32.Parse(message.MaxE2E);
+                    meanBW += message.BW;
+                }
+                if(!deadlineContraint(report, apps)){
+                    meanBW += 500;
+                }
+                if(!linkCapacityContraint(report,arch)){
+                    meanBW += 500;
+                }
+
+                report.Solution.MeanE2E = meanE2E / report.Messages.Count;
+                report.Solution.MeanBW = meanBW / report.Messages.Count;
+                evaluations.Add(meanBW / report.Messages.Count);
             }
             return evaluations;
         }
         
-        public static List<Output.Report> SelectedPopulation(int selectedSize,List<Output.Report> population, List<double> evaluations)
+        public static List<Output.Report> SelectedPopulation(int selectedSize,List<Output.Report> population, List<long> evaluations)
         {
             List<Output.Report> selectedPopulation = new List<Output.Report>();
             var nums = evaluations.OrderBy(x => x).Take(selectedSize).ToList();
@@ -402,50 +468,137 @@ namespace So_CSHARP
             for(int i = 0;i < selectedPopulation.Count;i++){
                 Output.Report tmp = new Output.Report();
                 while(m<= j){
-                if(i == selectedPopulation.Count-1){
-                selectedPopulation[i].Messages[m] = tempReport.Messages[m];
+                    if(i == selectedPopulation.Count-1){
+                        selectedPopulation[i].Messages[m] = tempReport.Messages[m];
+                    }
+                    else{
+                        selectedPopulation[i].Messages[m] = selectedPopulation[i+1].Messages[m];
+                    }
+                    m++;
                 }
-                else{
-                selectedPopulation[i].Messages[m] = selectedPopulation[i+1].Messages[m];
                 tmp = selectedPopulation[i];
-                }
-                m++;
-                }
                 recombinedPopulation.Add(tmp);
             }
-            Console.WriteLine(selectedPopulation.SequenceEqual(recombinedPopulation));
             return recombinedPopulation;
         }
 
-        public static List<Output.Report> MutatePopulation(int populationSize, List<Output.Report> recombinedPopulation)
+        public static List<Output.Report> MutatePopulation(int populationSize, List<Output.Report> recombinedPopulation, Application apps)
         {
-            List<Output.Report> mutatedPopulation = recombinedPopulation;
+            List<Output.Report> mutatedPopulation = new List<Output.Report>(recombinedPopulation);
             var random = new Random();
             for (int i = 0; i < populationSize - recombinedPopulation.Count; i++)
             {
                 int j = i % recombinedPopulation.Count;
-                Output.Report currentSolution = recombinedPopulation[j];
-                // currentSolution.Message[random.Next(0, currentSolution.Message.Count)] == Abdi skadet funktion;
-                mutatedPopulation.Add(currentSolution);
+                Output.Report currentSolution = (Output.Report) recombinedPopulation[j].Clone();
+                mutatedPopulation.Add(newRandomSolution(apps, currentSolution));
             }
             return mutatedPopulation;
         }
+
         
         public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize, int selectedSize)
         {
             // Initialize population
+            string filename = $"..\\So_CSHARP2\\files\\Example\\Output\\APPSGA{populationSize}-{selectedSize}.csv";
             List<Output.Report> population = InitPopulation(populationSize, arch, apps);
-            // Evaluate population
-            List<double> evaluations = EvaluationList(population);
-            // Return best solution if stopping criteria met
-            
-            // Selection using elitism (fitness proportionate and tournament selection)
-            List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
-            // Recombine 
-            List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
-            // Mutation to create new generation
-            List<Output.Report> mutatedPopulation = MutatePopulation(populationSize, recombinedPopulation);
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            List<long> evaluations = new List<long>();
+            List<int> meanEval = new List<int>();
+            while (sw.Elapsed.TotalMinutes < 2)
+            {
+                Console.WriteLine(sw.Elapsed.TotalSeconds);
+                // Evaluate population
+                evaluations = EvaluationList(population,arch, apps);
+                meanEval.Add((int) evaluations.Average());
+                // Selection using elitism (fitness proportionate and tournament selection)
+                List<Output.Report> selectedPopulation = SelectedPopulation(selectedSize, population, evaluations);
+                // Recombine 
+                List<Output.Report> recombinedPopulation = RecombinedPopulation(selectedPopulation);
+                // Mutation to create new generation
+                population = MutatePopulation(populationSize, recombinedPopulation,apps);
 
+
+                if(meanEval.Count > 5){
+
+                if(meanEval.TakeLast(5).ToList().Sum()/5 - meanEval.TakeLast(1).Sum() < 1){
+                    break;
+                }}
+            }
+            // Write best solution to XML
+            meanEval.ForEach(x => Console.WriteLine(x));
+            Console.WriteLine("Generation:" + meanEval.Count);
+            string csv = String.Join(",", meanEval.Select(x => x.ToString()).ToArray());
+            File.WriteAllText(filename, csv);
+            CreateAReport(population[evaluations.IndexOf(evaluations.Min())],selectedSize);
+        }
+
+         public static bool deadlineContraint(Output.Report report, Application apps)
+        {
+            foreach (Output.Message message in report.Messages)
+            {
+                if(message.Deadline == null){findDeadline(message,apps);}
+                if(message.Deadline == null){Console.WriteLine($"Null deadline for message {message.Name}");}
+                if (!(Int32.Parse(message.MaxE2E) < Int32.Parse(message.Deadline)))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static void findDeadline(Output.Message message, Application apps){
+        var s =  apps.Messages.Find(x => x.Name == message.Name);
+        message.Deadline = s.Deadline;
+        }
+
+        public static bool linkCapacityContraint(Output.Report report, Architecture arch)
+        {
+
+         //   Console.WriteLine("--------------------linkCapacityContraint--------------------");
+
+            for (int i = 1; i < (arch.Edges.Count() - 1) * 3; i++)
+            {
+                List<(Output.Link, Output.Message)> links = new();
+                foreach (Output.Message message in report.Messages)
+                {
+                    foreach (Output.Link link in message.Links)
+                    {
+
+                        if (link.LinkCycleTurn == i)
+                        {
+                            links.Add((link, message));
+
+                        }
+                    }
+
+                }
+            //    Console.WriteLine("--------------------message--------------------");
+             //   links.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
+              //  Console.WriteLine("");
+
+                // loops over (links,message) list
+                foreach ((Output.Link, Output.Message) linkandMessage in links)
+                {  
+
+                    var linkandMessages = links.FindAll(link2 => linkandMessage.Item1.Source == link2.Item1.Source && linkandMessage.Item1.Destination == link2.Item1.Destination);
+
+                //    Console.WriteLine("--------------------linkandMessage--------------------");
+                 //   linkandMessages.ForEach(p => Console.Write("Source: " + p.Item1.Source + " Destination: " + p.Item1.Destination + " LinkCycleTurn: " + p.Item1.LinkCycleTurn + " FOR MESSAGE: " + p.Item2.Name + "\n"));
+                    var currentSource = linkandMessages[0].Item1.Source;
+                    var currentDestination = linkandMessages[0].Item1.Destination;
+                    var bw = arch.Edges.FindLast(edge => edge.Source == currentSource && edge.Destination == currentDestination).BW;
+
+                    var currentSize = linkandMessages.Sum(p => p.Item2.Size);
+                  //  Console.WriteLine("--------------------BW--------------------");
+                   // Console.WriteLine(bw);
+                   // Console.WriteLine(currentSize);
+                    if (currentSize > Int32.Parse(bw)) { return false; }
+                }
+
+            }
+
+            return true;
         }
     
         
@@ -454,7 +607,6 @@ namespace So_CSHARP
         // possibly return List<List<Edge>>
         public static List<List<Edge>> MessageVertexPathsToEdgePaths(Message message, Architecture arch)
         {
-         
             List<List<Edge>> possiblePaths = new();
             List<Edge> path;
             foreach (List<Vertex> route in message.PossibleVerticesPath)
@@ -465,16 +617,13 @@ namespace So_CSHARP
 
                     if (i < route.Count - 1)
                     {
+                        
                         path.Add(EdgeFromVerticies(route.ElementAt(i), route.ElementAt(i + 1), arch));
                     }
                 }
-        //        Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
                 //path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"    ));
-      //          Console.WriteLine("\n");
-  //              Console.WriteLine(string.Join("PATH TO EDGES edges:", "\n"));
-    //            path.ForEach(p => Console.Write("source: " + p.Source + " destination: " + p.Destination + "\n"));
+                
                 possiblePaths.Add(path);
-                Console.WriteLine("\n");
             }
 
             //Return and add to possible edge paths for a message. 
@@ -485,10 +634,7 @@ namespace So_CSHARP
         {
             foreach (Edge edge in arch.Edges)
             {
-                // maybe???
-                // We should check direction before invoking this function thus, the deleted part of the if statement. 
-                // since edges are biderctional we can possibly recieve a wrong direction 
-                if ( (String.Equals(edge.Source, source.Name) && String.Equals(edge.Destination, destination.Name)) || (String.Equals(edge.Source, destination.Name) && String.Equals(edge.Destination, source.Name)))
+                     if ( (String.Equals(edge.Source, source.Name) && String.Equals(edge.Destination, destination.Name)) || (String.Equals(edge.Source, destination.Name) && String.Equals(edge.Destination, source.Name)))
                 {
                     return edge;
                 }
