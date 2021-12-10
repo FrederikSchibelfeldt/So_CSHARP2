@@ -1,12 +1,11 @@
-# This CITATION.cff file was generated with cffinit.
-# Visit https://bit.ly/cffinit to generate yours today!
+
 
 cff-version: 1.2.0
-title: >-
-  Routing and Queue Assignment in TSN using
-  Peristaltic Shapers
-message: Systems Optimization course project
-type: software
+title:
+  "Routing and Queue Assignment in TSN using
+  Peristaltic Shapers"
+message: "Systems Optimization course project
+type: software"
 authors:
   - family-names: Ahmad
     name-suffix: A
@@ -16,4 +15,3 @@ authors:
     given-names: F
   - family-names: Farah
     name-suffix: A
-  - {}
