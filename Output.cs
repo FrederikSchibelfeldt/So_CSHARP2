@@ -12,7 +12,7 @@ namespace So_CSHARP
     {
         static string inputPath = "..\\So_CSHARP2\\files\\Example";
 
-        static string outputfile = $"ReportTest{0}.xml";
+        static string outputfile = "ReportTest.xml";
 
         public static void SetOutput(string s){
             outputfile = s;

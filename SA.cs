@@ -25,7 +25,7 @@ namespace So_CSHARP
             while (T > 1)
             {
                 Output.Report RandomSolution = NewRandomSolution(app, initialRandomSolution);
-                long lambda = Inputs.CostFunction(initialRandomSolution, arch) - Inputs.CostFunction(RandomSolution, arch);
+                long lambda = Inputs.CostFunction(initialRandomSolution, arch, app) - Inputs.CostFunction(RandomSolution, arch, app);
                 if (lambda > 0 || lambda > Math.Exp(-(1 / T) * lambda))
                 {
                     solutionSpace = (List<Output.Report>) solutionSpace.Prepend(RandomSolution).ToList();
@@ -37,12 +37,17 @@ namespace So_CSHARP
 
                 T *= (1 - coolingRate);
             }
+    
+           
             var sortedSolutionSpace = solutionSpace.OrderByDescending(report => report.Solution.Cost).ToList();
+                        solutionSpace.ForEach(p => Console.Write(p.Solution.Cost + ","));
+            Console.WriteLine(sortedSolutionSpace.Count);
+            Console.WriteLine(" \n ********SolutionsSpace Output*******");
     
             Output.Report GlobalMaximaEstimate = sortedSolutionSpace.Last(); 
             GlobalMaximaEstimate.Solution.Runtime = stopwatch.Elapsed.TotalSeconds; // Add runTime to soltion
             Inputs.CreateAReport(GlobalMaximaEstimate);
-            return sortedSolutionSpace.First();
+            return sortedSolutionSpace.Last();
         }
 
         public static Output.Report NewRandomSolution(Application app, Output.Report currentRandomSolution)

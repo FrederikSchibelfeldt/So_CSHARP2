@@ -235,19 +235,20 @@ namespace So_CSHARP
         }
 
 
-        public static long CostFunction(Output.Report report, Architecture arch)
+        public static long CostFunction(Output.Report report, Architecture arch, Application apps)
         {  
-            long cost = report.Solution.MeanBW + report.Solution.MeanE2E;
 
-            if(!LinkCapacityContraint(report, arch)){
-
-                cost += 200;
-            }
-            if (!DeadlineContraint(report))
-            {
-                cost += 200;
-            }
+            long cost = report.Solution.MeanBW ;
+                if(!deadlineContraint(report, apps)){
+                    cost += 500;
+                }
+                if(!linkCapacityContraint(report,arch)){
+                    cost += 500;
+                }
+            
             report.Solution.Cost = cost;
+            report.Solution.MeanBW = cost;
+        //System.Console.WriteLine(cost);
         return cost; 
         }
 

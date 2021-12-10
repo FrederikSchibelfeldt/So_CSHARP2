@@ -35,11 +35,19 @@ namespace So_CSHARP
                     RunSimulatedAnnealing(arch, application);
                 }
 
-                if (args[0] == "GA")
+                else if (args[0] == "GA")
                 {
 
                     GeneticAlgorithms(arch, application, 100, 20);
                     GeneticAlgorithms(arch, application, 1000, 200);
+                }
+                else{
+                Console.ForegroundColor = ConsoleColor.Red;
+                System.Console.WriteLine("Please include both input files or NONE!");
+                System.Console.WriteLine("Algorithm then Application file followed by arch file followed by output [OPTIONAL] ");
+                System.Console.WriteLine("Example for SA with 2 input files and output [optional]: > dotnet run SA Apps.xml Config.xml ouput.xml");
+                Console.ResetColor();
+                return;
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\n Algorithm run succesfully please refer to ReportTest.xml");
@@ -60,10 +68,18 @@ namespace So_CSHARP
                     RunSimulatedAnnealing(arch2, application2);
                 }
 
-                if (args[0] == "GA")
+               else if (args[0] == "GA")
                 {
                     GeneticAlgorithms(arch2, application2, 100, 20);
                     GeneticAlgorithms(arch2, application2, 1000, 200);
+                }
+                else{
+                Console.ForegroundColor = ConsoleColor.Red;
+                System.Console.WriteLine("Please include both input files or NONE!");
+                System.Console.WriteLine("Algorithm then Application file followed by arch file followed by output [OPTIONAL] ");
+                System.Console.WriteLine("Example for SA with 2 input files and output [optional]: > dotnet run SA Apps.xml Config.xml ouput.xml");
+                Console.ResetColor();
+                return;
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\n Algorithm run succesfully please refer to ReportTest.xml");
@@ -91,11 +107,19 @@ namespace So_CSHARP
                     RunSimulatedAnnealing(arch2, application2);
                 }
 
-                if (args[0] == "GA")
+              else if (args[0] == "GA")
                 {
 
                     GeneticAlgorithms(arch2, application2, 100, 20);
                     GeneticAlgorithms(arch2, application2, 1000, 200);
+                }
+                else{
+                Console.ForegroundColor = ConsoleColor.Red;
+                System.Console.WriteLine("Please include both input files or NONE!");
+                System.Console.WriteLine("Algorithm then Application file followed by arch file followed by output [OPTIONAL] ");
+                System.Console.WriteLine("Example for SA with 2 input files and output [optional]: > dotnet run SA Apps.xml Config.xml ouput.xml");
+                Console.ResetColor();
+                return;
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"\n Algorithm run succesfully please refer to {outputfile}");
