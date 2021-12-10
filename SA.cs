@@ -50,6 +50,40 @@ namespace So_CSHARP
             return sortedSolutionSpace.Last();
         }
 
+
+          public static Output.Report RunSimulatedWithSolutionFromGA(Output.Report initialSolution, Application app, Architecture arch)
+        {
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+
+            double T = 20000;
+            double coolingRate = 0.003;
+            List<Output.Report> solutionSpace = new();
+            Output.Report initialRandomSolution = initialSolution;
+            while (T > 1)
+            {
+                Output.Report RandomSolution = NewRandomSolution(app, initialRandomSolution);
+                long lambda = Inputs.CostFunction(initialRandomSolution, arch) - Inputs.CostFunction(RandomSolution, arch);
+                if (lambda > 0 || lambda > Math.Exp(-(1 / T) * lambda))
+                {
+                    solutionSpace = (List<Output.Report>) solutionSpace.Prepend(RandomSolution).ToList();
+                }
+                else
+                {
+                    initialRandomSolution = RandomSolution; 
+                    }
+
+                T *= (1 - coolingRate);
+            }
+            var sortedSolutionSpace = solutionSpace.OrderByDescending(report => report.Solution.Cost).ToList();
+    
+            Output.Report GlobalMaximaEstimate = sortedSolutionSpace.Last(); 
+            Console.WriteLine(GlobalMaximaEstimate.Solution.MeanBW + " - THIS IS SA MEAN BW AFTER GA");
+            GlobalMaximaEstimate.Solution.Runtime = stopwatch.Elapsed.TotalSeconds; // Add runTime to soltion
+            Inputs.CreateAReport(GlobalMaximaEstimate);
+            return sortedSolutionSpace.First();
+        }
+
         public static Output.Report NewRandomSolution(Application app, Output.Report currentRandomSolution)
         {
             Random rand = new();

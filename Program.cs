@@ -39,7 +39,8 @@ namespace So_CSHARP
                 {
 
                     GeneticAlgorithms(arch, application, 100, 20);
-                    GeneticAlgorithms(arch, application, 1000, 200);
+                   Output.Report GAsolution =  GeneticAlgorithms(arch, application, 1000, 200);
+                   RunSimulatedWithSolutionFromGA(GAsolution,application,arch);
                 }
                 else{
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -70,8 +71,10 @@ namespace So_CSHARP
 
                else if (args[0] == "GA")
                 {
+              
                     GeneticAlgorithms(arch2, application2, 100, 20);
-                    GeneticAlgorithms(arch2, application2, 1000, 200);
+                   Output.Report GAsolution =  GeneticAlgorithms(arch2, application2, 1000, 200);
+                   RunSimulatedWithSolutionFromGA(GAsolution,application2,arch2);
                 }
                 else{
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -111,7 +114,8 @@ namespace So_CSHARP
                 {
 
                     GeneticAlgorithms(arch2, application2, 100, 20);
-                    GeneticAlgorithms(arch2, application2, 1000, 200);
+                   Output.Report GAsolution =  GeneticAlgorithms(arch2, application2, 1000, 200);
+                   RunSimulatedWithSolutionFromGA(GAsolution,application2,arch2);
                 }
                 else{
                 Console.ForegroundColor = ConsoleColor.Red;

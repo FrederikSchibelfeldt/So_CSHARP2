@@ -497,7 +497,7 @@ namespace So_CSHARP
         }
 
         
-        public static void GeneticAlgorithms(Architecture arch, Application apps, int populationSize, int selectedSize)
+        public static Output.Report GeneticAlgorithms(Architecture arch, Application apps, int populationSize, int selectedSize)
         {
             // Initialize population
             string filename = $"..\\So_CSHARP2\\files\\Example\\Output\\APPSGA{populationSize}-{selectedSize}.csv";
@@ -532,6 +532,7 @@ namespace So_CSHARP
             string csv = String.Join(",", meanEval.Select(x => x.ToString()).ToArray());
             File.WriteAllText(filename, csv);
             CreateAReport(population[evaluations.IndexOf(evaluations.Min())],selectedSize);
+            return population[evaluations.IndexOf(evaluations.Min())];
         }
 
          public static bool deadlineContraint(Output.Report report, Application apps)
